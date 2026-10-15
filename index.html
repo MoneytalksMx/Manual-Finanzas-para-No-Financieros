@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MoneyTalks | Programa de Bienestar Financiero</title>
+  <meta name="description" content="Manual de Finanzas para No Financieros — MoneyTalks, Programa de Bienestar Financiero.">
+  <link rel="icon" href="logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+    body {
+      background: #f4f3f1;
+      color: #1f1f1f;
+      font-family: "Montserrat", system-ui, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+    }
+    .brand img {
+      height: 64px;
+      width: auto;
+      display: block;
+    }
+    .divider {
+      width: 2px;
+      align-self: stretch;
+      min-height: 64px;
+      background: #1f1f1f;
+    }
+    .tagline {
+      font-weight: 600;
+      font-size: 22px;
+      line-height: 1.35;
+      margin: 0;
+    }
+    @media (max-width: 560px) {
+      .brand { flex-direction: column; gap: 18px; text-align: center; }
+      .brand img { height: 52px; }
+      .divider { width: 64px; height: 2px; min-height: 0; align-self: center; }
+      .tagline { font-size: 18px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="brand">
+    <img src="logo.png" alt="MoneyTalks">
+    <span class="divider" aria-hidden="true"></span>
+    <p class="tagline">Programa de<br>Bienestar Financiero</p>
+  </main>
+</body>
+</html>
