@@ -1,0 +1,5 @@
+{
+  "rewrites": [
+    { "source": "/", "has": [{ "type": "host", "value": "nomina.moneytalks.mx" }], "destination": "/nomina/index.html" }
+  ]
+}
