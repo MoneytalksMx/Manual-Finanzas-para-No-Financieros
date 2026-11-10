@@ -104,6 +104,7 @@
       padding: 40px 24px 96px;
       animation: app-in 500ms cubic-bezier(0.23, 1, 0.32, 1) both;
     }
+    .app > * { min-width: 0; }
     @keyframes app-in {
       from { opacity: 0; transform: translateY(8px); }
       to { opacity: 1; transform: none; }
@@ -305,10 +306,94 @@
       font-weight: 500;
       color: var(--muted);
     }
-    .case-section[data-flash] h3 { color: var(--brand); transition: color 200ms ease; }
+    .case-body {
+      max-width: 68ch;
+      font-size: 15.5px;
+      font-weight: 500;
+      line-height: 1.7;
+      color: #2b2a27;
+    }
+    .case-body > p { margin: 0 0 14px; }
+    .case-body > p:last-child { margin-bottom: 0; }
+    .case-head {
+      display: grid;
+      gap: 6px;
+      margin: 0 0 14px;
+      font-size: 14px;
+    }
+    .case-head div { display: flex; gap: 10px; }
+    .case-head dt { min-width: 76px; font-weight: 600; color: var(--muted); }
+    .case-head dd { margin: 0; font-weight: 600; }
+    .case-head__title {
+      margin: 0;
+      font-size: clamp(19px, 2.6vw, 23px);
+      font-weight: 600;
+      line-height: 1.35;
+      color: var(--ink);
+      text-wrap: balance;
+    }
+    .case-table {
+      max-width: 100%;
+      margin: 4px 0 12px;
+      overflow-x: auto;
+      border: 1px solid #e2ded7;
+      border-radius: 12px;
+      background: #fbfaf8;
+    }
+    .case-table:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+    .case-table table {
+      width: 100%;
+      min-width: 520px;
+      border-collapse: collapse;
+      font-size: 13.5px;
+      line-height: 1.45;
+    }
+    .case-table th, .case-table td {
+      padding: 10px 14px;
+      text-align: left;
+      vertical-align: top;
+      border-bottom: 1px solid #ebe7e1;
+    }
+    .case-table tbody tr:last-child th, .case-table tbody tr:last-child td { border-bottom: 0; }
+    .case-table thead th {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      color: var(--muted);
+      background: #f1eee9;
+    }
+    .case-table tbody th { font-weight: 600; color: var(--ink); }
+    .case-table td { font-variant-numeric: tabular-nums; }
+    .case-note {
+      font-size: 13px;
+      line-height: 1.55;
+      color: var(--muted);
+    }
+    .case-questions {
+      margin: 0;
+      padding-left: 1.4em;
+    }
+    .case-questions li { margin: 0 0 10px; padding-left: 4px; }
+    .case-questions li::marker { font-weight: 600; color: var(--brand); }
+    .case-sources {
+      display: grid;
+      gap: 14px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      font-size: 13.5px;
+      line-height: 1.5;
+    }
+    .case-sources li { display: grid; gap: 3px; }
+    .case-sources a {
+      color: var(--brand);
+      font-size: 12.5px;
+      overflow-wrap: anywhere;
+      text-underline-offset: 2px;
+    }
 
     @media (max-width: 860px) {
-      .app { grid-template-columns: 1fr; gap: 32px; padding: 24px 16px 72px; }
+      .app { grid-template-columns: minmax(0, 1fr); gap: 32px; padding: 24px 16px 72px; }
       .app__nav { position: static; max-height: none; overflow: visible; }
     }
 
@@ -539,8 +624,9 @@
     </div>
   </main>
 
+  <script src="casos.js"></script>
   <script>
-    // Menú de capítulos y esqueleto de cada caso
+    // Menú de capítulos y casos de cada uno
     (function () {
       var CHAPTERS = [
         'Todos tomamos decisiones financieras',
@@ -683,22 +769,111 @@
         h2.textContent = CHAPTERS[i];
         wrap.appendChild(kicker);
         wrap.appendChild(h2);
+        var data = (window.MT_CASES || []).filter(function (c) { return c.n === i; })[0];
         SECTIONS.forEach(function (s, k) {
           var sec = document.createElement('section');
           sec.className = 'case-section';
           sec.id = 'cap-' + i + '-' + s.id;
-          sec.innerHTML = '<h3><span class="case-section__n"></span><span></span></h3><p class="case-section__pending">Contenido pendiente</p>';
+          sec.innerHTML = '<h3><span class="case-section__n"></span><span></span></h3>';
           sec.querySelector('.case-section__n').textContent = String(k + 1).padStart(2, '0');
           sec.querySelector('h3 span:last-child').textContent = s.label;
+          var body = data ? renderSection(i, data, s.id) : null;
+          if (body) {
+            sec.appendChild(body);
+          } else {
+            var p = el('p', 'case-section__pending', 'Contenido pendiente');
+            sec.appendChild(p);
+          }
           wrap.appendChild(sec);
         });
         article.appendChild(wrap);
+      }
+      function el(tag, cls, text) {
+        var e = document.createElement(tag);
+        if (cls) e.className = cls;
+        if (text !== undefined) e.textContent = text;
+        return e;
+      }
+      function renderSection(i, data, id) {
+        var box = el('div', 'case-body');
+        if (id === 'encabezado') {
+          var dl = el('dl', 'case-head');
+          [['Capítulo', i + ' · ' + CHAPTERS[i]], ['Empresa', data.empresa]].forEach(function (pair) {
+            var row = el('div');
+            row.appendChild(el('dt', null, pair[0]));
+            row.appendChild(el('dd', null, pair[1]));
+            dl.appendChild(row);
+          });
+          box.appendChild(dl);
+          box.appendChild(el('p', 'case-head__title', data.title));
+          return box;
+        }
+        var blocks = data.sections[id];
+        if (!blocks || !blocks.length) return null;
+        if (id === 'fuentes') {
+          var ul = el('ul', 'case-sources');
+          blocks.forEach(function (f) {
+            var li = el('li');
+            if (f.text) li.appendChild(el('span', null, f.text));
+            if (f.url) {
+              var a = el('a', null, f.url);
+              a.href = f.url;
+              a.target = '_blank';
+              a.rel = 'noopener noreferrer';
+              li.appendChild(a);
+            }
+            ul.appendChild(li);
+          });
+          box.appendChild(ul);
+          return box;
+        }
+        var list = null;
+        blocks.forEach(function (b) {
+          if (b.type === 'item') {
+            if (!list) { list = el('ol', 'case-questions'); box.appendChild(list); }
+            list.appendChild(el('li', null, b.text));
+            return;
+          }
+          list = null;
+          if (b.type === 'table') {
+            var scroller = el('div', 'case-table');
+            scroller.tabIndex = 0;
+            scroller.setAttribute('role', 'region');
+            scroller.setAttribute('aria-label', 'Tabla de ' + data.empresa);
+            var table = el('table');
+            var thead = el('thead');
+            var tr = el('tr');
+            b.header.forEach(function (h) { tr.appendChild(el('th', null, h)); });
+            thead.appendChild(tr);
+            table.appendChild(thead);
+            var tbody = el('tbody');
+            b.rows.forEach(function (r) {
+              var row = el('tr');
+              r.forEach(function (c, ci) {
+                var cell = el(ci === 0 ? 'th' : 'td', null, c);
+                if (ci === 0) cell.scope = 'row';
+                row.appendChild(cell);
+              });
+              tbody.appendChild(row);
+            });
+            table.appendChild(tbody);
+            scroller.appendChild(table);
+            box.appendChild(scroller);
+          } else if (b.type === 'note') {
+            box.appendChild(el('p', 'case-note', b.text));
+          } else {
+            box.appendChild(el('p', null, b.text));
+          }
+        });
+        return box;
       }
       function select(i, sectionId, scroll) {
         var value = i + '-' + sectionId;
         if (i !== current) {
           current = i;
           sections().forEach(function (s, k) { s.toggleAttribute('data-current', k === i); });
+          // Solo queda abierto el capítulo que se está leyendo
+          Array.from(open).forEach(function (k) { if (k !== i) setOpen(k, false); });
           renderChapter(i);
         }
         if (!open.has(i)) setOpen(i, true);
