@@ -14,8 +14,13 @@
       --bg: #f4f3f1;
       --ink: #1f1f1f;
       --muted: #6b6862;
-      --brand: #2c86c7;
-      --danger: #d93025;
+      /* Paleta de Envases */
+      --env-red: #aa1124;
+      --env-red-dark: #921327;
+      --env-gray: #999998;
+      --env-ink: #262626;
+      --brand: var(--env-red);
+      --danger: #c2410c;
     }
     * { box-sizing: border-box; }
     [hidden] { display: none !important; }
@@ -32,7 +37,46 @@
       justify-content: center;
       gap: 56px;
       padding: 32px 16px;
+      border-top: 4px solid var(--env-red);
     }
+    .topbar {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 26px;
+    }
+    .client {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 0;
+    }
+    .client__label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--env-gray);
+    }
+    .client img { display: block; height: 30px; width: auto; }
+    .site-footer {
+      background: var(--env-ink);
+      color: #d9d9d9;
+    }
+    .site-footer__inner {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px 40px;
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 40px 24px;
+    }
+    .site-footer img { display: block; height: 34px; width: auto; }
+    .site-footer p { margin: 0; font-size: 13px; font-weight: 500; line-height: 1.6; }
+    .site-footer strong { color: #ffffff; font-weight: 600; }
+    .site-footer__band { height: 6px; background: linear-gradient(90deg, var(--env-red) 0%, var(--env-red-dark) 100%); }
     .brand {
       display: flex;
       align-items: center;
@@ -86,12 +130,17 @@
       display: block;
       padding: 0;
     }
-    body[data-view="app"] .brand {
-      justify-content: center;
-      gap: 20px;
-      padding: 24px 16px;
+    body[data-view="app"] .topbar {
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 14px 24px;
+      padding: 20px max(24px, calc((100% - 1112px) / 2));
       border-bottom: 1px solid #e2ded7;
+      background: #f7f6f4;
     }
+    body[data-view="app"] .brand { gap: 20px; }
+    body[data-view="app"] .client img { height: 28px; }
     body[data-view="app"] .brand img { height: 44px; }
     body[data-view="app"] .divider { min-height: 44px; }
     body[data-view="app"] .tagline { font-size: 16px; }
@@ -397,7 +446,7 @@
       .logo-wall__tile:hover {
         transform: translateY(-2px);
         border-color: color-mix(in srgb, var(--brand) 45%, #e7e3dc);
-        box-shadow: 0 10px 24px -14px rgba(44, 134, 199, 0.45);
+        box-shadow: 0 10px 24px -14px rgba(170, 17, 36, 0.35);
       }
     }
     .logo-wall__tile:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
@@ -498,7 +547,7 @@
       --cs-font: calc(var(--cs-size) * 0.5);
       --cs-pitch: calc(var(--cs-size) + var(--cs-gap));
       --cs-slot: #e6e3de;
-      --cs-accent: var(--brand);
+      --cs-accent: var(--env-ink);
       --cs-digit: #ffffff;
       --cs-ease-spring: cubic-bezier(0.3, 1.35, 0.6, 1);
       --cs-ease-out: cubic-bezier(0.23, 1, 0.32, 1);
@@ -600,7 +649,7 @@
       display: grid;
       place-items: center;
       border-radius: var(--cs-radius);
-      background: var(--cs-accent);
+      background: var(--brand);
       color: var(--cs-digit);
       pointer-events: none;
       clip-path: inset(0 50% round var(--cs-radius));
@@ -671,7 +720,10 @@
       .divider { width: 64px; height: 2px; min-height: 0; align-self: center; }
       .tagline { font-size: 18px; }
       .code-slots { --cs-gap: 6px; }
-      body[data-view="app"] .brand { flex-direction: row; gap: 14px; text-align: left; padding: 16px; }
+      body[data-view="app"] .topbar { justify-content: center; padding: 16px; }
+      body[data-view="app"] .brand { flex-direction: row; gap: 14px; text-align: left; }
+      body[data-view="app"] .client img { height: 24px; }
+      .site-footer__inner { padding: 32px 16px; }
       body[data-view="app"] .brand img { height: 34px; }
       body[data-view="app"] .divider { width: 2px; height: auto; min-height: 34px; align-self: stretch; }
       body[data-view="app"] .tagline { font-size: 13px; }
@@ -679,11 +731,14 @@
   </style>
 </head>
 <body>
-  <header class="brand">
-    <img src="logo.png" alt="MoneyTalks">
-    <span class="divider" aria-hidden="true"></span>
-    <p class="tagline">Programa de<br>Bienestar Financiero</p>
-  </header>
+  <div class="topbar">
+    <header class="brand">
+      <img src="logo.png" alt="MoneyTalks">
+      <span class="divider" aria-hidden="true"></span>
+      <p class="tagline">Programa de<br>Bienestar Financiero</p>
+    </header>
+    <p class="client"><span class="client__label">Preparado para</span><img src="img/envases.webp" alt="Envases"></p>
+  </div>
 
   <main id="main">
     <section class="gate" id="gate">
@@ -715,6 +770,14 @@
       <article id="chapter" aria-live="polite"></article>
     </div>
   </main>
+
+  <footer class="site-footer" id="site-footer" hidden>
+    <div class="site-footer__band" aria-hidden="true"></div>
+    <div class="site-footer__inner">
+      <img src="img/envases-blanco.webp" alt="Envases">
+      <p><strong>Manual de Finanzas para No Financieros</strong><br>Programa de Bienestar Financiero de MoneyTalks para Envases</p>
+    </div>
+  </footer>
 
   <script src="casos.js"></script>
   <script>
@@ -1067,6 +1130,7 @@
       window.mtShowApp = function () {
         document.body.dataset.view = 'app';
         document.getElementById('app').hidden = false;
+        document.getElementById('site-footer').hidden = false;
         if (!built) build();
         fromHash();
       };
