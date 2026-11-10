@@ -8,18 +8,29 @@
   <link rel="icon" href="logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --bg: #f4f3f1;
+      --ink: #1f1f1f;
+      --muted: #6b6862;
+      --brand: #2c86c7;
+      --danger: #d93025;
+    }
     * { box-sizing: border-box; }
-    html, body { height: 100%; margin: 0; }
+    html, body { min-height: 100%; margin: 0; }
     body {
-      background: #f4f3f1;
-      color: #1f1f1f;
+      min-height: 100vh;
+      min-height: 100dvh;
+      background: var(--bg);
+      color: var(--ink);
       font-family: "Montserrat", system-ui, sans-serif;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 16px;
+      gap: 56px;
+      padding: 32px 16px;
     }
     .brand {
       display: flex;
@@ -35,7 +46,7 @@
       width: 2px;
       align-self: stretch;
       min-height: 64px;
-      background: #1f1f1f;
+      background: var(--ink);
     }
     .tagline {
       font-weight: 600;
@@ -43,19 +54,427 @@
       line-height: 1.35;
       margin: 0;
     }
+
+    /* ---------- Acceso con código ---------- */
+    .gate {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      text-align: center;
+      transition: opacity 400ms ease, transform 400ms ease;
+    }
+    .gate[data-leaving] { opacity: 0; transform: translateY(-8px); }
+    .gate__title {
+      margin: 0;
+      font-size: 15px;
+      font-weight: 600;
+    }
+    .gate__msg {
+      margin: 0;
+      min-height: 1.4em;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--muted);
+      transition: color 200ms ease;
+    }
+    .gate__msg[data-tone="error"] { color: var(--danger); }
+
+    .welcome {
+      text-align: center;
+      animation: welcome-in 500ms cubic-bezier(0.23, 1, 0.32, 1) both;
+    }
+    .welcome h1 { margin: 0 0 8px; font-size: 20px; font-weight: 600; }
+    .welcome p { margin: 0; font-size: 14px; font-weight: 500; color: var(--muted); }
+    @keyframes welcome-in {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: none; }
+    }
+
+    /* Basado en CodeSlots de React Bits (reactbits.dev), portado a JS + CSS sin dependencias */
+    .code-slots {
+      --cs-gap: 8px;
+      --cs-size: min(46px, calc((100vw - 32px - 8 * var(--cs-gap)) / 9));
+      --cs-height: calc(var(--cs-size) * 1.18);
+      --cs-radius: min(12px, calc(var(--cs-size) / 2));
+      --cs-font: calc(var(--cs-size) * 0.5);
+      --cs-pitch: calc(var(--cs-size) + var(--cs-gap));
+      --cs-slot: #e6e3de;
+      --cs-accent: var(--brand);
+      --cs-digit: #ffffff;
+      --cs-ease-spring: cubic-bezier(0.3, 1.35, 0.6, 1);
+      --cs-ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+      position: relative;
+      display: inline-block;
+    }
+    .code-slots__row {
+      position: relative;
+      display: inline-flex;
+      gap: var(--cs-gap);
+      cursor: text;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .code-slots__input {
+      position: absolute;
+      inset: 0;
+      z-index: 4;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      color: transparent;
+      caret-color: transparent;
+      font-size: 16px;
+      opacity: 0;
+      cursor: inherit;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+    .code-slots__slot {
+      position: relative;
+      width: var(--cs-size);
+      height: var(--cs-height);
+      border-radius: var(--cs-radius);
+      overflow: hidden;
+      background: var(--cs-slot);
+      transition: background-color 200ms ease;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    @media (hover: hover) and (pointer: fine) {
+      .code-slots__row[data-status="idle"]:hover .code-slots__slot:not([data-active]) {
+        background: color-mix(in srgb, var(--ink) 4%, var(--cs-slot));
+      }
+    }
+    .code-slots__slot[data-active] {
+      background: color-mix(in srgb, var(--ink) 9%, var(--cs-slot));
+    }
+    .code-slots__fill {
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: var(--cs-accent);
+      transform: scale(0);
+      transition: transform 300ms var(--cs-ease-out) var(--d, 0ms), background-color 200ms ease;
+    }
+    .code-slots__slot[data-filled] .code-slots__fill {
+      transform: scale(1);
+      transition-timing-function: var(--cs-ease-spring), ease;
+    }
+    .code-slots__digit {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      display: grid;
+      place-items: center;
+      color: var(--cs-digit);
+      font-size: var(--cs-font);
+      font-weight: 600;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: transform 300ms var(--cs-ease-out) var(--d, 0ms), opacity 300ms var(--cs-ease-out) var(--d, 0ms);
+    }
+    .code-slots__slot[data-filled] .code-slots__digit {
+      opacity: 1;
+      transform: translateY(0);
+      transition-timing-function: var(--cs-ease-spring), var(--cs-ease-out);
+    }
+    /* Error: las casillas se tiñen de rojo y se vacían en cascada */
+    .code-slots__row[data-status="error"] .code-slots__slot {
+      background: color-mix(in srgb, var(--danger) 18%, var(--cs-slot));
+    }
+    .code-slots__row[data-status="error"] .code-slots__fill { background: var(--danger); }
+    /* Éxito: los caracteres se hunden y una franja azul se abre desde el centro con la palomita */
+    .code-slots__row[data-status="success"] .code-slots__digit {
+      opacity: 0;
+      transform: translateY(calc(var(--cs-height) * 0.5));
+      transition: transform 300ms var(--cs-ease-out) var(--sd, 0ms), opacity 180ms ease var(--sd, 0ms);
+    }
+    .code-slots__wash {
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      display: grid;
+      place-items: center;
+      border-radius: var(--cs-radius);
+      background: var(--cs-accent);
+      color: var(--cs-digit);
+      pointer-events: none;
+      clip-path: inset(0 50% round var(--cs-radius));
+      transition: clip-path 300ms var(--cs-ease-out);
+    }
+    .code-slots__row[data-status="success"] .code-slots__wash {
+      clip-path: inset(0 0% round var(--cs-radius));
+    }
+    .code-slots__check {
+      display: grid;
+      place-items: center;
+      opacity: 0;
+      transform: translateY(8px) scale(0.85);
+      transition: transform 350ms var(--cs-ease-spring), opacity 250ms ease;
+    }
+    .code-slots__check svg { width: calc(var(--cs-size) * 0.6); height: calc(var(--cs-size) * 0.6); }
+    .code-slots__row[data-status="success"] .code-slots__check {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      transition-delay: 280ms;
+    }
+    .code-slots__caret {
+      position: absolute;
+      z-index: 3;
+      top: 25%;
+      left: calc(var(--cs-size) / 2 - 0.75px);
+      width: 1.5px;
+      height: 50%;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateX(calc(var(--a, 0) * var(--cs-pitch)));
+      transition: transform 260ms var(--cs-ease-out);
+    }
+    .code-slots__caret[data-show] { opacity: 1; }
+    .code-slots__caret-line {
+      display: block;
+      width: 100%;
+      height: 100%;
+      background: var(--ink);
+      animation: code-slots-blink 1s linear infinite;
+    }
+    @keyframes code-slots-blink {
+      0%, 49.9% { opacity: 1; }
+      50%, 100% { opacity: 0; }
+    }
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      margin: -1px;
+      padding: 0;
+      border: 0;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .code-slots *, .gate, .welcome {
+        transition-duration: 1ms !important;
+        animation: none !important;
+      }
+    }
     @media (max-width: 560px) {
+      body { gap: 44px; }
       .brand { flex-direction: column; gap: 18px; text-align: center; }
       .brand img { height: 52px; }
       .divider { width: 64px; height: 2px; min-height: 0; align-self: center; }
       .tagline { font-size: 18px; }
+      .code-slots { --cs-gap: 6px; }
     }
   </style>
 </head>
 <body>
-  <main class="brand">
+  <header class="brand">
     <img src="logo.png" alt="MoneyTalks">
     <span class="divider" aria-hidden="true"></span>
     <p class="tagline">Programa de<br>Bienestar Financiero</p>
+  </header>
+
+  <main id="main">
+    <section class="gate" id="gate">
+      <p class="gate__title" id="gate-title">Ingresa tu código de acceso</p>
+      <div class="code-slots">
+        <div class="code-slots__row" id="slots" data-status="idle">
+          <input class="code-slots__input" id="code-input" type="text" inputmode="text"
+                 autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false"
+                 maxlength="9" aria-labelledby="gate-title" aria-describedby="gate-status" autofocus>
+          <span class="code-slots__wash" aria-hidden="true">
+            <span class="code-slots__check">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 14l3.5 3.5L19 7"/></svg>
+            </span>
+          </span>
+          <span class="code-slots__caret" aria-hidden="true"><span class="code-slots__caret-line"></span></span>
+        </div>
+      </div>
+      <p class="gate__msg" id="gate-msg"></p>
+      <span class="sr-only" id="gate-status" aria-live="polite"></span>
+    </section>
+
+    <section class="welcome" id="welcome" hidden>
+      <h1>Manual de Finanzas para No Financieros</h1>
+      <p>Bienvenido. Ya tienes acceso al contenido.</p>
+    </section>
   </main>
+
+  <script>
+    (function () {
+      var LENGTH = 9;
+      // SHA-256 del código de acceso (no se guarda el código en texto plano)
+      var CODE_HASH = '0e883e13d45e6db7e51c9e9f1b0b810172c72381dcb757b921606d51a3be56f8';
+      var STORAGE_KEY = 'mt-manual-acceso';
+      var CASCADE = 20, SETTLE = 300;
+
+      var gate = document.getElementById('gate');
+      var welcome = document.getElementById('welcome');
+      var row = document.getElementById('slots');
+      var input = document.getElementById('code-input');
+      var caret = row.querySelector('.code-slots__caret');
+      var msg = document.getElementById('gate-msg');
+      var status = document.getElementById('gate-status');
+
+      function unlocked() {
+        try { return localStorage.getItem(STORAGE_KEY) === CODE_HASH; } catch (e) { return false; }
+      }
+      function showWelcome() {
+        gate.hidden = true;
+        welcome.hidden = false;
+      }
+      if (unlocked()) { showWelcome(); return; }
+
+      var slots = [], chars = [], active = 0, state = 'idle', focused = false;
+      for (var i = 0; i < LENGTH; i++) {
+        var s = document.createElement('span');
+        s.className = 'code-slots__slot';
+        s.setAttribute('aria-hidden', 'true');
+        s.innerHTML = '<span class="code-slots__fill"></span><span class="code-slots__digit"></span>';
+        s.style.setProperty('--sd', (60 + i * 30) + 'ms');
+        row.insertBefore(s, row.querySelector('.code-slots__wash'));
+        slots.push(s);
+        chars.push('');
+      }
+
+      function clean(raw) { return String(raw || '').toUpperCase().replace(/[^A-Z0-9]/g, ''); }
+      function firstEmpty() { var k = chars.indexOf(''); return k === -1 ? LENGTH - 1 : k; }
+      function render() {
+        slots.forEach(function (s, k) { s.toggleAttribute('data-active', focused && k === active && state === 'idle'); });
+        caret.style.setProperty('--a', active);
+        caret.toggleAttribute('data-show', focused && state === 'idle' && !chars[active]);
+        var n = chars.filter(Boolean).length;
+        status.textContent = state === 'success' ? 'Código aceptado' : n + ' de ' + LENGTH + ' caracteres';
+      }
+      function land(k, ch, delay) {
+        var s = slots[k];
+        s.style.setProperty('--d', delay + 'ms');
+        if (s.hasAttribute('data-filled')) { s.removeAttribute('data-filled'); void s.offsetWidth; }
+        s.querySelector('.code-slots__digit').textContent = ch;
+        s.setAttribute('data-filled', '');
+      }
+      function clearSlot(k, delay) {
+        slots[k].style.setProperty('--d', (delay || 0) + 'ms');
+        slots[k].removeAttribute('data-filled');
+        chars[k] = '';
+      }
+      function insert(raw, from) {
+        var c = clean(raw);
+        if (!c || state !== 'idle') return;
+        if (msg.dataset.tone) { msg.textContent = ''; delete msg.dataset.tone; }
+        var k = from === undefined ? active : from;
+        for (var j = 0; j < c.length && k < LENGTH; j++, k++) {
+          chars[k] = c[j];
+          land(k, c[j], j * CASCADE);
+        }
+        active = Math.min(k, LENGTH - 1);
+        render();
+        if (chars.every(Boolean)) verify(chars.join(''));
+      }
+
+      function sha256(text) {
+        return crypto.subtle.digest('SHA-256', new TextEncoder().encode(text)).then(function (buf) {
+          return Array.from(new Uint8Array(buf)).map(function (b) { return b.toString(16).padStart(2, '0'); }).join('');
+        });
+      }
+      function verify(code) {
+        state = 'checking';
+        render();
+        sha256(code).then(function (h) { h === CODE_HASH ? succeed() : fail(); }, fail);
+      }
+      function succeed() {
+        state = 'success';
+        row.dataset.status = 'success';
+        input.blur();
+        input.readOnly = true;
+        msg.textContent = '';
+        render();
+        try { localStorage.setItem(STORAGE_KEY, CODE_HASH); } catch (e) {}
+        setTimeout(function () {
+          gate.setAttribute('data-leaving', '');
+          setTimeout(showWelcome, 400);
+        }, 900);
+      }
+      function fail() {
+        state = 'error';
+        row.dataset.status = 'error';
+        msg.dataset.tone = 'error';
+        msg.textContent = 'Código incorrecto. Inténtalo de nuevo.';
+        render();
+        setTimeout(function () {
+          var filled = [];
+          chars.forEach(function (c, k) { if (c) filled.push(k); });
+          filled.reverse().forEach(function (k, n) { clearSlot(k, n * CASCADE); });
+          active = 0;
+          caret.style.setProperty('--a', 0);
+          setTimeout(function () {
+            state = 'idle';
+            row.dataset.status = 'idle';
+            render();
+          }, (filled.length - 1) * CASCADE + SETTLE);
+        }, 450);
+      }
+
+      input.addEventListener('keydown', function (e) {
+        if (state !== 'idle' || e.metaKey || e.ctrlKey || e.altKey) return;
+        var key = e.key;
+        if (/^[a-zA-Z0-9]$/.test(key)) {
+          e.preventDefault();
+          insert(key);
+        } else if (key === 'Backspace') {
+          e.preventDefault();
+          if (chars[active]) clearSlot(active);
+          else if (active > 0) { active -= 1; clearSlot(active); }
+          render();
+        } else if (key === 'Delete') {
+          e.preventDefault(); clearSlot(active); render();
+        } else if (key === 'ArrowLeft') {
+          e.preventDefault(); active = Math.max(active - 1, 0); render();
+        } else if (key === 'ArrowRight') {
+          e.preventDefault(); active = Math.min(active + 1, firstEmpty()); render();
+        } else if (key === 'Home') {
+          e.preventDefault(); active = 0; render();
+        } else if (key === 'End') {
+          e.preventDefault(); active = firstEmpty(); render();
+        }
+      });
+      // Teclados móviles (Android) no siempre reportan la tecla en keydown: se lee del input
+      input.addEventListener('input', function () {
+        var v = input.value;
+        input.value = '';
+        if (state !== 'idle') return;
+        var c = clean(v);
+        if (c) insert(c, c.length === 1 ? active : 0);
+      });
+      input.addEventListener('paste', function (e) {
+        e.preventDefault();
+        if (state === 'idle') insert(e.clipboardData.getData('text'), 0);
+      });
+      input.addEventListener('focus', function () { focused = true; render(); });
+      input.addEventListener('blur', function () { focused = false; render(); });
+      row.addEventListener('mousedown', function (e) {
+        e.preventDefault();
+        if (state === 'idle') {
+          var rect = row.getBoundingClientRect();
+          var pitch = rect.width / LENGTH;
+          var k = Math.floor((e.clientX - rect.left) / pitch);
+          active = Math.max(0, Math.min(k, firstEmpty()));
+        }
+        input.focus();
+        render();
+      });
+
+      render();
+    })();
+  </script>
 </body>
 </html>
