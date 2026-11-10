@@ -313,6 +313,94 @@
       line-height: 1.7;
       color: #2b2a27;
     }
+    .case-body--wide { max-width: none; }
+    .case-hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 28px;
+      align-items: center;
+    }
+    .case-logos {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      min-width: 200px;
+      min-height: 120px;
+      padding: 20px 26px;
+      background: #ffffff;
+      border: 1px solid #e7e3dc;
+      border-radius: 18px;
+      box-shadow: 0 1px 2px rgba(31, 31, 31, 0.04), 0 8px 24px -12px rgba(31, 31, 31, 0.12);
+      animation: logo-in 500ms cubic-bezier(0.23, 1, 0.32, 1) 120ms both;
+    }
+    .case-logos img {
+      display: block;
+      width: auto;
+      height: auto;
+      max-width: 170px;
+      max-height: 72px;
+      object-fit: contain;
+    }
+    .case-logos[data-count="2"] img { max-width: 120px; max-height: 56px; }
+    .case-logos__sep { font-size: 13px; font-weight: 600; color: var(--muted); }
+    @keyframes logo-in {
+      from { opacity: 0; transform: translateY(6px) scale(0.98); }
+      to { opacity: 1; transform: none; }
+    }
+    .logo-wall { margin-top: 28px; }
+    .logo-wall__title {
+      margin: 0 0 12px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .logo-wall__grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(128px, 1fr));
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    .logo-wall__grid li { animation: logo-in 450ms cubic-bezier(0.23, 1, 0.32, 1) both; animation-delay: calc(var(--i) * 35ms); }
+    .logo-wall__tile {
+      position: relative;
+      display: grid;
+      place-items: center;
+      height: 92px;
+      padding: 14px 16px 22px;
+      background: #ffffff;
+      border: 1px solid #e7e3dc;
+      border-radius: 14px;
+      transition: transform 200ms cubic-bezier(0.23, 1, 0.32, 1), border-color 200ms ease, box-shadow 200ms ease;
+    }
+    .logo-wall__tile img {
+      display: block;
+      width: auto;
+      height: auto;
+      max-width: 88%;
+      max-height: 44px;
+      object-fit: contain;
+    }
+    .logo-wall__cap {
+      position: absolute;
+      left: 10px;
+      bottom: 6px;
+      font-size: 10.5px;
+      font-weight: 600;
+      color: var(--muted);
+    }
+    @media (hover: hover) and (pointer: fine) {
+      .logo-wall__tile:hover {
+        transform: translateY(-2px);
+        border-color: color-mix(in srgb, var(--brand) 45%, #e7e3dc);
+        box-shadow: 0 10px 24px -14px rgba(44, 134, 199, 0.45);
+      }
+    }
+    .logo-wall__tile:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
     .case-body > p { margin: 0 0 14px; }
     .case-body > p:last-child { margin-bottom: 0; }
     .case-head {
@@ -395,6 +483,10 @@
     @media (max-width: 860px) {
       .app { grid-template-columns: minmax(0, 1fr); gap: 32px; padding: 24px 16px 72px; }
       .app__nav { position: static; max-height: none; overflow: visible; }
+      .case-hero { grid-template-columns: minmax(0, 1fr); gap: 18px; }
+      .case-logos { order: -1; justify-self: start; min-width: 0; min-height: 96px; padding: 16px 20px; }
+      .case-logos img { max-width: 150px; max-height: 60px; }
+      .logo-wall__grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
     }
 
     /* Basado en CodeSlots de React Bits (reactbits.dev), portado a JS + CSS sin dependencias */
@@ -567,7 +659,7 @@
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .code-slots *, .gate, .app, .chapter, .branched-menu * {
+      .code-slots *, .gate, .app, .chapter, .branched-menu *, .case-logos, .logo-wall *, .logo-wall__grid li {
         transition-duration: 1ms !important;
         animation: none !important;
       }
@@ -788,6 +880,58 @@
         });
         article.appendChild(wrap);
       }
+      // Logos de las empresas de cada caso (img/logos)
+      var LOGOS = {
+        1: [['bimbo', 'Grupo Bimbo']],
+        2: [['walmex', 'Walmart de México y Centroamérica'], ['ferrari', 'Ferrari']],
+        3: [['cemex', 'Cemex'], ['airbnb', 'Airbnb']],
+        4: [['amazon', 'Amazon']],
+        5: [['liverpool', 'El Puerto de Liverpool']],
+        6: [['volaris', 'Volaris']],
+        7: [['kimberly', 'Kimberly-Clark de México']],
+        8: [['mercadolibre', 'Mercado Libre']],
+        9: [['toyota', 'Toyota']],
+        10: [['alsea', 'Alsea']],
+        11: [['chedraui', 'Chedraui'], ['soriana', 'Soriana']],
+        12: [['aeromexico', 'Aeroméxico']],
+        13: [['bmw', 'BMW Group']],
+        14: [['apple', 'Apple']],
+        15: [['tiendas3b', 'Tiendas 3B']],
+        16: [['gruma', 'Gruma']]
+      };
+      function logoImg(l, loading) {
+        var img = el('img');
+        img.src = 'img/logos/' + l[0] + '.webp';
+        img.alt = 'Logo de ' + l[1];
+        img.loading = loading || 'lazy';
+        img.decoding = 'async';
+        return img;
+      }
+      function logoWall() {
+        var wall = el('div', 'logo-wall');
+        wall.appendChild(el('p', 'logo-wall__title', 'Las empresas de estos casos'));
+        var grid = el('ul', 'logo-wall__grid');
+        var n = 0;
+        Object.keys(LOGOS).forEach(function (cap) {
+          LOGOS[cap].forEach(function (l) {
+            var li = el('li');
+            li.style.setProperty('--i', n++);
+            var a = el('a', 'logo-wall__tile');
+            a.href = '#cap-' + cap;
+            a.setAttribute('aria-label', l[1] + ', capítulo ' + cap);
+            a.appendChild(logoImg(l));
+            a.appendChild(el('span', 'logo-wall__cap', 'Cap. ' + cap));
+            a.addEventListener('click', function (e) {
+              e.preventDefault();
+              select(Number(cap), 'encabezado', true);
+            });
+            li.appendChild(a);
+            grid.appendChild(li);
+          });
+        });
+        wall.appendChild(grid);
+        return wall;
+      }
       function el(tag, cls, text) {
         var e = document.createElement(tag);
         if (cls) e.className = cls;
@@ -797,6 +941,9 @@
       function renderSection(i, data, id) {
         var box = el('div', 'case-body');
         if (id === 'encabezado') {
+          box.className = 'case-body case-body--wide';
+          var hero = el('div', 'case-hero');
+          var info = el('div', 'case-hero__info');
           var dl = el('dl', 'case-head');
           [['Capítulo', i + ' · ' + CHAPTERS[i]], ['Empresa', data.empresa]].forEach(function (pair) {
             var row = el('div');
@@ -804,8 +951,21 @@
             row.appendChild(el('dd', null, pair[1]));
             dl.appendChild(row);
           });
-          box.appendChild(dl);
-          box.appendChild(el('p', 'case-head__title', data.title));
+          info.appendChild(dl);
+          info.appendChild(el('p', 'case-head__title', data.title));
+          hero.appendChild(info);
+          var logos = LOGOS[i];
+          if (logos) {
+            var card = el('div', 'case-logos');
+            if (logos.length > 1) card.dataset.count = logos.length;
+            logos.forEach(function (l, k) {
+              if (k > 0) card.appendChild(el('span', 'case-logos__sep', 'y'));
+              card.appendChild(logoImg(l, 'eager'));
+            });
+            hero.appendChild(card);
+          }
+          box.appendChild(hero);
+          if (i === 0) box.appendChild(logoWall());
           return box;
         }
         var blocks = data.sections[id];
