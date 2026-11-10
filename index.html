@@ -41,24 +41,8 @@
     }
     .topbar {
       display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 26px;
+      justify-content: center;
     }
-    .client {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin: 0;
-    }
-    .client__label {
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--env-gray);
-    }
-    .client img { display: block; height: 30px; width: auto; }
     .site-footer {
       background: var(--env-ink);
       color: #d9d9d9;
@@ -77,27 +61,30 @@
     .site-footer p { margin: 0; font-size: 13px; font-weight: 500; line-height: 1.6; }
     .site-footer strong { color: #ffffff; font-weight: 600; }
     .site-footer__band { height: 6px; background: linear-gradient(90deg, var(--env-red) 0%, var(--env-red-dark) 100%); }
+    /* Los tres elementos (MoneyTalks, lema y Envases) ocupan el mismo ancho */
     .brand {
-      display: flex;
+      --bw: 210px;
+      display: grid;
+      grid-template-columns: var(--bw) auto var(--bw) auto var(--bw);
       align-items: center;
-      gap: 28px;
+      justify-items: center;
+      gap: calc(var(--bw) * 0.13);
     }
-    .brand img {
-      height: 64px;
-      width: auto;
-      display: block;
-    }
+    .brand__logo { display: block; width: var(--bw); height: auto; }
+    /* El bloque rojo de Envases pesa más a la vista: se compensa con un ancho menor */
+    .brand__logo--envases { width: calc(var(--bw) * 0.84); }
     .divider {
       width: 2px;
-      align-self: stretch;
-      min-height: 64px;
+      height: calc(var(--bw) * 0.3);
       background: var(--ink);
     }
     .tagline {
-      font-weight: 600;
-      font-size: 22px;
-      line-height: 1.35;
       margin: 0;
+      font-weight: 600;
+      font-size: calc(var(--bw) / 10);
+      line-height: 1.3;
+      white-space: nowrap;
+      text-align: left;
     }
 
     /* ---------- Acceso con código ---------- */
@@ -131,19 +118,11 @@
       padding: 0;
     }
     body[data-view="app"] .topbar {
-      flex-direction: row;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      gap: 14px 24px;
-      padding: 20px max(24px, calc((100% - 1112px) / 2));
+      padding: 18px 24px;
       border-bottom: 1px solid #e2ded7;
       background: #f7f6f4;
     }
-    body[data-view="app"] .brand { gap: 20px; }
-    body[data-view="app"] .client img { height: 28px; }
-    body[data-view="app"] .brand img { height: 44px; }
-    body[data-view="app"] .divider { min-height: 44px; }
-    body[data-view="app"] .tagline { font-size: 16px; }
+    body[data-view="app"] .brand { --bw: 150px; }
     .app {
       display: grid;
       grid-template-columns: 320px minmax(0, 1fr);
@@ -979,29 +958,31 @@
     }
     @media (max-width: 560px) {
       body { gap: 44px; }
-      .brand { flex-direction: column; gap: 18px; text-align: center; }
-      .brand img { height: 52px; }
-      .divider { width: 64px; height: 2px; min-height: 0; align-self: center; }
-      .tagline { font-size: 18px; }
+      .brand { --bw: 190px; grid-template-columns: var(--bw); gap: 18px; }
+      .divider { width: 56px; height: 2px; }
+      .tagline { text-align: center; }
       .code-slots { --cs-gap: 6px; }
-      body[data-view="app"] .topbar { justify-content: center; padding: 16px; }
-      body[data-view="app"] .brand { flex-direction: row; gap: 14px; text-align: left; }
-      body[data-view="app"] .client img { height: 24px; }
+      body[data-view="app"] .topbar { padding: 14px 12px; }
+      body[data-view="app"] .brand {
+        --bw: min(96px, calc((100vw - 24px - 4px - 40px) / 3));
+        grid-template-columns: var(--bw) auto var(--bw) auto var(--bw);
+        gap: 10px;
+      }
+      body[data-view="app"] .divider { width: 1.5px; height: calc(var(--bw) * 0.34); }
+      body[data-view="app"] .tagline { text-align: left; }
       .site-footer__inner { padding: 32px 16px; }
-      body[data-view="app"] .brand img { height: 34px; }
-      body[data-view="app"] .divider { width: 2px; height: auto; min-height: 34px; align-self: stretch; }
-      body[data-view="app"] .tagline { font-size: 13px; }
     }
   </style>
 </head>
 <body>
   <div class="topbar">
     <header class="brand">
-      <img src="logo.png" alt="MoneyTalks">
+      <img class="brand__logo" src="logo.png" alt="MoneyTalks">
       <span class="divider" aria-hidden="true"></span>
       <p class="tagline">Programa de<br>Bienestar Financiero</p>
+      <span class="divider" aria-hidden="true"></span>
+      <img class="brand__logo brand__logo--envases" src="img/envases.webp" alt="Envases">
     </header>
-    <p class="client"><span class="client__label">Preparado para</span><img src="img/envases.webp" alt="Envases"></p>
   </div>
 
   <main id="main">
