@@ -155,6 +155,164 @@
     }
     @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
 
+    /* Guía de uso */
+    .help-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin: -4px 0 16px;
+      padding: 4px 0;
+      border: 0;
+      background: none;
+      color: var(--brand);
+      font: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .help-link:hover { text-decoration: underline; text-underline-offset: 3px; }
+    .help-link:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; border-radius: 4px; }
+    .guide {
+      position: fixed;
+      inset: 0;
+      z-index: 60;
+      display: grid;
+      place-items: center;
+      padding: 16px;
+    }
+    .guide__scrim {
+      position: absolute;
+      inset: 0;
+      background: rgba(38, 38, 38, 0.55);
+      animation: fade-in 250ms ease both;
+    }
+    .guide__card {
+      position: relative;
+      width: min(100%, 460px);
+      max-height: calc(100dvh - 32px);
+      overflow-y: auto;
+      padding: 22px 26px 22px;
+      background: var(--bg);
+      border-top: 5px solid var(--env-red);
+      border-radius: 18px;
+      box-shadow: 0 24px 60px -20px rgba(0, 0, 0, 0.45);
+      display: flex;
+      flex-direction: column;
+      min-height: min(440px, calc(100dvh - 32px));
+      animation: guide-in 420ms cubic-bezier(0.23, 1, 0.32, 1) both;
+    }
+    @keyframes guide-in {
+      from { opacity: 0; transform: translateY(14px) scale(0.98); }
+      to { opacity: 1; transform: none; }
+    }
+    .guide__top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .guide__count { font-size: 12px; font-weight: 600; color: var(--muted); letter-spacing: 0.04em; }
+    .guide__skip {
+      padding: 6px 2px;
+      border: 0;
+      background: none;
+      color: var(--muted);
+      font: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .guide__skip:hover { color: var(--ink); }
+    .guide__step { animation: guide-step 320ms cubic-bezier(0.23, 1, 0.32, 1) both; }
+    @keyframes guide-step {
+      from { opacity: 0; transform: translateX(10px); }
+      to { opacity: 1; transform: none; }
+    }
+    .guide__step h3 { margin: 6px 0 10px; font-size: 21px; font-weight: 600; line-height: 1.3; }
+    .guide__step p { margin: 0 0 10px; font-size: 15px; font-weight: 500; line-height: 1.6; color: #2b2a27; }
+    .guide__hint { font-size: 13.5px !important; color: var(--muted) !important; }
+    .guide__art {
+      display: grid;
+      place-items: center;
+      height: 128px;
+      margin-bottom: 8px;
+      background: #ffffff;
+      border: 1px solid #e7e3dc;
+      border-radius: 14px;
+    }
+    .guide__art--logos {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      padding: 0 18px;
+    }
+    .guide__art--logos img { max-width: 100%; max-height: 40px; justify-self: center; }
+    .guide__art--start span {
+      display: grid;
+      place-items: center;
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: var(--env-red);
+      color: #fff;
+      font-size: 34px;
+      font-weight: 600;
+    }
+    .guide__parts {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px 16px;
+      margin: 4px 0 14px;
+      padding-left: 1.3em;
+      font-size: 14.5px;
+      font-weight: 600;
+    }
+    .guide__parts li::marker { color: var(--brand); }
+    .guide__nav {
+      margin-top: auto !important;
+      padding-top: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 14px;
+    }
+    .guide__dots { display: flex; gap: 6px; }
+    .guide__dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 4px;
+      background: #d6d1c9;
+      transition: width 250ms cubic-bezier(0.23, 1, 0.32, 1), background-color 200ms ease;
+    }
+    .guide__dot[data-on] { width: 20px; background: var(--env-red); }
+    .guide__buttons { display: flex; gap: 8px; }
+    .guide__btn {
+      min-height: 42px;
+      padding: 0 20px;
+      border: 0;
+      border-radius: 12px;
+      background: var(--env-ink);
+      color: #fff;
+      font: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 200ms ease;
+    }
+    .guide__btn:hover { background: var(--env-red); }
+    .guide__btn--ghost { background: #e9e6e1; color: var(--ink); }
+    .guide__btn--ghost:hover { background: #dedad3; }
+    .guide__btn:focus-visible, .guide__skip:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+    body[data-guide-open] { overflow: hidden; }
+    .only-mobile { display: none; }
+    @media (max-width: 860px) {
+      .only-mobile { display: block; }
+      .only-desktop { display: none; }
+      .guide { place-items: end center; padding: 0; }
+      .guide__card { width: 100%; max-height: 92dvh; border-radius: 20px 20px 0 0; padding: 20px 20px calc(20px + env(safe-area-inset-bottom)); }
+      .guide__parts { grid-template-columns: 1fr; }
+    }
+
     /* Botón de índice y panel lateral (solo celular) */
     .nav-toggle, .nav-close, .nav-scrim { display: none; }
     .app > * { min-width: 0; }
@@ -814,7 +972,7 @@
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .code-slots *, .gate, .app, .chapter, .branched-menu *, .case-logos, .logo-wall *, .logo-wall__grid li {
+      .code-slots *, .gate, .app, .chapter, .branched-menu *, .case-logos, .logo-wall *, .logo-wall__grid li, .guide *, .guide__card {
         transition-duration: 1ms !important;
         animation: none !important;
       }
@@ -879,7 +1037,13 @@
       <div class="nav-scrim" id="nav-scrim" aria-hidden="true"></div>
       <aside class="app__nav" id="app-nav" aria-label="Índice del manual">
         <div class="app__nav-head">
-          <p class="app__nav-title">Manual de Finanzas para No Financieros</p>
+          <div>
+            <p class="app__nav-title">Manual de Finanzas para No Financieros</p>
+            <button type="button" class="help-link" data-open-guide>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.3a2.5 2.5 0 0 1 4.8.9c0 1.7-2.4 2.2-2.4 3.6"/><path d="M12 17.2h.01"/></svg>
+              ¿Cómo funciona?
+            </button>
+          </div>
           <button type="button" class="nav-close" id="nav-close" aria-label="Cerrar índice">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
           </button>
@@ -900,9 +1064,77 @@
     </div>
   </footer>
 
+  <div class="guide" id="guide" role="dialog" aria-modal="true" aria-labelledby="guide-title" hidden>
+    <div class="guide__scrim"></div>
+    <div class="guide__card">
+      <div class="guide__top">
+        <span class="guide__count"></span>
+        <button type="button" class="guide__skip" data-guide="skip">Saltar guía</button>
+      </div>
+      <h2 class="sr-only" id="guide-title">Cómo funciona esta página</h2>
+
+      <section class="guide__step">
+        <div class="guide__art guide__art--logos" aria-hidden="true">
+          <img src="img/logos/bimbo.webp" alt=""><img src="img/logos/amazon.webp" alt=""><img src="img/logos/volaris.webp" alt=""><img src="img/logos/apple.webp" alt="">
+        </div>
+        <h3>Bienvenido al manual en línea</h3>
+        <p>Aquí encontrarás un caso de una empresa real para cada capítulo de tu manual <strong>Finanzas para No Financieros</strong>. Cada caso muestra cómo las ideas del libro se ven en empresas que conoces.</p>
+      </section>
+
+      <section class="guide__step" hidden>
+        <div class="guide__art" aria-hidden="true">
+          <svg viewBox="0 0 220 110" width="220" height="110" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 8 V96" stroke="#d6d1c9" stroke-width="2.5"/>
+            <path d="M20 8 V22" stroke="#aa1124" stroke-width="2.5"/>
+            <rect x="34" y="12" width="120" height="10" rx="5" fill="#262626"/>
+            <path d="M44 30 V82" stroke="#d6d1c9" stroke-width="1.6"/>
+            <path d="M44 30 V52 a8 8 0 0 0 8 8 H66" stroke="#aa1124" stroke-width="1.8"/>
+            <rect x="72" y="36" width="80" height="7" rx="3.5" fill="#cfcac2"/>
+            <rect x="72" y="56" width="96" height="7" rx="3.5" fill="#aa1124"/>
+            <rect x="72" y="76" width="70" height="7" rx="3.5" fill="#cfcac2"/>
+            <rect x="34" y="94" width="104" height="10" rx="5" fill="#cfcac2"/>
+          </svg>
+        </div>
+        <h3>Muévete con el índice</h3>
+        <p class="only-desktop">El índice está a la izquierda. Toca un capítulo para desplegar sus secciones y elige la que quieras leer.</p>
+        <p class="only-mobile">Toca el botón <strong>Índice</strong> en la parte de arriba. Elige un capítulo para desplegar sus secciones y toca la que quieras leer.</p>
+      </section>
+
+      <section class="guide__step" hidden>
+        <h3>Cada caso tiene 7 partes</h3>
+        <ol class="guide__parts">
+          <li>Encabezado</li>
+          <li>La historia</li>
+          <li>Los números clave</li>
+          <li>Qué tiene que ver con tu manual</li>
+          <li>Para pensar</li>
+          <li>En una planta de latas</li>
+          <li>Fuentes</li>
+        </ol>
+        <p>Puedes leerlo completo de arriba abajo o saltar directo a la parte que te interese.</p>
+      </section>
+
+      <section class="guide__step" hidden>
+        <div class="guide__art guide__art--start" aria-hidden="true"><span>0</span></div>
+        <h3>Empieza por el capítulo 0</h3>
+        <p>Ahí están todas las empresas de los casos. Toca cualquier logo para ir directo a su capítulo.</p>
+        <p class="guide__hint">Si necesitas volver a ver esta guía, búscala en el índice como «¿Cómo funciona?».</p>
+      </section>
+
+      <div class="guide__nav">
+        <div class="guide__dots" aria-hidden="true"></div>
+        <div class="guide__buttons">
+          <button type="button" class="guide__btn guide__btn--ghost" data-guide="back" hidden>Atrás</button>
+          <button type="button" class="guide__btn" data-guide="next">Siguiente</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script src="casos.js"></script>
   <script>
     // Menú de capítulos y casos de cada uno
+    if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
     (function () {
       var CHAPTERS = [
         'Todos tomamos decisiones financieras',
@@ -1233,7 +1465,7 @@
         placeMarker(true);
         var cur = document.getElementById('nav-current');
         if (cur) cur.textContent = 'Cap. ' + i + ' · ' + CHAPTERS[i];
-        var hash = '#cap-' + value;
+        var hash = '#cap-' + i;
         if (location.hash !== hash) history.replaceState(null, '', hash);
         if (scroll) {
           var target = document.getElementById('cap-' + value);
@@ -1243,11 +1475,11 @@
         }
       }
       function fromHash() {
-        var m = /^#cap-(\d+)(?:-([a-z]+))?$/.exec(location.hash);
+        var m = /^#cap-(\d+)/.exec(location.hash);
         var i = m ? Number(m[1]) : 0;
-        var sid = m && m[2] ? m[2] : 'encabezado';
-        if (!(i >= 0 && i < CHAPTERS.length) || !SECTIONS.some(function (s) { return s.id === sid; })) { i = 0; sid = 'encabezado'; }
-        select(i, sid, !!m && sid !== 'encabezado');
+        if (!(i >= 0 && i < CHAPTERS.length)) i = 0;
+        select(i, 'encabezado', false);
+        window.scrollTo(0, 0);
       }
 
       // Índice como panel lateral en celular
@@ -1274,12 +1506,74 @@
       document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeNav(true); });
       mobileNav.addEventListener('change', function () { closeNav(false); });
 
+      // Guía de uso: aparece la primera vez que se entra desde un dispositivo
+      var GUIDE_KEY = 'mt-guia-vista';
+      var guide = document.getElementById('guide');
+      var guideSteps = guide.querySelectorAll('.guide__step');
+      var guideDots = guide.querySelector('.guide__dots');
+      var guideStep = 0, guideReturn = null;
+      guideSteps.forEach(function (_, k) {
+        var d = el('span', 'guide__dot');
+        guideDots.appendChild(d);
+      });
+      function showGuideStep(k) {
+        guideStep = k;
+        guideSteps.forEach(function (st, n) {
+          st.hidden = n !== k;
+        });
+        guideDots.querySelectorAll('.guide__dot').forEach(function (d, n) { d.toggleAttribute('data-on', n === k); });
+        guide.querySelector('.guide__count').textContent = (k + 1) + ' de ' + guideSteps.length;
+        guide.querySelector('[data-guide="back"]').hidden = k === 0;
+        var last = k === guideSteps.length - 1;
+        guide.querySelector('[data-guide="next"]').textContent = last ? 'Comenzar' : 'Siguiente';
+        guide.querySelector('[data-guide="skip"]').hidden = last;
+      }
+      function openGuide() {
+        guideReturn = document.activeElement;
+        closeNav(false);
+        showGuideStep(0);
+        guide.hidden = false;
+        document.body.setAttribute('data-guide-open', '');
+        setTimeout(function () { guide.querySelector('[data-guide="next"]').focus(); }, 50);
+      }
+      function closeGuide() {
+        guide.hidden = true;
+        document.body.removeAttribute('data-guide-open');
+        try { localStorage.setItem(GUIDE_KEY, '1'); } catch (e) {}
+        if (guideReturn && guideReturn.focus && document.body.contains(guideReturn)) guideReturn.focus();
+      }
+      guide.querySelector('[data-guide="next"]').addEventListener('click', function () {
+        if (guideStep < guideSteps.length - 1) showGuideStep(guideStep + 1);
+        else { closeGuide(); select(0, 'encabezado', false); window.scrollTo(0, 0); }
+      });
+      guide.querySelector('[data-guide="back"]').addEventListener('click', function () { showGuideStep(Math.max(0, guideStep - 1)); });
+      guide.querySelector('[data-guide="skip"]').addEventListener('click', closeGuide);
+      guide.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') { e.stopPropagation(); closeGuide(); }
+        if (e.key === 'Tab') {
+          var f = Array.from(guide.querySelectorAll('button')).filter(function (b) { return !b.hidden && b.offsetParent !== null; });
+          if (!f.length) return;
+          if (e.shiftKey && document.activeElement === f[0]) { e.preventDefault(); f[f.length - 1].focus(); }
+          else if (!e.shiftKey && document.activeElement === f[f.length - 1]) { e.preventDefault(); f[0].focus(); }
+        }
+      });
+      document.querySelectorAll('[data-open-guide]').forEach(function (b) { b.addEventListener('click', openGuide); });
+
       window.mtShowApp = function () {
         document.body.dataset.view = 'app';
         document.getElementById('app').hidden = false;
         document.getElementById('site-footer').hidden = false;
         if (!built) build();
-        fromHash();
+        var seen = false;
+        try { seen = localStorage.getItem(GUIDE_KEY) === '1'; } catch (e) {}
+        if (seen) {
+          fromHash();
+        } else {
+          // Primera vez en este dispositivo: capítulo 0 y guía de uso
+          select(0, 'encabezado', false);
+          window.scrollTo(0, 0);
+          openGuide();
+        }
       };
     })();
   </script>
