@@ -742,7 +742,6 @@
       var LENGTH = 9;
       // SHA-256 del código de acceso (no se guarda el código en texto plano)
       var CODE_HASH = '0e883e13d45e6db7e51c9e9f1b0b810172c72381dcb757b921606d51a3be56f8';
-      var STORAGE_KEY = 'mt-manual-acceso';
       var CASCADE = 20, SETTLE = 300;
 
       var gate = document.getElementById('gate');
@@ -752,14 +751,12 @@
       var msg = document.getElementById('gate-msg');
       var status = document.getElementById('gate-status');
 
-      function unlocked() {
-        try { return localStorage.getItem(STORAGE_KEY) === CODE_HASH; } catch (e) { return false; }
-      }
+      // El código se pide en cada visita: se borra el acceso que guardaban versiones anteriores
+      try { localStorage.removeItem('mt-manual-acceso'); } catch (e) {}
       function showWelcome() {
         gate.hidden = true;
         window.mtShowApp();
       }
-      if (unlocked()) { showWelcome(); return; }
 
       var slots = [], chars = [], active = 0, state = 'idle', focused = false;
       for (var i = 0; i < LENGTH; i++) {
@@ -825,7 +822,6 @@
         input.readOnly = true;
         msg.textContent = '';
         render();
-        try { localStorage.setItem(STORAGE_KEY, CODE_HASH); } catch (e) {}
         setTimeout(function () {
           gate.setAttribute('data-leaving', '');
           setTimeout(showWelcome, 400);
