@@ -704,6 +704,14 @@
       line-height: 1.55;
       color: var(--muted);
     }
+    .case-body strong { font-weight: 600; color: var(--ink); }
+    .case-list, .case-bullets {
+      margin: 0 0 14px;
+      padding-left: 1.4em;
+    }
+    .case-list li, .case-bullets li { margin: 0 0 10px; padding-left: 4px; }
+    .case-list li::marker { font-weight: 600; color: var(--brand); }
+    .case-bullets li::marker { color: var(--brand); }
     .case-questions {
       margin: 0;
       padding-left: 1.4em;
@@ -1887,6 +1895,16 @@
         wall.appendChild(grid);
         return wall;
       }
+      // Texto con negritas e itálicas: cada bloque trae tramos [texto, 'b' | 'i' | '']
+      function rich(node, b) {
+        if (!b.runs) { node.textContent = b.text; return node; }
+        b.runs.forEach(function (r) {
+          if (r[1] === 'b') node.appendChild(el('strong', null, r[0]));
+          else if (r[1] === 'i') node.appendChild(el('em', null, r[0]));
+          else node.appendChild(document.createTextNode(r[0]));
+        });
+        return node;
+      }
       function el(tag, cls, text) {
         var e = document.createElement(tag);
         if (cls) e.className = cls;
@@ -1951,18 +1969,24 @@
           box.appendChild(icon);
           var txt = el('div');
           txt.appendChild(el('span', 'case-cans__label', 'Envases · Planta de latas'));
-          blocks.forEach(function (b) { txt.appendChild(el('p', null, b.text)); });
+          blocks.forEach(function (b) { txt.appendChild(rich(el('p'), b)); });
           box.appendChild(txt);
           return box;
         }
-        var list = null;
+        var list = null, listType = null;
         blocks.forEach(function (b) {
-          if (b.type === 'item') {
-            if (!list) { list = el('ol', 'case-questions'); box.appendChild(list); }
-            list.appendChild(el('li', null, b.text));
+          if (b.type === 'item' || b.type === 'bullet') {
+            if (!list || listType !== b.type) {
+              listType = b.type;
+              list = b.type === 'item'
+                ? el('ol', id === 'pensar' ? 'case-questions' : 'case-list')
+                : el('ul', 'case-bullets');
+              box.appendChild(list);
+            }
+            list.appendChild(rich(el('li'), b));
             return;
           }
-          list = null;
+          list = null; listType = null;
           if (b.type === 'table') {
             var scroller = el('div', 'case-table');
             scroller.tabIndex = 0;
@@ -1990,7 +2014,7 @@
           } else if (b.type === 'note') {
             box.appendChild(el('p', 'case-note', b.text));
           } else {
-            box.appendChild(el('p', null, b.text));
+            box.appendChild(rich(el('p'), b));
           }
         });
         return box;
