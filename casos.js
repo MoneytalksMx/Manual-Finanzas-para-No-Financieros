@@ -11,19 +11,19 @@ window.MT_CASES = [
    "historia": [
     {
      "type": "p",
-     "text": "Tu manual explica las finanzas con NEXO, una fábrica de playeras que no existe. Aquí vamos a hacer lo mismo, pero con empresas que sí existen y que seguro conoces: el súper donde compras la despensa, la aerolínea en la que has volado, la marca del pan que hay en tu cocina."
+     "text": "Tu manual explica las finanzas con NEXO, una fábrica de playeras que no existe. Aquí vamos a hacer lo mismo, pero con empresas que sí existen y que seguro conoces: El súper donde compras la despensa, la aerolínea en la que has volado, la marca del pan que hay en tu cocina."
     },
     {
      "type": "p",
-     "text": "Todas cotizan en bolsa, así que están obligadas a publicar sus resultados cada trimestre. Cualquiera puede abrir esos reportes. Nosotros los usamos para algo muy concreto: tomar una decisión de la empresa (abrir tiendas, construir un centro de distribución, recortar un plan de producción) y buscar dónde quedó en sus números."
+     "text": "Todas cotizan en bolsa, así que están obligadas a publicar sus resultados cada trimestre. Cualquiera puede abrir esos reportes. Nosotros los usamos para algo muy concreto: Tomar una decisión de la empresa (abrir tiendas, construir un centro de distribución, recortar un plan de producción) y buscar dónde quedó en sus números."
     },
     {
      "type": "p",
-     "text": "Ojo: no venimos a juzgar a nadie. Que una utilidad baje no significa que alguien se equivocó. Que suba tampoco significa que todo se hizo bien. Lo que nos interesa es la conexión entre lo que la empresa hizo y lo que sus números cuentan después."
+     "text": "Ojo: No venimos a juzgar a nadie. Que una utilidad baje no significa que alguien se equivocó. Que suba tampoco significa que todo se hizo bien. Lo que nos interesa es la conexión entre lo que la empresa hizo y lo que sus números cuentan después."
     },
     {
      "type": "p",
-     "text": "Todos los casos se leen igual: la historia, los números clave, la relación con tu manual, unas preguntas para pensar y las fuentes. Si un dato no apareció en una fuente pública, te lo decimos. Si una cifra es un cálculo hecho con datos de la empresa, también."
+     "text": "Todos los casos se leen igual: La historia, los números clave, la relación con tu manual, unas preguntas para pensar y las fuentes. Si un dato no apareció en una fuente pública, te lo decimos. Si una cifra es un cálculo hecho con datos de la empresa, también."
     }
    ],
    "numeros": [
@@ -121,7 +121,7 @@ window.MT_CASES = [
    "manual": [
     {
      "type": "p",
-     "text": "El capítulo 0 arranca con una idea: todos tomamos decisiones financieras, aunque no trabajemos en Finanzas. Víctor no lleva la contabilidad de NEXO, pero decide cuántas personas entran a un turno, cuándo se para una máquina y cuánta tela se pide. Cada una de esas decisiones termina en una cifra. En estas empresas pasa igual, solo que a otra escala: detrás de cada número publicado hay personas operando plantas, tiendas, aviones y almacenes."
+     "text": "El capítulo 0 arranca con una idea: Todos tomamos decisiones financieras, aunque no trabajemos en Finanzas. Víctor no lleva la contabilidad de NEXO, pero decide cuántas personas entran a un turno, cuándo se para una máquina y cuánta tela se pide. Cada una de esas decisiones termina en una cifra. En estas empresas pasa igual, solo que a otra escala: Detrás de cada número publicado hay personas operando plantas, tiendas, aviones y almacenes."
     }
    ],
    "pensar": [
@@ -145,7 +145,7 @@ window.MT_CASES = [
    "latas": [
     {
      "type": "p",
-     "text": "En una planta de latas se toman miles de decisiones al día que nadie llama financieras: a qué velocidad corre la línea, cuándo se hace un cambio de formato, cuánta lámina se rechaza, si un mantenimiento se adelanta o se pospone. Ninguna pasa por Finanzas. Todas terminan en sus reportes. Los casos que siguen son para entrenar ese ojo: ver una decisión de operación y ubicar en qué renglón aparece."
+     "text": "En una planta de latas se toman miles de decisiones al día que nadie llama financieras: A qué velocidad corre la línea, cuándo se hace un cambio de formato, cuánta lámina se rechaza, si un mantenimiento se adelanta o se pospone. Ninguna pasa por Finanzas. Todas terminan en sus reportes. Los casos que siguen son para entrenar ese ojo: Ver una decisión de operación y ubicar en qué renglón aparece."
     }
    ],
    "fuentes": [
@@ -164,15 +164,15 @@ window.MT_CASES = [
    "historia": [
     {
      "type": "p",
-     "text": "Seguro has visto el camión de Bimbo en tu colonia. Ese camión no es un extra del negocio: es parte central del negocio."
+     "text": "Seguro has visto el camión de Bimbo en tu colonia. Ese camión no es un extra del negocio: Es parte central del negocio."
     },
     {
      "type": "p",
-     "text": "Grupo Bimbo nació en la Ciudad de México en 1945 y hoy se describe como la empresa de panificación más grande del mundo. Bimbo, Marinela, Tía Rosa, Barcel: todas son suyas."
+     "text": "Grupo Bimbo nació en la Ciudad de México en 1945 y hoy se describe como la empresa de panificación más grande del mundo. Bimbo, Marinela, Tía Rosa, Barcel: Todas son suyas."
     },
     {
      "type": "p",
-     "text": "Lo curioso es cómo se presenta. En su perfil público no empieza hablando de utilidades. Empieza por lo que hace y con qué lo hace: más de 100 marcas, 249 panaderías y plantas, más de 54,000 rutas de reparto y más de 153,000 colaboradores, con operaciones directas en 39 países."
+     "text": "Lo curioso es cómo se presenta. En su perfil público no empieza hablando de utilidades. Empieza por lo que hace y con qué lo hace: Más de 100 marcas, 249 panaderías y plantas, más de 54,000 rutas de reparto y más de 153,000 colaboradores, con operaciones directas en 39 países."
     },
     {
      "type": "p",
@@ -239,7 +239,7 @@ window.MT_CASES = [
    "manual": [
     {
      "type": "p",
-     "text": "El capítulo 1 propone entender el negocio antes de ver sus cifras. NEXO cabe en una línea: compra tela, la convierte en playeras y las vende. Bimbo hace lo mismo con su descripción pública: qué vende, a quién, cómo llega y qué necesita para lograrlo. Si puedes explicar así una empresa, sus estados financieros dejan de sorprenderte, porque ya sabes qué esperar: una panificadora con 54,000 rutas va a tener muchos camiones, mucho personal de reparto y un gasto de distribución alto."
+     "text": "El capítulo 1 propone entender el negocio antes de ver sus cifras. NEXO cabe en una línea: Compra tela, la convierte en playeras y las vende. Bimbo hace lo mismo con su descripción pública: Qué vende, a quién, cómo llega y qué necesita para lograrlo. Si puedes explicar así una empresa, sus estados financieros dejan de sorprenderte, porque ya sabes qué esperar: Una panificadora con 54,000 rutas va a tener muchos camiones, mucho personal de reparto y un gasto de distribución alto."
     }
    ],
    "pensar": [
@@ -263,7 +263,7 @@ window.MT_CASES = [
    "latas": [
     {
      "type": "p",
-     "text": "Tu planta también cabe en pocas líneas: recibe bobinas de aluminio, las convierte en latas y las entrega a clientes que las llenan. Y se parece al pan en algo: la lata vacía es voluminosa y barata de producir comparada con lo que cuesta moverla, por eso las plantas suelen estar cerca de sus clientes. Describir tu planta así de claro (qué entra, qué sale, para quién y con qué equipo) es el primer paso para entender sus números."
+     "text": "Tu planta también cabe en pocas líneas: Recibe bobinas de aluminio, las convierte en latas y las entrega a clientes que las llenan. Y se parece al pan en algo: La lata vacía es voluminosa y barata de producir comparada con lo que cuesta moverla, por eso las plantas suelen estar cerca de sus clientes. Describir tu planta así de claro (qué entra, qué sale, para quién y con qué equipo) es el primer paso para entender sus números."
     }
    ],
    "fuentes": [
@@ -309,7 +309,7 @@ window.MT_CASES = [
     },
     {
      "type": "p",
-     "text": "Dicho en sencillo: de cada 100 pesos que entraron a sus cajas, le quedaron menos de 5. Gana poquito en cada venta y lo compensa con un volumen enorme."
+     "text": "Dicho en sencillo: De cada 100 pesos que entraron a sus cajas, le quedaron menos de 5. Gana poquito en cada venta y lo compensa con un volumen enorme."
     },
     {
      "type": "p",
@@ -319,11 +319,11 @@ window.MT_CASES = [
        "b"
       ],
       [
-       "Ingresos por 7,146 millones de euros, un margen de operación de 29.5% y una utilidad neta de 1,600 millones. De cada 100 euros le quedaron alrededor de 22 (cálculo propio). Y aquí viene lo interesante: entregó 112 autos menos que en 2024, de forma deliberada, y aun así sus ingresos crecieron 7%.",
+       "Ingresos por 7,146 millones de euros, un margen de operación de 29.5% y una utilidad neta de 1,600 millones. De cada 100 euros le quedaron alrededor de 22 (cálculo propio). Y aquí viene lo interesante: Entregó 112 autos menos que en 2024, de forma deliberada, y aun así sus ingresos crecieron 7%.",
        ""
       ]
      ],
-     "text": "Ferrari va por el camino contrario. Ingresos por 7,146 millones de euros, un margen de operación de 29.5% y una utilidad neta de 1,600 millones. De cada 100 euros le quedaron alrededor de 22 (cálculo propio). Y aquí viene lo interesante: entregó 112 autos menos que en 2024, de forma deliberada, y aun así sus ingresos crecieron 7%."
+     "text": "Ferrari va por el camino contrario. Ingresos por 7,146 millones de euros, un margen de operación de 29.5% y una utilidad neta de 1,600 millones. De cada 100 euros le quedaron alrededor de 22 (cálculo propio). Y aquí viene lo interesante: Entregó 112 autos menos que en 2024, de forma deliberada, y aun así sus ingresos crecieron 7%."
     },
     {
      "type": "p",
@@ -373,13 +373,13 @@ window.MT_CASES = [
     },
     {
      "type": "note",
-     "text": "Fuentes: reporte del cuarto trimestre de 2025 de Walmex (18 de febrero de 2026) y comunicado de resultados 2025 de Ferrari (10 de febrero de 2026). Las cifras están en monedas distintas; aquí se comparan los porcentajes, no los montos."
+     "text": "Fuentes: Reporte del cuarto trimestre de 2025 de Walmex (18 de febrero de 2026) y comunicado de resultados 2025 de Ferrari (10 de febrero de 2026). Las cifras están en monedas distintas; aquí se comparan los porcentajes, no los montos."
     }
    ],
    "manual": [
     {
      "type": "p",
-     "text": "El capítulo 2 enseña a leer el estado de resultados de arriba hacia abajo: ventas, costo, utilidad bruta, gastos, utilidad de operación y utilidad neta. Víctor hace ese mismo recorrido con playeras. Este caso agrega algo: cuánto queda en cada escalón depende del modelo de negocio. Un margen de 5% es alarma en una empresa y lo normal en otra. Antes de opinar sobre un margen, pregunta qué tipo de negocio estás viendo."
+     "text": "El capítulo 2 enseña a leer el estado de resultados de arriba hacia abajo: Ventas, costo, utilidad bruta, gastos, utilidad de operación y utilidad neta. Víctor hace ese mismo recorrido con playeras. Este caso agrega algo: Cuánto queda en cada escalón depende del modelo de negocio. Un margen de 5% es alarma en una empresa y lo normal en otra. Antes de opinar sobre un margen, pregunta qué tipo de negocio estás viendo."
     }
    ],
    "pensar": [
@@ -403,7 +403,7 @@ window.MT_CASES = [
    "latas": [
     {
      "type": "p",
-     "text": "Una lata se parece mucho más a Walmex que a Ferrari: se fabrican cantidades enormes y cada pieza deja una ganancia muy pequeña. En un negocio así, un punto de desperdicio, unos minutos de paro por turno o un consumo de energía mayor al previsto se multiplican por millones de piezas. Por eso la eficiencia de una línea no es tema solo de Producción: en un modelo de bajo margen, es lo que decide si queda utilidad."
+     "text": "Una lata se parece mucho más a Walmex que a Ferrari: Se fabrican cantidades enormes y cada pieza deja una ganancia muy pequeña. En un negocio así, un punto de desperdicio, unos minutos de paro por turno o un consumo de energía mayor al previsto se multiplican por millones de piezas. Por eso la eficiencia de una línea no es tema solo de Producción: En un modelo de bajo margen, es lo que decide si queda utilidad."
     }
    ],
    "fuentes": [
@@ -427,7 +427,7 @@ window.MT_CASES = [
    "historia": [
     {
      "type": "p",
-     "text": "Cemex fabrica cemento y concreto. Airbnb es una plataforma donde alguien renta su casa a un viajero y la empresa cobra una comisión. Las dos son enormes: en 2025 Cemex ingresó 16,132 millones de dólares y Airbnb 12,241 millones."
+     "text": "Cemex fabrica cemento y concreto. Airbnb es una plataforma donde alguien renta su casa a un viajero y la empresa cobra una comisión. Las dos son enormes: En 2025 Cemex ingresó 16,132 millones de dólares y Airbnb 12,241 millones."
     },
     {
      "type": "p",
@@ -441,11 +441,11 @@ window.MT_CASES = [
        "i"
       ],
       [
-       "cada una para poder vender. Y eso es justo lo que muestra el balance general: qué tiene una empresa y cómo lo pagó.",
+       "cada una para poder vender. Y eso es justo lo que muestra el balance general: Qué tiene una empresa y cómo lo pagó.",
        ""
       ]
      ],
-     "text": "Lo que las separa es qué necesita tener cada una para poder vender. Y eso es justo lo que muestra el balance general: qué tiene una empresa y cómo lo pagó."
+     "text": "Lo que las separa es qué necesita tener cada una para poder vender. Y eso es justo lo que muestra el balance general: Qué tiene una empresa y cómo lo pagó."
     },
     {
      "type": "p",
@@ -455,11 +455,11 @@ window.MT_CASES = [
        "b"
       ],
       [
-       "De sus 28,945 millones de dólares en activos, 11,054 millones son canteras, hornos, molinos, plantas de concreto y camiones. Es 38% de todo lo que tiene (cálculo propio). Y mantenerlo cuesta: solo en 2025 invirtió 947 millones en propiedades, maquinaria y equipo.",
+       "De sus 28,945 millones de dólares en activos, 11,054 millones son canteras, hornos, molinos, plantas de concreto y camiones. Es 38% de todo lo que tiene (cálculo propio). Y mantenerlo cuesta: Solo en 2025 invirtió 947 millones en propiedades, maquinaria y equipo.",
        ""
       ]
      ],
-     "text": "Abramos el de Cemex. De sus 28,945 millones de dólares en activos, 11,054 millones son canteras, hornos, molinos, plantas de concreto y camiones. Es 38% de todo lo que tiene (cálculo propio). Y mantenerlo cuesta: solo en 2025 invirtió 947 millones en propiedades, maquinaria y equipo."
+     "text": "Abramos el de Cemex. De sus 28,945 millones de dólares en activos, 11,054 millones son canteras, hornos, molinos, plantas de concreto y camiones. Es 38% de todo lo que tiene (cálculo propio). Y mantenerlo cuesta: Solo en 2025 invirtió 947 millones en propiedades, maquinaria y equipo."
     },
     {
      "type": "p",
@@ -469,15 +469,15 @@ window.MT_CASES = [
        "b"
       ],
       [
-       "Tiene activos por 22,208 millones, pero su balance resumido ni siquiera trae un renglón separado de propiedades y equipo. Lo que más pesa es el dinero: efectivo, inversiones de corto plazo y fondos de huéspedes y anfitriones que la empresa solo resguarda. ¿Cuánto invirtió en propiedades y equipo en todo el año? 33 millones.",
+       "Tiene activos por 22,208 millones, pero su balance resumido ni siquiera trae un renglón separado de propiedades y equipo. Lo que más pesa es el dinero: Efectivo, inversiones de corto plazo y fondos de huéspedes y anfitriones que la empresa solo resguarda. ¿Cuánto invirtió en propiedades y equipo en todo el año? 33 millones.",
        ""
       ]
      ],
-     "text": "Ahora el de Airbnb. Tiene activos por 22,208 millones, pero su balance resumido ni siquiera trae un renglón separado de propiedades y equipo. Lo que más pesa es el dinero: efectivo, inversiones de corto plazo y fondos de huéspedes y anfitriones que la empresa solo resguarda. ¿Cuánto invirtió en propiedades y equipo en todo el año? 33 millones."
+     "text": "Ahora el de Airbnb. Tiene activos por 22,208 millones, pero su balance resumido ni siquiera trae un renglón separado de propiedades y equipo. Lo que más pesa es el dinero: Efectivo, inversiones de corto plazo y fondos de huéspedes y anfitriones que la empresa solo resguarda. ¿Cuánto invirtió en propiedades y equipo en todo el año? 33 millones."
     },
     {
      "type": "p",
-     "text": "Ponlo así: por cada dólar que ingresó, Cemex invirtió cerca de 6 centavos en activos fijos. Airbnb, menos de medio centavo (cálculos propios). Airbnb no es dueña de las casas que se rentan en su plataforma. Cemex sí es dueña de sus hornos."
+     "text": "Ponlo así: Por cada dólar que ingresó, Cemex invirtió cerca de 6 centavos en activos fijos. Airbnb, menos de medio centavo (cálculos propios). Airbnb no es dueña de las casas que se rentan en su plataforma. Cemex sí es dueña de sus hornos."
     },
     {
      "type": "p",
@@ -522,13 +522,13 @@ window.MT_CASES = [
     },
     {
      "type": "note",
-     "text": "Fuentes: estados financieros consolidados auditados 2025 de Cemex y carta a accionistas del cuarto trimestre de 2025 de Airbnb."
+     "text": "Fuentes: Estados financieros consolidados auditados 2025 de Cemex y carta a accionistas del cuarto trimestre de 2025 de Airbnb."
     }
    ],
    "manual": [
     {
      "type": "p",
-     "text": "El capítulo 3 presenta el balance general como una fotografía de lo que la empresa tiene y lo que debe. NEXO necesita máquinas de coser, una nave e inventario de tela antes de vender la primera playera, así que su balance se parece más al de Cemex que al de Airbnb. La lección: el balance te cuenta qué tipo de negocio es antes de que alguien te lo explique. Basta ver en qué renglones está el dinero."
+     "text": "El capítulo 3 presenta el balance general como una fotografía de lo que la empresa tiene y lo que debe. NEXO necesita máquinas de coser, una nave e inventario de tela antes de vender la primera playera, así que su balance se parece más al de Cemex que al de Airbnb. La lección: El balance te cuenta qué tipo de negocio es antes de que alguien te lo explique. Basta ver en qué renglones está el dinero."
     }
    ],
    "pensar": [
@@ -552,7 +552,7 @@ window.MT_CASES = [
    "latas": [
     {
      "type": "p",
-     "text": "Tu planta está del lado de Cemex. Las líneas de formado, las lavadoras, los hornos y las decoradoras son equipos caros que se pagan antes de producir la primera lata y se usan durante muchos años. La consecuencia práctica: el equipo cuesta lo mismo si corre o si está parado. Cada hora de línea detenida es una hora en la que un activo ya pagado no produce nada. Por eso la disponibilidad de los equipos importa tanto."
+     "text": "Tu planta está del lado de Cemex. Las líneas de formado, las lavadoras, los hornos y las decoradoras son equipos caros que se pagan antes de producir la primera lata y se usan durante muchos años. La consecuencia práctica: El equipo cuesta lo mismo si corre o si está parado. Cada hora de línea detenida es una hora en la que un activo ya pagado no produce nada. Por eso la disponibilidad de los equipos importa tanto."
     }
    ],
    "fuentes": [
@@ -580,7 +580,7 @@ window.MT_CASES = [
     },
     {
      "type": "p",
-     "text": "El contexto: durante la pandemia la gente compró en línea mucho más que antes, y la empresa decidió ampliar su red de almacenes, centros de clasificación y camionetas a gran velocidad."
+     "text": "El contexto: Durante la pandemia la gente compró en línea mucho más que antes, y la empresa decidió ampliar su red de almacenes, centros de clasificación y camionetas a gran velocidad."
     },
     {
      "type": "p",
@@ -624,7 +624,7 @@ window.MT_CASES = [
     },
     {
      "type": "p",
-     "text": "¿Y después? En 2022 las ventas siguieron creciendo, pero la empresa reportó una pérdida neta de 2.7 mil millones. El efectivo no desapareció por un problema oculto: se convirtió en almacenes y equipo. Si esa inversión fue la correcta es otra pregunta, y se responde con los años siguientes."
+     "text": "¿Y después? En 2022 las ventas siguieron creciendo, pero la empresa reportó una pérdida neta de 2.7 mil millones. El efectivo no desapareció por un problema oculto: Se convirtió en almacenes y equipo. Si esa inversión fue la correcta es otra pregunta, y se responde con los años siguientes."
     }
    ],
    "numeros": [
@@ -673,7 +673,7 @@ window.MT_CASES = [
    "manual": [
     {
      "type": "p",
-     "text": "El capítulo 4 separa dos ideas que se confunden todo el tiempo: utilidad y efectivo. En NEXO puede pasar lo mismo en pequeño: si Víctor compra una máquina nueva y además vende a crédito, el estado de resultados muestra ganancia mientras la cuenta de banco baja. Amazon enseña que un flujo libre negativo no es, por sí solo, ni buena ni mala noticia. Hay que ver a dónde se fue el dinero."
+     "text": "El capítulo 4 separa dos ideas que se confunden todo el tiempo: Utilidad y efectivo. En NEXO puede pasar lo mismo en pequeño: Si Víctor compra una máquina nueva y además vende a crédito, el estado de resultados muestra ganancia mientras la cuenta de banco baja. Amazon enseña que un flujo libre negativo no es, por sí solo, ni buena ni mala noticia. Hay que ver a dónde se fue el dinero."
     }
    ],
    "pensar": [
@@ -697,7 +697,7 @@ window.MT_CASES = [
    "latas": [
     {
      "type": "p",
-     "text": "Cuando una planta instala una línea nueva, el dinero sale durante la construcción y la puesta en marcha, mucho antes de vender la primera lata. En los reportes, ese costo irá apareciendo poco a poco, año con año, como depreciación. Resultado: durante un tiempo la planta puede verse rentable y, a la vez, estar consumiendo efectivo. Por eso los proyectos de inversión se siguen con el flujo de efectivo y no solo con la utilidad."
+     "text": "Cuando una planta instala una línea nueva, el dinero sale durante la construcción y la puesta en marcha, mucho antes de vender la primera lata. En los reportes, ese costo irá apareciendo poco a poco, año con año, como depreciación. Resultado: Durante un tiempo la planta puede verse rentable y, a la vez, estar consumiendo efectivo. Por eso los proyectos de inversión se siguen con el flujo de efectivo y no solo con la utilidad."
     }
    ],
    "fuentes": [
@@ -725,7 +725,7 @@ window.MT_CASES = [
    "historia": [
     {
      "type": "p",
-     "text": "En enero de 2021, Liverpool presentó el proyecto más grande de su historia: la Plataforma Logística Arco Norte (PLAN), en Jilotepec, Estado de México. Seis naves y más de 25 mil millones de pesos de inversión global, según informó a la Bolsa."
+     "text": "En enero de 2021, Liverpool presentó el proyecto más grande de su historia: La Plataforma Logística Arco Norte (PLAN), en Jilotepec, Estado de México. Seis naves y más de 25 mil millones de pesos de inversión global, según informó a la Bolsa."
     },
     {
      "type": "p",
@@ -733,7 +733,7 @@ window.MT_CASES = [
     },
     {
      "type": "p",
-     "text": "Ahora la pregunta interesante: ¿dónde aparece una obra así en los estados financieros de 2025? En los tres. Sigamos el dinero."
+     "text": "Ahora la pregunta interesante: ¿Dónde aparece una obra así en los estados financieros de 2025? En los tres. Sigamos el dinero."
     },
     {
      "type": "item",
@@ -743,11 +743,11 @@ window.MT_CASES = [
        "b"
       ],
       [
-       "es dinero que sale. Liverpool reportó inversiones de capital por 10,654 millones de pesos en el año. El informe no separa cuánto fue para PLAN.",
+       "Es dinero que sale. Liverpool reportó inversiones de capital por 10,654 millones de pesos en el año. El informe no separa cuánto fue para PLAN.",
        ""
       ]
      ],
-     "text": "Primero, en el flujo de efectivo: es dinero que sale. Liverpool reportó inversiones de capital por 10,654 millones de pesos en el año. El informe no separa cuánto fue para PLAN."
+     "text": "Primero, en el flujo de efectivo: Es dinero que sale. Liverpool reportó inversiones de capital por 10,654 millones de pesos en el año. El informe no separa cuánto fue para PLAN."
     },
     {
      "type": "item",
@@ -757,11 +757,11 @@ window.MT_CASES = [
        "b"
       ],
       [
-       "lo construido se queda como activo. Propiedades, mobiliario y equipo pasó de 64,025 a 67,292 millones de pesos.",
+       "Lo construido se queda como activo. Propiedades, mobiliario y equipo pasó de 64,025 a 67,292 millones de pesos.",
        ""
       ]
      ],
-     "text": "Después, en el balance general: lo construido se queda como activo. Propiedades, mobiliario y equipo pasó de 64,025 a 67,292 millones de pesos."
+     "text": "Después, en el balance general: Lo construido se queda como activo. Propiedades, mobiliario y equipo pasó de 64,025 a 67,292 millones de pesos."
     },
     {
      "type": "item",
@@ -771,11 +771,11 @@ window.MT_CASES = [
        "b"
       ],
       [
-       "una nave no se registra como gasto el año en que se paga; su costo se reparte durante su vida útil. La depreciación y amortización subió 11% (cálculo propio), de 5,703 a 6,346 millones. Además, operar la nave nueva genera gastos desde el primer día.",
+       "Una nave no se registra como gasto el año en que se paga; su costo se reparte durante su vida útil. La depreciación y amortización subió 11% (cálculo propio), de 5,703 a 6,346 millones. Además, operar la nave nueva genera gastos desde el primer día.",
        ""
       ]
      ],
-     "text": "Al final, y poco a poco, en el estado de resultados: una nave no se registra como gasto el año en que se paga; su costo se reparte durante su vida útil. La depreciación y amortización subió 11% (cálculo propio), de 5,703 a 6,346 millones. Además, operar la nave nueva genera gastos desde el primer día."
+     "text": "Al final, y poco a poco, en el estado de resultados: Una nave no se registra como gasto el año en que se paga; su costo se reparte durante su vida útil. La depreciación y amortización subió 11% (cálculo propio), de 5,703 a 6,346 millones. Además, operar la nave nueva genera gastos desde el primer día."
     },
     {
      "type": "p",
@@ -783,7 +783,7 @@ window.MT_CASES = [
     },
     {
      "type": "p",
-     "text": "Cuidado con la conclusión: el informe no dice cuánto corresponde a PLAN, así que no se puede afirmar que la obra explique toda la caída. En un año influyen muchas otras cosas."
+     "text": "Cuidado con la conclusión: El informe no dice cuánto corresponde a PLAN, así que no se puede afirmar que la obra explique toda la caída. En un año influyen muchas otras cosas."
     }
    ],
    "numeros": [
@@ -842,7 +842,7 @@ window.MT_CASES = [
    "manual": [
     {
      "type": "p",
-     "text": "El capítulo 5 muestra que los tres estados financieros cuentan una sola historia desde tres ángulos. Si Víctor compra una máquina, el efectivo baja hoy, el activo sube en el balance y el estado de resultados recibe un pedazo del costo cada año. Liverpool es ese mismo recorrido con una obra de miles de millones: sale la caja, crece el activo y después llegan la depreciación y los gastos de operar lo nuevo."
+     "text": "El capítulo 5 muestra que los tres estados financieros cuentan una sola historia desde tres ángulos. Si Víctor compra una máquina, el efectivo baja hoy, el activo sube en el balance y el estado de resultados recibe un pedazo del costo cada año. Liverpool es ese mismo recorrido con una obra de miles de millones: Sale la caja, crece el activo y después llegan la depreciación y los gastos de operar lo nuevo."
     }
    ],
    "pensar": [
@@ -866,7 +866,7 @@ window.MT_CASES = [
    "latas": [
     {
      "type": "p",
-     "text": "Una línea nueva o una ampliación siguen el mismo camino. Primero se ve en el flujo de efectivo, mientras se paga al proveedor del equipo y la obra civil. Luego aparece en el balance como maquinaria. Y durante años llega al estado de resultados como depreciación, junto con el personal, la energía y el mantenimiento de la línea. Un detalle que pesa: si el arranque tarda más de lo previsto, la depreciación y los gastos ya corren aunque todavía no haya volumen para absorberlos."
+     "text": "Una línea nueva o una ampliación siguen el mismo camino. Primero se ve en el flujo de efectivo, mientras se paga al proveedor del equipo y la obra civil. Luego aparece en el balance como maquinaria. Y durante años llega al estado de resultados como depreciación, junto con el personal, la energía y el mantenimiento de la línea. Un detalle que pesa: Si el arranque tarda más de lo previsto, la depreciación y los gastos ya corren aunque todavía no haya volumen para absorberlos."
     }
    ],
    "fuentes": [
@@ -898,15 +898,15 @@ window.MT_CASES = [
    "historia": [
     {
      "type": "p",
-     "text": "Volaris se define como una aerolínea de ultra bajo costo. La fórmula: una tarifa base barata y lo demás se cobra aparte (maleta, selección de asiento, abordaje prioritario). Para que eso sea negocio, tiene que producir cada asiento más barato que sus competidores. Por eso su indicador central no es cuánto gasta en total, sino cuánto le cuesta cada unidad."
+     "text": "Volaris se define como una aerolínea de ultra bajo costo. La fórmula: Una tarifa base barata y lo demás se cobra aparte (maleta, selección de asiento, abordaje prioritario). Para que eso sea negocio, tiene que producir cada asiento más barato que sus competidores. Por eso su indicador central no es cuánto gasta en total, sino cuánto le cuesta cada unidad."
     },
     {
      "type": "p",
-     "text": "¿Y cuál es la unidad de una aerolínea? El asiento-milla disponible: un asiento volando una milla, vaya ocupado o vacío. Su costo se conoce como CASM y se mide en centavos de dólar. En 2025, el de Volaris fue de 8.04 centavos. En 2024 había sido de 8.03. Prácticamente igual."
+     "text": "¿Y cuál es la unidad de una aerolínea? El asiento-milla disponible: Un asiento volando una milla, vaya ocupado o vacío. Su costo se conoce como CASM y se mide en centavos de dólar. En 2025, el de Volaris fue de 8.04 centavos. En 2024 había sido de 8.03. Prácticamente igual."
     },
     {
      "type": "p",
-     "text": "Pero si abres ese total, aparece movimiento. La empresa reporta también el CASM sin combustible, porque el precio de la turbosina no depende de ella. Ese subió 3.5%, de 5.40 a 5.58 centavos. Al mismo tiempo, el costo promedio del combustible bajó 6%. Una cosa compensó la otra: lo que controla subió un poco, lo que no controla bajó, y el total quedó igual."
+     "text": "Pero si abres ese total, aparece movimiento. La empresa reporta también el CASM sin combustible, porque el precio de la turbosina no depende de ella. Ese subió 3.5%, de 5.40 a 5.58 centavos. Al mismo tiempo, el costo promedio del combustible bajó 6%. Una cosa compensó la otra: Lo que controla subió un poco, lo que no controla bajó, y el total quedó igual."
     },
     {
      "type": "p",
@@ -914,7 +914,7 @@ window.MT_CASES = [
     },
     {
      "type": "p",
-     "text": "Ahora el giro: un costo unitario bajo no garantiza la utilidad. En 2025 los ingresos de Volaris bajaron 3%, su utilidad de operación cayó de 413 a 135 millones de dólares y cerró con una pérdida neta de 104 millones. El costo por asiento se mantuvo. Lo que cambió fue cuánto ingresó por cada asiento y cuántos se llenaron: la ocupación fue de 84.3%, 2.5 puntos menos que el año anterior."
+     "text": "Ahora el giro: Un costo unitario bajo no garantiza la utilidad. En 2025 los ingresos de Volaris bajaron 3%, su utilidad de operación cayó de 413 a 135 millones de dólares y cerró con una pérdida neta de 104 millones. El costo por asiento se mantuvo. Lo que cambió fue cuánto ingresó por cada asiento y cuántos se llenaron: La ocupación fue de 84.3%, 2.5 puntos menos que el año anterior."
     }
    ],
    "numeros": [
@@ -969,7 +969,7 @@ window.MT_CASES = [
    "manual": [
     {
      "type": "p",
-     "text": "El capítulo 6 explica que para decidir no basta con saber cuánto se gastó: hay que saber cuánto costó cada unidad. En NEXO la unidad es la playera, y Víctor necesita el costo por playera para saber si un pedido deja ganancia. Volaris hace lo mismo con el asiento-milla y, además, separa el costo que controla del que no controla. Así puede ver si su operación mejora o empeora aunque el precio del combustible se mueva."
+     "text": "El capítulo 6 explica que para decidir no basta con saber cuánto se gastó: Hay que saber cuánto costó cada unidad. En NEXO la unidad es la playera, y Víctor necesita el costo por playera para saber si un pedido deja ganancia. Volaris hace lo mismo con el asiento-milla y, además, separa el costo que controla del que no controla. Así puede ver si su operación mejora o empeora aunque el precio del combustible se mueva."
     }
    ],
    "pensar": [
@@ -1021,7 +1021,7 @@ window.MT_CASES = [
    "historia": [
     {
      "type": "p",
-     "text": "Papel higiénico, pañales, pañuelos, servilletas. Kleenex, Huggies, Pétalo, Suavel. Kimberly-Clark de México vende productos que casi todos los hogares ya compran. Y ese es justo su reto: en un mercado maduro, crecer en ventas es lento."
+     "text": "Papel higiénico, pañales, pañuelos, servilletas. Kleenex, Huggies, Pétalo, Suavel. Kimberly-Clark de México vende productos que casi todos los hogares ya compran. Y ese es justo su reto: En un mercado maduro, crecer en ventas es lento."
     },
     {
      "type": "p",
@@ -1033,15 +1033,15 @@ window.MT_CASES = [
     },
     {
      "type": "p",
-     "text": "¿Qué hizo? Usó una palanca que sí controla: su programa de ahorro en costos. Reportó ahorros por 2,000 millones de pesos en el año, alrededor de 500 millones por trimestre. Para dimensionarlo: equivale a 3.6% de sus ventas y a cerca de una sexta parte de su utilidad de operación (cálculos propios). El reporte no detalla de qué proyecto salió cada peso."
+     "text": "¿Qué hizo? Usó una palanca que sí controla: Su programa de ahorro en costos. Reportó ahorros por 2,000 millones de pesos en el año, alrededor de 500 millones por trimestre. Para dimensionarlo: Equivale a 3.6% de sus ventas y a cerca de una sexta parte de su utilidad de operación (cálculos propios). El reporte no detalla de qué proyecto salió cada peso."
     },
     {
      "type": "p",
-     "text": "El efecto se ve mejor en el cuarto trimestre, cuando la presión del tipo de cambio aflojó: las ventas crecieron 2% y la utilidad de operación 9%. El margen de operación pasó de 21.4% a 22.9%. Vendiendo casi lo mismo, le quedó más."
+     "text": "El efecto se ve mejor en el cuarto trimestre, cuando la presión del tipo de cambio aflojó: Las ventas crecieron 2% y la utilidad de operación 9%. El margen de operación pasó de 21.4% a 22.9%. Vendiendo casi lo mismo, le quedó más."
     },
     {
      "type": "p",
-     "text": "Hay que leerlo con cuidado. En el año completo la utilidad bajó, no subió. Los ahorros no evitaron la caída; la hicieron más pequeña. Y la mejora del cuarto trimestre se debió también a mejores costos de materias primas y a un tipo de cambio más favorable, según la propia empresa. Lo que el caso sí deja claro: hay resultados que se defienden desde la operación, sin depender de vender más."
+     "text": "Hay que leerlo con cuidado. En el año completo la utilidad bajó, no subió. Los ahorros no evitaron la caída; la hicieron más pequeña. Y la mejora del cuarto trimestre se debió también a mejores costos de materias primas y a un tipo de cambio más favorable, según la propia empresa. Lo que el caso sí deja claro: Hay resultados que se defienden desde la operación, sin depender de vender más."
     }
    ],
    "numeros": [
@@ -1090,7 +1090,7 @@ window.MT_CASES = [
    "manual": [
     {
      "type": "p",
-     "text": "El capítulo 7 presenta las palancas que mueven el resultado: precio, volumen, costo y uso de los activos. Víctor puede mejorar la utilidad sin vender una playera más si desperdicia menos tela, reduce los tiempos muertos o aprovecha mejor sus máquinas. Kimberly-Clark de México muestra esa misma palanca donde vender más es difícil: cuando las ventas crecen 1%, lo que pasa dentro de la planta pesa mucho en el resultado."
+     "text": "El capítulo 7 presenta las palancas que mueven el resultado: Precio, volumen, costo y uso de los activos. Víctor puede mejorar la utilidad sin vender una playera más si desperdicia menos tela, reduce los tiempos muertos o aprovecha mejor sus máquinas. Kimberly-Clark de México muestra esa misma palanca donde vender más es difícil: Cuando las ventas crecen 1%, lo que pasa dentro de la planta pesa mucho en el resultado."
     }
    ],
    "pensar": [
@@ -1114,7 +1114,7 @@ window.MT_CASES = [
    "latas": [
     {
      "type": "p",
-     "text": "En una planta de latas, las palancas operativas tienen nombre propio: el porcentaje de metal que se va a la merma, el peso de cada lata, los minutos que tarda un cambio de formato, la velocidad real de la línea contra la de diseño, el gas y la electricidad por millar. Ninguna requiere vender una lata más. Y cuando el volumen de un cliente no crece o el precio ya está pactado en un contrato, son las únicas palancas que quedan en manos de la planta."
+     "text": "En una planta de latas, las palancas operativas tienen nombre propio: El porcentaje de metal que se va a la merma, el peso de cada lata, los minutos que tarda un cambio de formato, la velocidad real de la línea contra la de diseño, el gas y la electricidad por millar. Ninguna requiere vender una lata más. Y cuando el volumen de un cliente no crece o el precio ya está pactado en un contrato, son las únicas palancas que quedan en manos de la planta."
     }
    ],
    "fuentes": [
@@ -1150,7 +1150,7 @@ window.MT_CASES = [
     },
     {
      "type": "p",
-     "text": "En junio de 2026 repitió el ejercicio con una cifra mayor: 4,600 millones de dólares para 2026 (35% más) y 8,500 empleos nuevos. Y aclaró algo importante: ese monto incluye tanto inversión de capital (lo que se queda como activo, como un centro de distribución) como gastos operativos (lo que se consume en el año, como sueldos y transporte)."
+     "text": "En junio de 2026 repitió el ejercicio con una cifra mayor: 4,600 millones de dólares para 2026 (35% más) y 8,500 empleos nuevos. Y aclaró algo importante: Ese monto incluye tanto inversión de capital (lo que se queda como activo, como un centro de distribución) como gastos operativos (lo que se consume en el año, como sueldos y transporte)."
     },
     {
      "type": "p",
@@ -1162,7 +1162,7 @@ window.MT_CASES = [
     },
     {
      "type": "p",
-     "text": "Un aviso: las cifras anunciadas son planes de la empresa. El monto realmente ejercido cada año no se encontró desglosado por país en las fuentes consultadas."
+     "text": "Un aviso: Las cifras anunciadas son planes de la empresa. El monto realmente ejercido cada año no se encontró desglosado por país en las fuentes consultadas."
     }
    ],
    "numeros": [
@@ -1211,7 +1211,7 @@ window.MT_CASES = [
    "manual": [
     {
      "type": "p",
-     "text": "El capítulo 8 explica que el presupuesto es el plan del año expresado en dinero. Si la meta de NEXO es producir más playeras, Víctor tiene que decidir cuánta tela compra, a cuántas personas contrata, si necesita otra máquina y cuándo ocurre cada cosa. Mercado Libre hace el mismo razonamiento a gran escala: una meta de servicio se convierte en un número de almacenes, un número de contrataciones y un monto de inversión, separados entre lo que es activo y lo que es gasto."
+     "text": "El capítulo 8 explica que el presupuesto es el plan del año expresado en dinero. Si la meta de NEXO es producir más playeras, Víctor tiene que decidir cuánta tela compra, a cuántas personas contrata, si necesita otra máquina y cuándo ocurre cada cosa. Mercado Libre hace el mismo razonamiento a gran escala: Una meta de servicio se convierte en un número de almacenes, un número de contrataciones y un monto de inversión, separados entre lo que es activo y lo que es gasto."
     }
    ],
    "pensar": [
@@ -1235,7 +1235,7 @@ window.MT_CASES = [
    "latas": [
     {
      "type": "p",
-     "text": "Si tu planta se compromete a entregar más latas el próximo año, la meta se desdobla en renglones muy concretos: más bobinas de aluminio y recubrimientos, turnos o personal adicional, refacciones para sostener más horas de línea, energía y, si la capacidad actual no alcanza, una inversión en equipo que debe pedirse con meses de anticipación. El presupuesto te obliga a hacer esa cuenta completa antes de aceptar la meta, no cuando la línea ya no da abasto."
+     "text": "Si tu planta se compromete a entregar más latas el próximo año, la meta se desdobla en renglones muy concretos: Más bobinas de aluminio y recubrimientos, turnos o personal adicional, refacciones para sostener más horas de línea, energía y, si la capacidad actual no alcanza, una inversión en equipo que debe pedirse con meses de anticipación. El presupuesto te obliga a hacer esa cuenta completa antes de aceptar la meta, no cuando la línea ya no da abasto."
     }
    ],
    "fuentes": [
@@ -1265,7 +1265,7 @@ window.MT_CASES = [
  {
   "n": 9,
   "tema": "FORECAST Y CONTROL PRESUPUESTAL",
-  "title": "De 9.7 a 9.2 millones de autos: corregir el plan a medio año",
+  "title": "De 9.7 a 9.2 millones de autos: Corregir el plan a medio año",
   "empresa": "Toyota",
   "sections": {
    "historia": [
@@ -1281,7 +1281,7 @@ window.MT_CASES = [
        "b"
       ],
       [
-       "producir 9.7 millones de vehículos. ",
+       "Producir 9.7 millones de vehículos. ",
        ""
       ],
       [
@@ -1289,27 +1289,27 @@ window.MT_CASES = [
        "b"
       ],
       [
-       "la escasez mundial de semiconductores, los chips que hoy lleva cualquier auto. Mes tras mes tuvo que recortar programas de producción y detener líneas en Japón algunos días. Sostuvo la meta durante varios meses, hasta que en octubre de 2022 reconoció que no la alcanzaría.",
+       "La escasez mundial de semiconductores, los chips que hoy lleva cualquier auto. Mes tras mes tuvo que recortar programas de producción y detener líneas en Japón algunos días. Sostuvo la meta durante varios meses, hasta que en octubre de 2022 reconoció que no la alcanzaría.",
        ""
       ]
      ],
-     "text": "El plan: producir 9.7 millones de vehículos. El obstáculo: la escasez mundial de semiconductores, los chips que hoy lleva cualquier auto. Mes tras mes tuvo que recortar programas de producción y detener líneas en Japón algunos días. Sostuvo la meta durante varios meses, hasta que en octubre de 2022 reconoció que no la alcanzaría."
+     "text": "El plan: Producir 9.7 millones de vehículos. El obstáculo: La escasez mundial de semiconductores, los chips que hoy lleva cualquier auto. Mes tras mes tuvo que recortar programas de producción y detener líneas en Japón algunos días. Sostuvo la meta durante varios meses, hasta que en octubre de 2022 reconoció que no la alcanzaría."
     },
     {
      "type": "p",
-     "text": "El 1 de noviembre lo hizo oficial: nuevo pronóstico, 9.2 millones. Medio millón menos."
+     "text": "El 1 de noviembre lo hizo oficial: Nuevo pronóstico, 9.2 millones. Medio millón menos."
     },
     {
      "type": "p",
-     "text": "Lo interesante es que no ajustó todo en la misma dirección. Ese mismo día subió su pronóstico de ingresos, de 34.5 a 36 billones de yenes, porque un yen débil hacía que sus ventas en el extranjero valieran más al convertirlas. Y dejó sin cambio el de utilidad neta. Revisó renglón por renglón con la información nueva: menos unidades, más ingresos por tipo de cambio, misma utilidad esperada."
+     "text": "Lo interesante es que no ajustó todo en la misma dirección. Ese mismo día subió su pronóstico de ingresos, de 34.5 a 36 billones de yenes, porque un yen débil hacía que sus ventas en el extranjero valieran más al convertirlas. Y dejó sin cambio el de utilidad neta. Revisó renglón por renglón con la información nueva: Menos unidades, más ingresos por tipo de cambio, misma utilidad esperada."
     },
     {
      "type": "p",
-     "text": "Antes del cierre corrigió una vez más, a 9.1 millones. ¿El resultado final? 9.13 millones de vehículos: un récord para la empresa en ese momento, aunque 6% por debajo del plan con el que arrancó (cálculo propio)."
+     "text": "Antes del cierre corrigió una vez más, a 9.1 millones. ¿El resultado final? 9.13 millones de vehículos: Un récord para la empresa en ese momento, aunque 6% por debajo del plan con el que arrancó (cálculo propio)."
     },
     {
      "type": "p",
-     "text": "La lección: un forecast (pronóstico actualizado) no es un presupuesto fallido. El presupuesto dice qué querías lograr al inicio del año. El forecast dice qué esperas lograr con lo que ya sabes. Toyota cerró casi exactamente donde decía su último forecast, señal de que la corrección fue realista."
+     "text": "La lección: Un forecast (pronóstico actualizado) no es un presupuesto fallido. El presupuesto dice qué querías lograr al inicio del año. El forecast dice qué esperas lograr con lo que ya sabes. Toyota cerró casi exactamente donde decía su último forecast, señal de que la corrección fue realista."
     }
    ],
    "numeros": [
@@ -1364,7 +1364,7 @@ window.MT_CASES = [
    "manual": [
     {
      "type": "p",
-     "text": "El capítulo 9 distingue el presupuesto del forecast y explica el control presupuestal: comparar lo planeado contra lo real y actuar. Si a medio año falta tela o un cliente recorta pedidos, Víctor no gana nada con seguir reportando contra un plan que ya no se va a cumplir. Necesita un pronóstico nuevo para decidir turnos, compras y entregas. Eso hizo Toyota: reconoció la desviación, explicó la causa y publicó un número nuevo que sí pudo cumplir."
+     "text": "El capítulo 9 distingue el presupuesto del forecast y explica el control presupuestal: Comparar lo planeado contra lo real y actuar. Si a medio año falta tela o un cliente recorta pedidos, Víctor no gana nada con seguir reportando contra un plan que ya no se va a cumplir. Necesita un pronóstico nuevo para decidir turnos, compras y entregas. Eso hizo Toyota: Reconoció la desviación, explicó la causa y publicó un número nuevo que sí pudo cumplir."
     }
    ],
    "pensar": [
@@ -1388,7 +1388,7 @@ window.MT_CASES = [
    "latas": [
     {
      "type": "p",
-     "text": "El plan de producción de una planta de latas depende de lo que sus clientes esperan llenar, y eso cambia con el clima, la temporada y el consumo. Si a media temporada un cliente reduce o adelanta sus pedidos, el presupuesto de enero deja de servir para programar líneas, comprar aluminio o planear mantenimientos. Lo útil en ese momento es un forecast actualizado: cuántas latas se van a producir de aquí al cierre, para que Compras, Producción y Finanzas trabajen con el mismo número."
+     "text": "El plan de producción de una planta de latas depende de lo que sus clientes esperan llenar, y eso cambia con el clima, la temporada y el consumo. Si a media temporada un cliente reduce o adelanta sus pedidos, el presupuesto de enero deja de servir para programar líneas, comprar aluminio o planear mantenimientos. Lo útil en ese momento es un forecast actualizado: Cuántas latas se van a producir de aquí al cierre, para que Compras, Producción y Finanzas trabajen con el mismo número."
     }
    ],
    "fuentes": [
@@ -1428,13 +1428,13 @@ window.MT_CASES = [
     },
     {
      "type": "p",
-     "text": "Un solo año dice poco de una empresa. Para leerla hay que poner varios años juntos y hacerse preguntas sencillas: ¿las ventas crecen?, ¿la utilidad crece al mismo ritmo?, ¿algo está cambiando? Hagámoslo con la tabla de abajo, en tres lecturas."
+     "text": "Un solo año dice poco de una empresa. Para leerla hay que poner varios años juntos y hacerse preguntas sencillas: ¿Las ventas crecen?, ¿la utilidad crece al mismo ritmo?, ¿algo está cambiando? Hagámoslo con la tabla de abajo, en tres lecturas."
     },
     {
      "type": "p",
      "runs": [
       [
-       "Primera lectura: las ventas. ",
+       "Primera lectura: Las ventas. ",
        "b"
       ],
       [
@@ -1442,13 +1442,13 @@ window.MT_CASES = [
        ""
       ]
      ],
-     "text": "Primera lectura: las ventas. De 68,831 millones de pesos en 2022 a 84,678 millones en 2025. Son 23% más en tres años (cálculo propio), sin un solo año de retroceso."
+     "text": "Primera lectura: Las ventas. De 68,831 millones de pesos en 2022 a 84,678 millones en 2025. Son 23% más en tres años (cálculo propio), sin un solo año de retroceso."
     },
     {
      "type": "p",
      "runs": [
       [
-       "Segunda lectura: la utilidad de operación, ",
+       "Segunda lectura: La utilidad de operación, ",
        "b"
       ],
       [
@@ -1456,25 +1456,25 @@ window.MT_CASES = [
        ""
       ]
      ],
-     "text": "Segunda lectura: la utilidad de operación, lo que deja el negocio después de pagar insumos, personal, rentas y demás gastos de operar. En el periodo completo creció 33%, más rápido que las ventas. Buena señal... hasta que la ves año por año. En 2023 saltó 26%. En 2024 creció 4%. En 2025, apenas 1.5%, mientras las ventas crecían 6% y 7%. En los dos últimos años, los costos y gastos crecieron más rápido que las ventas. El margen de operación lo resume: 9.2%, 10.7%, 10.5% y 9.9% (cálculos propios)."
+     "text": "Segunda lectura: La utilidad de operación, lo que deja el negocio después de pagar insumos, personal, rentas y demás gastos de operar. En el periodo completo creció 33%, más rápido que las ventas. Buena señal... hasta que la ves año por año. En 2023 saltó 26%. En 2024 creció 4%. En 2025, apenas 1.5%, mientras las ventas crecían 6% y 7%. En los dos últimos años, los costos y gastos crecieron más rápido que las ventas. El margen de operación lo resume: 9.2%, 10.7%, 10.5% y 9.9% (cálculos propios)."
     },
     {
      "type": "p",
      "runs": [
       [
-       "Tercera lectura: la utilidad neta. ",
+       "Tercera lectura: La utilidad neta. ",
        "b"
       ],
       [
-       "Aquí el comportamiento es muy irregular: 1,624 millones, 3,042, 763 y 2,236. La operación no tuvo esos saltos, así que la explicación está entre la utilidad de operación y la neta: intereses de la deuda, efectos del tipo de cambio e impuestos.",
+       "Aquí el comportamiento es muy irregular: 1,624 millones, 3,042, 763 y 2,236. La operación no tuvo esos saltos, así que la explicación está entre la utilidad de operación y la neta: Intereses de la deuda, efectos del tipo de cambio e impuestos.",
        ""
       ]
      ],
-     "text": "Tercera lectura: la utilidad neta. Aquí el comportamiento es muy irregular: 1,624 millones, 3,042, 763 y 2,236. La operación no tuvo esos saltos, así que la explicación está entre la utilidad de operación y la neta: intereses de la deuda, efectos del tipo de cambio e impuestos."
+     "text": "Tercera lectura: La utilidad neta. Aquí el comportamiento es muy irregular: 1,624 millones, 3,042, 763 y 2,236. La operación no tuvo esos saltos, así que la explicación está entre la utilidad de operación y la neta: Intereses de la deuda, efectos del tipo de cambio e impuestos."
     },
     {
      "type": "p",
-     "text": "Una nota de método: la empresa suele destacar cifras calculadas de otra forma, sin el efecto de la norma contable de arrendamientos (IFRS 16), y por eso en la prensa aparecen números distintos para el mismo año. Para comparar varios años, lo importante es usar siempre la misma base, como en esta tabla."
+     "text": "Una nota de método: La empresa suele destacar cifras calculadas de otra forma, sin el efecto de la norma contable de arrendamientos (IFRS 16), y por eso en la prensa aparecen números distintos para el mismo año. Para comparar varios años, lo importante es usar siempre la misma base, como en esta tabla."
     }
    ],
    "numeros": [
@@ -1526,7 +1526,7 @@ window.MT_CASES = [
    "manual": [
     {
      "type": "p",
-     "text": "El capítulo 10 enseña a leer una empresa con tendencias y no con una sola cifra. Un buen mes no dice si la fábrica de NEXO va mejor o peor; Víctor necesita ver varios periodos y comparar el ritmo de las ventas contra el de los costos. Alsea te deja las tres lecturas básicas: ¿la empresa crece?, ¿lo que gana crece igual?, ¿el último renglón se mueve por la operación o por otras causas?"
+     "text": "El capítulo 10 enseña a leer una empresa con tendencias y no con una sola cifra. Un buen mes no dice si la fábrica de NEXO va mejor o peor; Víctor necesita ver varios periodos y comparar el ritmo de las ventas contra el de los costos. Alsea te deja las tres lecturas básicas: ¿La empresa crece?, ¿lo que gana crece igual?, ¿el último renglón se mueve por la operación o por otras causas?"
     }
    ],
    "pensar": [
@@ -1578,7 +1578,7 @@ window.MT_CASES = [
    "historia": [
     {
      "type": "p",
-     "text": "Chedraui y Soriana venden prácticamente lo mismo: abarrotes, frutas, carnes, ropa y artículos para el hogar. Las dos nacieron en México como negocios familiares y las dos cotizan en la Bolsa. Si se parecen tanto, ¿por qué sus resultados no? Vamos indicador por indicador, con cifras de 2025."
+     "text": "Chedraui y Soriana venden prácticamente lo mismo: Abarrotes, frutas, carnes, ropa y artículos para el hogar. Las dos nacieron en México como negocios familiares y las dos cotizan en la Bolsa. Si se parecen tanto, ¿por qué sus resultados no? Vamos indicador por indicador, con cifras de 2025."
     },
     {
      "type": "p",
@@ -1624,7 +1624,7 @@ window.MT_CASES = [
     },
     {
      "type": "p",
-     "text": "¿De dónde viene la diferencia? Los reportes dan pistas. El margen bruto de Soriana se sostuvo (24.1%, ligeramente mejor que el año previo). Lo que se movió fue el gasto de operación: creció 3.5% mientras las ventas bajaban. Cuando las ventas caen y los gastos de las tiendas no, el margen se reduce. Chedraui, por su parte, abrió 142 tiendas en México y siguió creciendo en ventas."
+     "text": "¿De dónde viene la diferencia? Los reportes dan pistas. El margen bruto de Soriana se sostuvo (24.1%, ligeramente mejor que el año previo). Lo que se movió fue el gasto de operación: Creció 3.5% mientras las ventas bajaban. Cuando las ventas caen y los gastos de las tiendas no, el margen se reduce. Chedraui, por su parte, abrió 142 tiendas en México y siguió creciendo en ventas."
     },
     {
      "type": "p",
@@ -1674,13 +1674,13 @@ window.MT_CASES = [
     },
     {
      "type": "note",
-     "text": "Fuentes: análisis de B×+ con reportes de Chedraui (24 de febrero de 2026) y reporte del cuarto trimestre de 2025 de Soriana (20 de febrero de 2026)."
+     "text": "Fuentes: Análisis de B×+ con reportes de Chedraui (24 de febrero de 2026) y reporte del cuarto trimestre de 2025 de Soriana (20 de febrero de 2026)."
     }
    ],
    "manual": [
     {
      "type": "p",
-     "text": "El capítulo 11 presenta los indicadores como señales de salud: crecimiento, márgenes, rentabilidad. Víctor puede comparar su fábrica contra otra del mismo giro y descubrir que venden playeras parecidas con resultados distintos. Para eso sirve un indicador: no te da la explicación completa, pero te dice en qué renglón buscarla. Aquí la pista apunta a los gastos de operación y al comportamiento de las ventas por tienda."
+     "text": "El capítulo 11 presenta los indicadores como señales de salud: Crecimiento, márgenes, rentabilidad. Víctor puede comparar su fábrica contra otra del mismo giro y descubrir que venden playeras parecidas con resultados distintos. Para eso sirve un indicador: No te da la explicación completa, pero te dice en qué renglón buscarla. Aquí la pista apunta a los gastos de operación y al comportamiento de las ventas por tienda."
     }
    ],
    "pensar": [
@@ -1748,11 +1748,11 @@ window.MT_CASES = [
     },
     {
      "type": "p",
-     "text": "Sus resultados de 2025 lo muestran con números. La empresa voló prácticamente la misma oferta que en 2024: su capacidad creció 0.5%. Pero los ingresos bajaron 4.6%, de 5,620 a 5,361 millones de dólares, y la ocupación pasó de 86.6% a 85.9%. (La empresa aclara que los ingresos de 2024 incluían 153 millones de dólares de partidas extraordinarias, lo que explica parte de la diferencia.)"
+     "text": "Sus resultados de 2025 lo muestran con números. La empresa voló prácticamente la misma oferta que en 2024: Su capacidad creció 0.5%. Pero los ingresos bajaron 4.6%, de 5,620 a 5,361 millones de dólares, y la ocupación pasó de 86.6% a 85.9%. (La empresa aclara que los ingresos de 2024 incluían 153 millones de dólares de partidas extraordinarias, lo que explica parte de la diferencia.)"
     },
     {
      "type": "p",
-     "text": "¿Y los costos? Bajaron mucho menos. Haz la cuenta: los ingresos cayeron 259 millones y los gastos solo 121 millones (cálculos propios). La diferencia se fue directo a la utilidad de operación, que bajó 13%, contra una baja de ingresos de menos de 5%."
+     "text": "¿Y los costos? Bajaron mucho menos. Haz la cuenta: Los ingresos cayeron 259 millones y los gastos solo 121 millones (cálculos propios). La diferencia se fue directo a la utilidad de operación, que bajó 13%, contra una baja de ingresos de menos de 5%."
     },
     {
      "type": "p",
@@ -1764,7 +1764,7 @@ window.MT_CASES = [
     },
     {
      "type": "p",
-     "text": "Dos aclaraciones. Aeroméxico siguió siendo rentable en 2025, con un margen de operación de 17%: el caso no muestra una empresa en problemas, muestra qué tan sensible es la utilidad al ingreso. Y la empresa no publica cuál es su ocupación de equilibrio; con los datos públicos no se puede calcular con precisión, porque no separa sus costos en fijos y variables."
+     "text": "Dos aclaraciones. Aeroméxico siguió siendo rentable en 2025, con un margen de operación de 17%: El caso no muestra una empresa en problemas, muestra qué tan sensible es la utilidad al ingreso. Y la empresa no publica cuál es su ocupación de equilibrio; con los datos públicos no se puede calcular con precisión, porque no separa sus costos en fijos y variables."
     }
    ],
    "numeros": [
@@ -1811,13 +1811,13 @@ window.MT_CASES = [
     },
     {
      "type": "note",
-     "text": "Fuente: reporte no auditado del cuarto trimestre y año completo 2025 de Grupo Aeroméxico (16 de febrero de 2026)."
+     "text": "Fuente: Reporte no auditado del cuarto trimestre y año completo 2025 de Grupo Aeroméxico (16 de febrero de 2026)."
     }
    ],
    "manual": [
     {
      "type": "p",
-     "text": "El capítulo 12 explica el punto de equilibrio: el volumen de ventas con el que una empresa cubre todos sus costos y no gana ni pierde. En NEXO, la renta de la nave, los sueldos fijos y la depreciación de las máquinas se pagan igual si se cosen muchas playeras o pocas, así que Víctor necesita saber cuántas playeras cubren esos costos. En la aerolínea la lógica es la misma, con el vuelo como unidad: primero se llenan los asientos que pagan el vuelo; después vienen los que dejan ganancia."
+     "text": "El capítulo 12 explica el punto de equilibrio: El volumen de ventas con el que una empresa cubre todos sus costos y no gana ni pierde. En NEXO, la renta de la nave, los sueldos fijos y la depreciación de las máquinas se pagan igual si se cosen muchas playeras o pocas, así que Víctor necesita saber cuántas playeras cubren esos costos. En la aerolínea la lógica es la misma, con el vuelo como unidad: Primero se llenan los asientos que pagan el vuelo; después vienen los que dejan ganancia."
     }
    ],
    "pensar": [
@@ -1841,7 +1841,7 @@ window.MT_CASES = [
    "latas": [
     {
      "type": "p",
-     "text": "Una línea de latas se parece a un avión: está diseñada para producir a gran velocidad y cuesta casi lo mismo tenerla lista para un turno completo que para medio turno. La depreciación, el personal de la línea, el mantenimiento programado y parte de la energía se pagan aunque el volumen baje. Por eso existe un nivel de producción por debajo del cual la línea no cubre sus costos. Y por eso cada millar adicional por encima de ese nivel aporta mucho más que su proporción."
+     "text": "Una línea de latas se parece a un avión: Está diseñada para producir a gran velocidad y cuesta casi lo mismo tenerla lista para un turno completo que para medio turno. La depreciación, el personal de la línea, el mantenimiento programado y parte de la energía se pagan aunque el volumen baje. Por eso existe un nivel de producción por debajo del cual la línea no cubre sus costos. Y por eso cada millar adicional por encima de ese nivel aporta mucho más que su proporción."
     }
    ],
    "fuentes": [
@@ -1861,7 +1861,7 @@ window.MT_CASES = [
    "historia": [
     {
      "type": "p",
-     "text": "En febrero de 2023, BMW anunció una inversión de 800 millones de euros en su planta de San Luis Potosí, donde cerca de 3,700 personas fabrican el Serie 3, el Serie 2 Coupé y el M2 para el mercado mundial. Lo que hace útil este caso no es el monto. Es el orden en que BMW lo explicó: primero la necesidad, después el dinero."
+     "text": "En febrero de 2023, BMW anunció una inversión de 800 millones de euros en su planta de San Luis Potosí, donde cerca de 3,700 personas fabrican el Serie 3, el Serie 2 Coupé y el M2 para el mercado mundial. Lo que hace útil este caso no es el monto. Es el orden en que BMW lo explicó: Primero la necesidad, después el dinero."
     },
     {
      "type": "p",
@@ -1883,7 +1883,7 @@ window.MT_CASES = [
     },
     {
      "type": "item",
-     "text": "Tener las baterías cerca. Son piezas grandes, pesadas y delicadas de transportar, y la empresa sigue un principio que describe como «local para local»: ensamblarlas lo más cerca posible de la planta donde se montan."
+     "text": "Tener las baterías cerca. Son piezas grandes, pesadas y delicadas de transportar, y la empresa sigue un principio que describe como «local para local»: Ensamblarlas lo más cerca posible de la planta donde se montan."
     },
     {
      "type": "p",
@@ -1921,11 +1921,11 @@ window.MT_CASES = [
        "b"
       ],
       [
-       "BMW no publicó el rendimiento que espera de esta inversión ni en cuánto tiempo planea recuperarla. Esa parte del caso de negocio es interna. Lo que sí hizo público es el razonamiento: qué necesita producir, por qué ahí, qué hay que construir, cuánto cuesta, cuántas personas requiere y cuándo debe estar listo.",
+       "BMW no publicó el rendimiento que espera de esta inversión ni en cuánto tiempo planea recuperarla. Esa parte del caso de negocio es interna. Lo que sí hizo público es el razonamiento: Qué necesita producir, por qué ahí, qué hay que construir, cuánto cuesta, cuántas personas requiere y cuándo debe estar listo.",
        ""
       ]
      ],
-     "text": "Lo que el caso no muestra. BMW no publicó el rendimiento que espera de esta inversión ni en cuánto tiempo planea recuperarla. Esa parte del caso de negocio es interna. Lo que sí hizo público es el razonamiento: qué necesita producir, por qué ahí, qué hay que construir, cuánto cuesta, cuántas personas requiere y cuándo debe estar listo."
+     "text": "Lo que el caso no muestra. BMW no publicó el rendimiento que espera de esta inversión ni en cuánto tiempo planea recuperarla. Esa parte del caso de negocio es interna. Lo que sí hizo público es el razonamiento: Qué necesita producir, por qué ahí, qué hay que construir, cuánto cuesta, cuántas personas requiere y cuándo debe estar listo."
     }
    ],
    "numeros": [
@@ -1980,7 +1980,7 @@ window.MT_CASES = [
    "manual": [
     {
      "type": "p",
-     "text": "El capítulo 13 enseña a armar un caso de negocio: partir de un problema o una necesidad, plantear la solución, estimar la inversión y explicar qué se gana. Víctor no puede pedir una máquina diciendo solo cuánto cuesta; tiene que explicar qué problema resuelve. BMW siguió ese orden en público: primero la necesidad (producir autos eléctricos con la batería cerca), después la solución (un centro de baterías y cambios en la planta) y al final el monto, los empleos y la fecha."
+     "text": "El capítulo 13 enseña a armar un caso de negocio: Partir de un problema o una necesidad, plantear la solución, estimar la inversión y explicar qué se gana. Víctor no puede pedir una máquina diciendo solo cuánto cuesta; tiene que explicar qué problema resuelve. BMW siguió ese orden en público: Primero la necesidad (producir autos eléctricos con la batería cerca), después la solución (un centro de baterías y cambios en la planta) y al final el monto, los empleos y la fecha."
     }
    ],
    "pensar": [
@@ -2004,7 +2004,7 @@ window.MT_CASES = [
    "latas": [
     {
      "type": "p",
-     "text": "En una planta de latas, las inversiones suelen nacer de necesidades muy concretas: un cliente que pide un formato de lata que la línea actual no produce, un equipo que ya genera demasiados paros, un proceso que consume más energía o metal del que debería. Un caso de negocio sólido empieza por describir esa necesidad con datos de la operación y solo después propone el equipo y el monto. ¿Quién puede escribir mejor esa primera parte? Quien conoce la línea."
+     "text": "En una planta de latas, las inversiones suelen nacer de necesidades muy concretas: Un cliente que pide un formato de lata que la línea actual no produce, un equipo que ya genera demasiados paros, un proceso que consume más energía o metal del que debería. Un caso de negocio sólido empieza por describir esa necesidad con datos de la operación y solo después propone el equipo y el monto. ¿Quién puede escribir mejor esa primera parte? Quien conoce la línea."
     }
    ],
    "fuentes": [
@@ -2052,7 +2052,7 @@ window.MT_CASES = [
     },
     {
      "type": "p",
-     "text": "Aquí entra una idea clave. Cada dólar solo se puede usar una vez: si lo pones en una cosa, renuncias a lo que habría dado en otra. A eso se le llama costo de oportunidad, y es la idea detrás del valor del dinero en el tiempo: un dólar disponible hoy vale por lo que puedes hacer con él."
+     "text": "Aquí entra una idea clave. Cada dólar solo se puede usar una vez: Si lo pones en una cosa, renuncias a lo que habría dado en otra. A eso se le llama costo de oportunidad, y es la idea detrás del valor del dinero en el tiempo: Un dólar disponible hoy vale por lo que puedes hacer con él."
     },
     {
      "type": "p",
@@ -2122,11 +2122,11 @@ window.MT_CASES = [
        "b"
       ],
       [
-       "liquidó 10.9 mil millones de largo plazo y contrató 4.5 mil millones nuevos.",
+       "Liquidó 10.9 mil millones de largo plazo y contrató 4.5 mil millones nuevos.",
        ""
       ]
      ],
-     "text": "Deuda: liquidó 10.9 mil millones de largo plazo y contrató 4.5 mil millones nuevos."
+     "text": "Deuda: Liquidó 10.9 mil millones de largo plazo y contrató 4.5 mil millones nuevos."
     },
     {
      "type": "p",
@@ -2134,11 +2134,11 @@ window.MT_CASES = [
     },
     {
      "type": "p",
-     "text": "¿Qué dice esa decisión? Una lectura razonable: la empresa considera que ya invierte en su propio negocio todo lo que puede invertir con buen rendimiento, y que el efectivo restante rinde más en manos de sus accionistas que guardado. Ojo: es una interpretación, no algo que Apple haya declarado en esos términos."
+     "text": "¿Qué dice esa decisión? Una lectura razonable: La empresa considera que ya invierte en su propio negocio todo lo que puede invertir con buen rendimiento, y que el efectivo restante rinde más en manos de sus accionistas que guardado. Ojo: Es una interpretación, no algo que Apple haya declarado en esos términos."
     },
     {
      "type": "p",
-     "text": "Otra empresa, con más proyectos rentables por delante o con más deuda, repartiría el dinero de otra forma. No hay una mezcla correcta para todos. Lo que sí aplica a todos: usar el dinero en una cosa cuesta lo que se dejó de ganar en la mejor alternativa."
+     "text": "Otra empresa, con más proyectos rentables por delante o con más deuda, repartiría el dinero de otra forma. No hay una mezcla correcta para todos. Lo que sí aplica a todos: Usar el dinero en una cosa cuesta lo que se dejó de ganar en la mejor alternativa."
     }
    ],
    "numeros": [
@@ -2210,7 +2210,7 @@ window.MT_CASES = [
    "latas": [
     {
      "type": "p",
-     "text": "El presupuesto de inversión de una planta siempre es menor que la lista de proyectos que se proponen. Aprobar la modernización de una línea puede significar que este año no se reemplaza un compresor o no se amplía el almacén. Cada proyecto compite con los demás por el mismo dinero, y también con la opción de no invertir y pagar deuda. Por eso se pide que cada propuesta diga qué rendimiento ofrece: no es para ponerle trabas, es para poder compararla con las otras formas de usar ese dinero."
+     "text": "El presupuesto de inversión de una planta siempre es menor que la lista de proyectos que se proponen. Aprobar la modernización de una línea puede significar que este año no se reemplaza un compresor o no se amplía el almacén. Cada proyecto compite con los demás por el mismo dinero, y también con la opción de no invertir y pagar deuda. Por eso se pide que cada propuesta diga qué rendimiento ofrece: No es para ponerle trabas, es para poder compararla con las otras formas de usar ese dinero."
     }
    ],
    "fuentes": [
@@ -2242,7 +2242,7 @@ window.MT_CASES = [
    "historia": [
     {
      "type": "p",
-     "text": "Tiendas 3B («Bueno, Bonito y Barato») es una cadena mexicana de tiendas de descuento: locales pequeños, pocos productos, muchas marcas propias y precios bajos. Su estrategia consiste en repetir muchísimas veces una misma inversión pequeña: abrir una tienda."
+     "text": "Tiendas 3B («Bueno, Bonito y Barato») es una cadena mexicana de tiendas de descuento: Locales pequeños, pocos productos, muchas marcas propias y precios bajos. Su estrategia consiste en repetir muchísimas veces una misma inversión pequeña: Abrir una tienda."
     },
     {
      "type": "p",
@@ -2260,11 +2260,11 @@ window.MT_CASES = [
        "b"
       ],
       [
-       "alrededor de 5.5 millones de pesos.",
+       "Alrededor de 5.5 millones de pesos.",
        ""
       ]
      ],
-     "text": "Inversión por tienda: alrededor de 5.5 millones de pesos."
+     "text": "Inversión por tienda: Alrededor de 5.5 millones de pesos."
     },
     {
      "type": "bullet",
@@ -2274,11 +2274,11 @@ window.MT_CASES = [
        "b"
       ],
       [
-       "cerca de 26 meses. Es el tiempo que tarda el efectivo que genera la tienda en igualar lo que se invirtió en ella.",
+       "Cerca de 26 meses. Es el tiempo que tarda el efectivo que genera la tienda en igualar lo que se invirtió en ella.",
        ""
       ]
      ],
-     "text": "Payback (periodo de recuperación): cerca de 26 meses. Es el tiempo que tarda el efectivo que genera la tienda en igualar lo que se invirtió en ella."
+     "text": "Payback (periodo de recuperación): Cerca de 26 meses. Es el tiempo que tarda el efectivo que genera la tienda en igualar lo que se invirtió en ella."
     },
     {
      "type": "bullet",
@@ -2288,19 +2288,19 @@ window.MT_CASES = [
        "b"
       ],
       [
-       "alrededor de 55% al tercer año. Ya madura, la tienda genera cada año un efectivo equivalente a un poco más de la mitad de lo que costó abrirla.",
+       "Alrededor de 55% al tercer año. Ya madura, la tienda genera cada año un efectivo equivalente a un poco más de la mitad de lo que costó abrirla.",
        ""
       ]
      ],
-     "text": "Retorno sobre la inversión en efectivo: alrededor de 55% al tercer año. Ya madura, la tienda genera cada año un efectivo equivalente a un poco más de la mitad de lo que costó abrirla."
+     "text": "Retorno sobre la inversión en efectivo: Alrededor de 55% al tercer año. Ya madura, la tienda genera cada año un efectivo equivalente a un poco más de la mitad de lo que costó abrirla."
     },
     {
      "type": "p",
-     "text": "Son metas de la empresa, no resultados auditados de cada tienda. Aun así, enseñan cómo se evalúa una inversión: pones 5.5 millones hoy, los recuperas en poco más de dos años y ese dinero queda libre para abrir otra tienda. La empresa afirma que financia su expansión con el efectivo que genera su propia operación. Haz la cuenta: abrir 600 tiendas a ese costo requiere alrededor de 3,300 millones de pesos en un año (cálculo propio con las cifras de la empresa)."
+     "text": "Son metas de la empresa, no resultados auditados de cada tienda. Aun así, enseñan cómo se evalúa una inversión: Pones 5.5 millones hoy, los recuperas en poco más de dos años y ese dinero queda libre para abrir otra tienda. La empresa afirma que financia su expansión con el efectivo que genera su propia operación. Haz la cuenta: Abrir 600 tiendas a ese costo requiere alrededor de 3,300 millones de pesos en un año (cálculo propio con las cifras de la empresa)."
     },
     {
      "type": "p",
-     "text": "El payback tiene un límite, y tu manual lo explica: dice cuándo se recupera el dinero, pero no cuánto se gana después, ni toma en cuenta que un peso de dentro de tres años vale menos que uno de hoy. Para eso están el VAN (valor actual neto) y la TIR (tasa interna de retorno). La empresa no publicó el VAN ni la TIR de una tienda, y con los datos disponibles no se pueden calcular sin hacer supuestos sobre los flujos de cada año."
+     "text": "El payback tiene un límite, y tu manual lo explica: Dice cuándo se recupera el dinero, pero no cuánto se gana después, ni toma en cuenta que un peso de dentro de tres años vale menos que uno de hoy. Para eso están el VAN (valor actual neto) y la TIR (tasa interna de retorno). La empresa no publicó el VAN ni la TIR de una tienda, y con los datos disponibles no se pueden calcular sin hacer supuestos sobre los flujos de cada año."
     }
    ],
    "numeros": [
@@ -2379,7 +2379,7 @@ window.MT_CASES = [
    "latas": [
     {
      "type": "p",
-     "text": "En una planta de latas, la misma evaluación aplica a proyectos de todos tamaños: un sistema de inspección que reduce rechazos, un variador que baja el consumo eléctrico o una línea completa. La pregunta nunca cambia: ¿cuánto cuesta, cuánto efectivo ahorra o genera cada año y en cuánto tiempo se paga? Los proyectos pequeños de ahorro suelen tener paybacks cortos y fáciles de medir. Una línea nueva tarda más, y por eso se evalúa además con VAN y TIR, que consideran toda su vida útil."
+     "text": "En una planta de latas, la misma evaluación aplica a proyectos de todos tamaños: Un sistema de inspección que reduce rechazos, un variador que baja el consumo eléctrico o una línea completa. La pregunta nunca cambia: ¿Cuánto cuesta, cuánto efectivo ahorra o genera cada año y en cuánto tiempo se paga? Los proyectos pequeños de ahorro suelen tener paybacks cortos y fáciles de medir. Una línea nueva tarda más, y por eso se evalúa además con VAN y TIR, que consideran toda su vida útil."
     }
    ],
    "fuentes": [
@@ -2415,7 +2415,7 @@ window.MT_CASES = [
    "historia": [
     {
      "type": "p",
-     "text": "En México la conoces por Maseca. En Estados Unidos, por las tortillas Mission y Guerrero. Gruma es uno de los mayores productores de harina de maíz y tortillas del mundo: según sus reportes, tiene 75 plantas y alrededor de 25,000 empleados."
+     "text": "En México la conoces por Maseca. En Estados Unidos, por las tortillas Mission y Guerrero. Gruma es uno de los mayores productores de harina de maíz y tortillas del mundo: Según sus reportes, tiene 75 plantas y alrededor de 25,000 empleados."
     },
     {
      "type": "p",
@@ -2429,11 +2429,11 @@ window.MT_CASES = [
        "b"
       ],
       [
-       "el consumo de tortillas y harina de maíz, el tamaño de la población hispana en Estados Unidos y qué tanto se usa la tortilla en la cocina no mexicana.",
+       "El consumo de tortillas y harina de maíz, el tamaño de la población hispana en Estados Unidos y qué tanto se usa la tortilla en la cocina no mexicana.",
        ""
       ]
      ],
-     "text": "Demanda: el consumo de tortillas y harina de maíz, el tamaño de la población hispana en Estados Unidos y qué tanto se usa la tortilla en la cocina no mexicana."
+     "text": "Demanda: El consumo de tortillas y harina de maíz, el tamaño de la población hispana en Estados Unidos y qué tanto se usa la tortilla en la cocina no mexicana."
     },
     {
      "type": "bullet",
@@ -2443,11 +2443,11 @@ window.MT_CASES = [
        "b"
       ],
       [
-       "el costo y la disponibilidad del maíz y la harina de trigo, el costo de la energía y la volatilidad de esos precios.",
+       "El costo y la disponibilidad del maíz y la harina de trigo, el costo de la energía y la volatilidad de esos precios.",
        ""
       ]
      ],
-     "text": "Materias primas y energía: el costo y la disponibilidad del maíz y la harina de trigo, el costo de la energía y la volatilidad de esos precios."
+     "text": "Materias primas y energía: El costo y la disponibilidad del maíz y la harina de trigo, el costo de la energía y la volatilidad de esos precios."
     },
     {
      "type": "bullet",
@@ -2457,11 +2457,11 @@ window.MT_CASES = [
        "b"
       ],
       [
-       "lo que cuesta su deuda y cuánto valen sus ventas al convertirlas.",
+       "Lo que cuesta su deuda y cuánto valen sus ventas al convertirlas.",
        ""
       ]
      ],
-     "text": "Tipo de cambio y tasas de interés: lo que cuesta su deuda y cuánto valen sus ventas al convertirlas."
+     "text": "Tipo de cambio y tasas de interés: Lo que cuesta su deuda y cuánto valen sus ventas al convertirlas."
     },
     {
      "type": "bullet",
@@ -2471,11 +2471,11 @@ window.MT_CASES = [
        "b"
       ],
       [
-       "los efectos de iniciativas y políticas gubernamentales.",
+       "Los efectos de iniciativas y políticas gubernamentales.",
        ""
       ]
      ],
-     "text": "Gobierno y regulación: los efectos de iniciativas y políticas gubernamentales."
+     "text": "Gobierno y regulación: Los efectos de iniciativas y políticas gubernamentales."
     },
     {
      "type": "bullet",
@@ -2485,23 +2485,23 @@ window.MT_CASES = [
        "b"
       ],
       [
-       "otros productores de tortilla y de harina, y las condiciones económicas de los países donde opera.",
+       "Otros productores de tortilla y de harina, y las condiciones económicas de los países donde opera.",
        ""
       ]
      ],
-     "text": "Competencia y economía: otros productores de tortilla y de harina, y las condiciones económicas de los países donde opera."
+     "text": "Competencia y economía: Otros productores de tortilla y de harina, y las condiciones económicas de los países donde opera."
     },
     {
      "type": "p",
-     "text": "La lista se entiende mejor junto a sus números. En 2025 Gruma vendió 6,374.6 millones de dólares, y 73% vino de fuera de México. Por eso la demanda en Estados Unidos encabeza la lista: ahí sus ventas bajaron 4%, y la empresa lo atribuyó a una menor confianza del consumidor. El tipo de cambio también pesa: cerca de 67% de su deuda está en dólares."
+     "text": "La lista se entiende mejor junto a sus números. En 2025 Gruma vendió 6,374.6 millones de dólares, y 73% vino de fuera de México. Por eso la demanda en Estados Unidos encabeza la lista: Ahí sus ventas bajaron 4%, y la empresa lo atribuyó a una menor confianza del consumidor. El tipo de cambio también pesa: Cerca de 67% de su deuda está en dólares."
     },
     {
      "type": "p",
-     "text": "¿Y qué hace con esos riesgos? Para el maíz, el trigo, el aceite de soya, el gas natural y el diésel contrata coberturas: instrumentos financieros que le permiten fijar por adelantado el precio de una parte de lo que va a comprar. Usa instrumentos parecidos para el tipo de cambio y las tasas de interés. El reporte no indica qué porcentaje de sus compras está cubierto."
+     "text": "¿Y qué hace con esos riesgos? Para el maíz, el trigo, el aceite de soya, el gas natural y el diésel contrata coberturas: Instrumentos financieros que le permiten fijar por adelantado el precio de una parte de lo que va a comprar. Usa instrumentos parecidos para el tipo de cambio y las tasas de interés. El reporte no indica qué porcentaje de sus compras está cubierto."
     },
     {
      "type": "p",
-     "text": "Dos cosas quedan claras. Una cobertura no elimina el riesgo: reduce las sorpresas durante un tiempo. Y hay riesgos que no se pueden cubrir con un contrato, como que el consumidor compre menos. Con todo y eso, la utilidad de operación de Gruma en 2025 fue de 890.2 millones de dólares, la misma cifra que en 2024."
+     "text": "Dos cosas quedan claras. Una cobertura no elimina el riesgo: Reduce las sorpresas durante un tiempo. Y hay riesgos que no se pueden cubrir con un contrato, como que el consumidor compre menos. Con todo y eso, la utilidad de operación de Gruma en 2025 fue de 890.2 millones de dólares, la misma cifra que en 2024."
     }
    ],
    "numeros": [
@@ -2556,7 +2556,7 @@ window.MT_CASES = [
    "manual": [
     {
      "type": "p",
-     "text": "El capítulo 16 cierra el manual con una idea: ningún plan se cumple exactamente, así que hay que pensar en escenarios. Víctor puede preguntarse qué pasa si sube el algodón, si un cliente grande compra menos o si el dólar se mueve. Gruma hace ese mismo ejercicio por escrito y lo publica. El primer paso para manejar un riesgo es ponerle nombre. El segundo, decidir cuáles se pueden reducir y cuáles solo se pueden vigilar."
+     "text": "El capítulo 16 cierra el manual con una idea: Ningún plan se cumple exactamente, así que hay que pensar en escenarios. Víctor puede preguntarse qué pasa si sube el algodón, si un cliente grande compra menos o si el dólar se mueve. Gruma hace ese mismo ejercicio por escrito y lo publica. El primer paso para manejar un riesgo es ponerle nombre. El segundo, decidir cuáles se pueden reducir y cuáles solo se pueden vigilar."
     }
    ],
    "pensar": [
@@ -2580,7 +2580,7 @@ window.MT_CASES = [
    "latas": [
     {
      "type": "p",
-     "text": "La lista de una planta de latas tendría renglones muy parecidos. El aluminio y la energía tienen precios que se fijan en mercados internacionales y en dólares. La demanda depende de cuánto llenen los clientes, y eso cambia con la temporada y el consumo. También están la regulación sobre envases y las condiciones económicas del país. Ordenar esos riesgos, separar los que se pueden reducir desde la operación de los que piden un contrato o una cobertura, y pensar qué pasaría en un escenario malo: es el mismo ejercicio que hace Gruma."
+     "text": "La lista de una planta de latas tendría renglones muy parecidos. El aluminio y la energía tienen precios que se fijan en mercados internacionales y en dólares. La demanda depende de cuánto llenen los clientes, y eso cambia con la temporada y el consumo. También están la regulación sobre envases y las condiciones económicas del país. Ordenar esos riesgos, separar los que se pueden reducir desde la operación de los que piden un contrato o una cobertura, y pensar qué pasaría en un escenario malo: Es el mismo ejercicio que hace Gruma."
     }
    ],
    "fuentes": [
