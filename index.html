@@ -837,6 +837,8 @@
       max-width: 46%;
       padding: 0 0 0 clamp(20px, 4.2cqi, 36px);
     }
+    /* Banners más bajos con zona lisa más ancha (capítulo 0): el texto puede ocupar más */
+    .chapter__banner--photo[data-wide] .chapter__banner-text { max-width: 60%; }
     .chapter__banner--photo .chapter__title {
       margin-bottom: 12px;
       font-size: clamp(20px, 3.7cqi, 30px);
@@ -1811,7 +1813,7 @@
       }
       // Banners de cada caso (img/banners). tone: color del título según la zona izquierda del banner.
       var BANNERS = {
-        1: [1600, 506, 'light'], 2: [1600, 509, 'light'], 3: [1600, 504, 'light'], 4: [1600, 502, 'dark'],
+        0: [1600, 376, 'light'], 1: [1600, 506, 'light'], 2: [1600, 509, 'light'], 3: [1600, 504, 'light'], 4: [1600, 502, 'dark'],
         5: [1600, 502, 'light'], 6: [1600, 508, 'light'], 7: [1600, 502, 'light'], 8: [1600, 507, 'dark'],
         9: [1600, 507, 'light'], 10: [1600, 507, 'light'], 11: [1600, 501, 'dark'], 12: [1600, 509, 'light'],
         13: [1600, 427, 'light'], 14: [1530, 403, 'light'], 15: [1600, 415, 'light'], 16: [1600, 387, 'light']
@@ -1834,6 +1836,7 @@
           var nn = (i < 10 ? '0' : '') + i;
           banner.className = 'chapter__banner chapter__banner--photo';
           banner.dataset.tone = photo[2];
+          if (photo[0] / photo[1] > 4.2) banner.dataset.wide = '';
           banner.style.setProperty('--ratio', photo[0] + ' / ' + photo[1]);
           var img = el('img', 'chapter__photo');
           img.src = 'img/banners/cap' + nn + '.webp';
