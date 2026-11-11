@@ -240,6 +240,37 @@ Con `prefers-reduced-motion: reduce`, las transiciones bajan a 1 ms y las animac
 
 ---
 
+### 8.11 Colores de la empresa de cada capítulo
+
+Cada capítulo toma los colores de la empresa de su caso. Los colores salen de los logos de `img/logos/` y viven en `THEMES`, dentro de `index.html`. El rojo de Envases se queda en el marco del sitio: la línea superior, el índice, la sección activa, los contornos de foco, el pie de página y la sección «En una planta de latas».
+
+Cada tema define estos valores:
+
+| Valor | Uso | Regla |
+|---|---|---|
+| `bg` (2 colores) | Fondo del encabezado del capítulo, en degradado | El texto blanco encima debe tener un contraste de al menos 5:1 |
+| `ink` | Acento sobre hueso: números de sección, etiquetas Capítulo/Empresa, cabeceras de tabla, enlaces de fuentes | Contraste de al menos 4.5:1 sobre `#F4F3F1` y sobre su tinte al 9 % |
+| `bar` | Barra de lectura, borde superior de la tarjeta de logos, línea de la cita y del muro | Degradado con los colores de la marca |
+| `pal` | Figuras decorativas del encabezado | Libre, son decorativas |
+| `fx` | Tipo de figuras | `circles`, `pixels`, `rings` (Toyota), `plus` (la cruz de Volaris), `arcs` (rutas de Aeroméxico), `orbits` (BMW) o `confetti` (capítulo 0) |
+
+Si un caso tiene dos empresas, el degradado va del color de una al de la otra (por ejemplo, Walmart → Ferrari).
+
+**Piezas que usan el tema:**
+
+- **Encabezado del capítulo:** tarjeta de 20 px de radio con el degradado `bg`, «CAPÍTULO N», el título en blanco y una etiqueta «Caso: Empresa» con puntos de color. A la derecha, figuras que entran con resorte y flotan despacio.
+- **Barra de lectura:** 4 px fija arriba de la página, que avanza conforme se baja.
+- **Secciones:** el número va en una píldora del tinte de la marca, y las secciones aparecen deslizándose al llegar a ellas.
+- **Qué tiene que ver con tu manual:** cita sobre el tinte de la marca, con una línea de color a la izquierda.
+- **Para pensar:** tarjetas blancas con un círculo numerado en el degradado de la marca.
+- **En una planta de latas:** recuadro carbón con un ícono de lata en rojo Envases, porque habla de la planta de Envases.
+- **Anterior y siguiente:** al final de cada capítulo, dos tarjetas con el color y el logo del capítulo vecino.
+- **Muro de casos:** cada tarjeta lleva el círculo y la línea inferior con los colores de su empresa.
+
+Con `prefers-reduced-motion: reduce`, las figuras quedan quietas y las secciones se muestran sin animación.
+
+---
+
 ## 9. Accesibilidad
 
 - Todo se puede usar con teclado y tiene un contorno de foco visible de 2 px en rojo.

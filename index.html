@@ -568,6 +568,19 @@
       text-decoration: none;
       transition: transform 200ms cubic-bezier(0.23, 1, 0.32, 1), border-color 200ms ease, box-shadow 200ms ease;
     }
+    .logo-wall__tile { position: relative; }
+    .logo-wall__tile::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 4px;
+      background: var(--c-bar, var(--brand));
+      transform: scaleX(0.18);
+      transform-origin: left center;
+      transition: transform 300ms cubic-bezier(0.23, 1, 0.32, 1);
+    }
     .logo-wall__head {
       display: flex;
       align-items: center;
@@ -584,7 +597,7 @@
       width: 32px;
       height: 32px;
       border-radius: 50%;
-      background: var(--env-red);
+      background: linear-gradient(135deg, var(--c-bg1, var(--env-red)), var(--c-bg2, var(--env-red)));
       color: #ffffff;
       font-size: 15px;
       font-weight: 600;
@@ -596,7 +609,7 @@
       font-weight: 600;
       letter-spacing: 0.1em;
       text-transform: uppercase;
-      color: var(--env-red);
+      color: var(--c-ink, var(--env-red));
     }
     .logo-wall__name {
       display: -webkit-box;
@@ -628,10 +641,11 @@
     @media (hover: hover) and (pointer: fine) {
       .logo-wall__tile:hover {
         transform: translateY(-2px);
-        border-color: color-mix(in srgb, var(--brand) 45%, #e7e3dc);
-        box-shadow: 0 10px 24px -14px rgba(170, 17, 36, 0.35);
+        border-color: color-mix(in srgb, var(--c-ink, var(--brand)) 45%, #e7e3dc);
+        box-shadow: 0 10px 24px -14px color-mix(in srgb, var(--c-ink, var(--brand)) 55%, transparent);
       }
-      .logo-wall__tile:hover .logo-wall__head { background: #f7e7e9; }
+      .logo-wall__tile:hover::after { transform: scaleX(1); }
+      .logo-wall__tile:hover .logo-wall__head { background: color-mix(in srgb, var(--c-ink, var(--brand)) 10%, #ffffff); }
     }
     .logo-wall__tile:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
     .case-body > p { margin: 0 0 14px; }
@@ -711,6 +725,301 @@
       font-size: 12.5px;
       overflow-wrap: anywhere;
       text-underline-offset: 2px;
+    }
+
+    /* ---------- Colores de la empresa de cada capítulo ----------
+       Cada capítulo define --c-ink (acento legible sobre hueso), --c-bg1/--c-bg2 (fondo del
+       encabezado, con texto blanco) y --c-bar (degradado de la marca). El índice, el foco y el
+       marco del sitio siguen en rojo Envases. */
+    .chapter {
+      --c-ink: var(--brand);
+      --c-bg1: var(--env-ink);
+      --c-bg2: var(--env-ink);
+      --c-bar: var(--brand);
+      --c-tint: color-mix(in srgb, var(--c-ink) 9%, #ffffff);
+      --c-line: color-mix(in srgb, var(--c-ink) 22%, #e2ded7);
+    }
+    .chapter__banner {
+      position: relative;
+      isolation: isolate;
+      overflow: hidden;
+      margin: 0 0 28px;
+      padding: 30px 32px 28px;
+      min-height: 176px;
+      border-radius: 20px;
+      color: #ffffff;
+      background: linear-gradient(120deg, var(--c-bg1) 0%, var(--c-bg1) 35%, var(--c-bg2) 100%);
+      box-shadow: 0 18px 40px -24px color-mix(in srgb, var(--c-bg1) 80%, transparent);
+      animation: banner-in 500ms cubic-bezier(0.23, 1, 0.32, 1) both;
+    }
+    .chapter__banner::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background: radial-gradient(120% 140% at 0% 0%, rgba(255, 255, 255, 0.12), transparent 55%);
+    }
+    .chapter__banner-text { position: relative; z-index: 1; max-width: min(560px, 68%); }
+    .chapter__banner .chapter__kicker { color: rgba(255, 255, 255, 0.78); }
+    .chapter__banner .chapter__title { margin: 0 0 16px; color: #ffffff; }
+    .chapter__company {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0;
+      padding: 6px 12px 6px 8px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.14);
+      -webkit-backdrop-filter: blur(6px);
+      backdrop-filter: blur(6px);
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .chapter__company-dots { display: inline-flex; }
+    .chapter__company-dots i {
+      width: 10px;
+      height: 10px;
+      margin-right: -3px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(255, 255, 255, 0.85);
+    }
+    .chapter__art {
+      position: absolute;
+      top: 0;
+      right: 0;
+      z-index: 0;
+      width: 46%;
+      height: 100%;
+      overflow: visible;
+      pointer-events: none;
+    }
+    .chapter__art > * {
+      transform-box: fill-box;
+      transform-origin: center;
+      animation:
+        shape-in 600ms cubic-bezier(0.3, 1.35, 0.6, 1) both,
+        shape-float 7s ease-in-out infinite alternate;
+      animation-delay: calc(var(--k) * 45ms), calc(600ms + var(--k) * -380ms);
+    }
+    @keyframes banner-in {
+      from { opacity: 0; transform: translateY(10px) scale(0.985); }
+      to { opacity: 1; transform: none; }
+    }
+    @keyframes shape-in {
+      from { opacity: 0; transform: scale(0.2) rotate(-25deg); }
+      to { opacity: var(--o, 1); transform: none; }
+    }
+    @keyframes shape-float {
+      from { opacity: var(--o, 1); transform: translate(0, 0); }
+      to { opacity: var(--o, 1); transform: translate(var(--dx, 0px), var(--dy, -6px)); }
+    }
+
+    /* Barra de lectura con los colores de la marca */
+    .read-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 50;
+      height: 4px;
+      background: var(--c-bar, var(--brand));
+      transform: scaleX(var(--p, 0));
+      transform-origin: left center;
+      pointer-events: none;
+    }
+
+    /* Secciones */
+    .chapter .case-section { border-top-color: var(--c-line); }
+    .chapter .case-section h3 { position: relative; }
+    .chapter .case-section__n {
+      display: inline-grid;
+      place-items: center;
+      align-self: center;
+      min-width: 34px;
+      height: 24px;
+      padding: 0 8px;
+      border-radius: 999px;
+      background: var(--c-tint);
+      color: var(--c-ink);
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .chapter .case-section[data-reveal] {
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 500ms ease, transform 500ms cubic-bezier(0.23, 1, 0.32, 1);
+    }
+    .chapter .case-section[data-reveal="in"] { opacity: 1; transform: none; }
+    .chapter .case-logos {
+      position: relative;
+      overflow: hidden;
+      border-color: var(--c-line);
+      box-shadow: 0 1px 2px rgba(31, 31, 31, 0.04), 0 12px 28px -16px color-mix(in srgb, var(--c-ink) 45%, transparent);
+    }
+    .chapter .case-logos::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: var(--c-bar);
+    }
+    .chapter .case-head dt { color: var(--c-ink); }
+    .chapter .case-table { border-color: var(--c-line); }
+    .chapter .case-table thead th { background: var(--c-tint); color: var(--c-ink); }
+    @media (hover: hover) and (pointer: fine) {
+      .chapter .case-table tbody tr { transition: background-color 200ms ease; }
+      .chapter .case-table tbody tr:hover { background: color-mix(in srgb, var(--c-ink) 4%, #ffffff); }
+    }
+    .chapter .case-table:focus-visible { outline-color: var(--brand); }
+    .chapter .case-sources a { color: var(--c-ink); }
+
+    /* Para pensar: tarjetas numeradas */
+    .chapter .case-questions {
+      display: grid;
+      gap: 10px;
+      padding: 0;
+      list-style: none;
+      counter-reset: q;
+    }
+    .chapter .case-questions li {
+      position: relative;
+      margin: 0;
+      padding: 14px 16px 14px 58px;
+      border: 1px solid var(--c-line);
+      border-radius: 14px;
+      background: #ffffff;
+      counter-increment: q;
+      transition: transform 200ms ease, box-shadow 200ms ease;
+    }
+    .chapter .case-questions li::before {
+      content: counter(q);
+      position: absolute;
+      top: 13px;
+      left: 14px;
+      display: grid;
+      place-items: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--c-bg1), var(--c-bg2));
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+    @media (hover: hover) and (pointer: fine) {
+      .chapter .case-questions li:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 22px -16px color-mix(in srgb, var(--c-ink) 60%, transparent);
+      }
+    }
+
+    /* Qué tiene que ver con tu manual: cita con el color de la empresa */
+    .case-callout {
+      position: relative;
+      padding: 16px 20px 16px 22px;
+      border-radius: 14px;
+      background: var(--c-tint);
+    }
+    .case-callout::before {
+      content: "";
+      position: absolute;
+      top: 12px;
+      bottom: 12px;
+      left: 0;
+      width: 4px;
+      border-radius: 4px;
+      background: var(--c-bar);
+    }
+    .case-callout p { margin: 0; }
+
+    /* En una planta de latas: la casa es Envases, así que va en rojo y carbón */
+    .case-cans {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 16px;
+      align-items: start;
+      padding: 18px 20px;
+      border-radius: 14px;
+      background: var(--env-ink);
+      color: #ececec;
+    }
+    .case-cans__icon {
+      display: grid;
+      place-items: center;
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: var(--env-red);
+      color: #ffffff;
+    }
+    .case-cans__label {
+      display: block;
+      margin: 0 0 4px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #f2a8b1;
+    }
+    .case-cans p { margin: 0; }
+
+    /* Anterior / siguiente */
+    .chapter-pager {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+      padding-top: 24px;
+      border-top: 1px solid var(--c-line);
+    }
+    .chapter-pager__link {
+      --c-ink: var(--brand);
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: center;
+      min-height: 92px;
+      padding: 16px 16px 16px 20px;
+      overflow: hidden;
+      border: 1px solid #e2ded7;
+      border-radius: 14px;
+      background: #ffffff;
+      color: var(--ink);
+      text-decoration: none;
+      transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease;
+    }
+    .chapter-pager__link::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      width: 5px;
+      background: var(--c-bar);
+    }
+    .chapter-pager__link--next { grid-column: 2; }
+    .chapter-pager__dir {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--c-ink);
+    }
+    .chapter-pager__name { display: block; margin-top: 4px; font-size: 14px; font-weight: 600; line-height: 1.3; }
+    .chapter-pager__logos { display: flex; gap: 6px; align-items: center; }
+    .chapter-pager__logos img { display: block; max-width: 72px; max-height: 30px; width: auto; height: auto; object-fit: contain; }
+    .chapter-pager__link:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+    @media (hover: hover) and (pointer: fine) {
+      .chapter-pager__link:hover {
+        transform: translateY(-2px);
+        border-color: color-mix(in srgb, var(--c-ink) 40%, #e2ded7);
+        box-shadow: 0 12px 24px -16px color-mix(in srgb, var(--c-ink) 60%, transparent);
+      }
     }
 
     @media (max-width: 860px) {
@@ -826,6 +1135,15 @@
       .logo-wall__num { width: 28px; height: 28px; font-size: 14px; }
       .logo-wall__name { font-size: 12px; -webkit-line-clamp: 3; }
       .logo-wall__logos { min-height: 76px; padding: 12px; }
+      .chapter__banner { margin-bottom: 20px; padding: 22px 20px 20px; min-height: 0; border-radius: 18px; }
+      .chapter__banner-text { max-width: 82%; }
+      .chapter__art { width: 58%; opacity: 0.92; }
+      .chapter .case-questions li { padding: 12px 14px 12px 52px; }
+      .chapter .case-questions li::before { top: 11px; left: 12px; width: 28px; height: 28px; font-size: 13px; }
+      .case-cans { grid-template-columns: minmax(0, 1fr); gap: 12px; padding: 16px; }
+      .chapter-pager { grid-template-columns: minmax(0, 1fr); }
+      .chapter-pager__link--next { grid-column: auto; }
+      .chapter-pager__logos img { max-width: 60px; }
     }
 
     /* Basado en CodeSlots de React Bits (reactbits.dev), portado a JS + CSS sin dependencias */
@@ -998,7 +1316,7 @@
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .code-slots *, .gate, .app, .chapter, .branched-menu *, .case-logos, .logo-wall *, .logo-wall__grid li, .guide *, .guide__card {
+      .code-slots *, .gate, .app, .chapter, .chapter *, .branched-menu *, .case-logos, .logo-wall *, .logo-wall__grid li, .guide *, .guide__card {
         transition-duration: 1ms !important;
         animation: none !important;
       }
@@ -1293,19 +1611,196 @@
         marker.toggleAttribute('data-on', on);
         if (!glide) { void marker.offsetHeight; marker.style.transition = ''; }
       }
+      // Colores de la empresa de cada capítulo, tomados de sus logos.
+      // bg: fondo del encabezado (texto blanco encima, contraste ≥ 5:1).
+      // ink: acento legible sobre hueso. bar: degradado de la marca. pal: figuras decorativas.
+      // fx: tipo de figuras (plus = la cruz de cuadritos de Volaris).
+      var ALL_BRANDS = ['#D81E2A', '#0047BB', '#FFC220', '#FF5A5F', '#FF9900', '#E5007E', '#902088', '#68A8D8', '#88C038', '#FFE600', '#EB0A1E', '#F0C000', '#E07A1F', '#A8B400', '#1C69D4', '#F0C018'];
+      var THEMES = {
+        0: { bg: ['#262626', '#4a1018'], ink: '#AA1124', bar: ['#AA1124', '#FF9900', '#FFC220', '#88C038', '#68A8D8', '#902088'], fx: 'confetti', pal: ALL_BRANDS },
+        1: { bg: ['#1B3365', '#2A4C9A'], ink: '#C41A24', bar: ['#1B3365', '#D81E2A'], fx: 'circles', pal: ['#D81E2A', '#F2B8BD', '#5A7BD0', '#FFFFFF'] },
+        2: { bg: ['#0047BB', '#B0101E'], ink: '#0047BB', bar: ['#0047BB', '#FFC220', '#DA291C'], fx: 'circles', pal: ['#FFC220', '#FFF200', '#DA291C', '#4F8DF0'] },
+        3: { bg: ['#132C5E', '#C2334A'], ink: '#1A3A78', bar: ['#132C5E', '#E03C31', '#FF5A5F'], fx: 'pixels', pal: ['#E03C31', '#FF5A5F', '#3A64B8', '#FFB3B5'] },
+        4: { bg: ['#232F3E', '#37475A'], ink: '#232F3E', bar: ['#232F3E', '#FF9900'], fx: 'pixels', pal: ['#FF9900', '#FEBD69', '#146EB4', '#FFFFFF'] },
+        5: { bg: ['#A0004F', '#D1007A'], ink: '#B0005A', bar: ['#A0004F', '#E5007E', '#F7A8CF'], fx: 'circles', pal: ['#FF5DB1', '#F7A8CF', '#5C002E', '#FFFFFF'] },
+        6: { bg: ['#5A1054', '#902088'], ink: '#902088', bar: ['#902088', '#D0A0C8', '#68A8D8', '#88C038'], fx: 'plus', pal: ['#902088', '#68A8D8', '#88C038', '#D0A0C8', '#B0D0F0', '#D8E0A0'] },
+        7: { bg: ['#00007A', '#1C2DB5'], ink: '#00008F', bar: ['#00008F', '#5C6EF0'], fx: 'pixels', pal: ['#5C6EF0', '#A9B5FA', '#FFFFFF', '#2D3FC4'] },
+        8: { bg: ['#2D3277', '#2A6AD0'], ink: '#2D3277', bar: ['#2D3277', '#3483FA', '#FFE600'], fx: 'circles', pal: ['#FFE600', '#FFF159', '#3483FA', '#FFFFFF'] },
+        9: { bg: ['#9E0012', '#58595B'], ink: '#B5000F', bar: ['#EB0A1E', '#9A9A9A'], fx: 'rings', pal: ['#EB0A1E', '#C0C0C0', '#FFFFFF'] },
+        10: { bg: ['#00375F', '#00578F'], ink: '#00467F', bar: ['#00467F', '#F0C000'], fx: 'circles', pal: ['#F0C000', '#FFE27A', '#4D9AD6', '#FFFFFF'] },
+        11: { bg: ['#00509D', '#B3161E'], ink: '#0057A8', bar: ['#0060C0', '#E07A1F', '#A8B400', '#D81E1E'], fx: 'pixels', pal: ['#E07A1F', '#A8B400', '#3D9BE9', '#F04848'] },
+        12: { bg: ['#0B1F45', '#1F3F73'], ink: '#0B2343', bar: ['#0B2343', '#3A6EA5', '#E9302A'], fx: 'arcs', pal: ['#E9302A', '#7FA6D6', '#FFFFFF'] },
+        13: { bg: ['#141414', '#0E57B5'], ink: '#0E57B5', bar: ['#141414', '#1C69D4', '#81C4FF'], fx: 'orbits', pal: ['#1C69D4', '#81C4FF', '#FFFFFF'] },
+        14: { bg: ['#1D1D1F', '#3A3A3D'], ink: '#1D1D1F', bar: ['#1D1D1F', '#86868B', '#D2D2D7'], fx: 'circles', pal: ['#86868B', '#D2D2D7', '#FFFFFF', '#5E5E63'] },
+        15: { bg: ['#A80F1F', '#D81E28'], ink: '#B5121B', bar: ['#B5121B', '#F4A6A6'], fx: 'pixels', pal: ['#FFFFFF', '#F4A6A6', '#7A0A14'] },
+        16: { bg: ['#004A26', '#007A3D'], ink: '#00602F', bar: ['#00602F', '#F0C018'], fx: 'circles', pal: ['#F0C018', '#F7E08A', '#5DBB63', '#FFFFFF'] }
+      };
+      function barCss(t) { return t.bar.length > 1 ? 'linear-gradient(90deg, ' + t.bar.join(', ') + ')' : t.bar[0]; }
+      function applyTheme(node, i) {
+        var t = THEMES[i];
+        if (!t) return;
+        node.style.setProperty('--c-ink', t.ink);
+        node.style.setProperty('--c-bg1', t.bg[0]);
+        node.style.setProperty('--c-bg2', t.bg[1]);
+        node.style.setProperty('--c-bar', barCss(t));
+      }
+      // Figuras decorativas del encabezado (siempre las mismas en cada capítulo)
+      function seeded(n) {
+        var x = (n + 1) * 9301 + 49297;
+        return function () { x = (x * 9301 + 49297) % 233280; return x / 233280; };
+      }
+      function chapterArt(i) {
+        var t = THEMES[i];
+        var svg = document.createElementNS(NS, 'svg');
+        svg.setAttribute('class', 'chapter__art');
+        svg.setAttribute('viewBox', '0 0 300 180');
+        svg.setAttribute('preserveAspectRatio', 'xMaxYMid slice');
+        svg.setAttribute('aria-hidden', 'true');
+        var rnd = seeded(i), k = 0;
+        function pick() { return t.pal[Math.floor(rnd() * t.pal.length)]; }
+        function add(tag, attrs, o) {
+          var e = document.createElementNS(NS, tag);
+          Object.keys(attrs).forEach(function (a) { e.setAttribute(a, attrs[a]); });
+          e.setAttribute('opacity', o);
+          e.style.setProperty('--o', o);
+          e.style.setProperty('--k', k++);
+          e.style.setProperty('--dx', Math.round((rnd() - 0.5) * 12) + 'px');
+          e.style.setProperty('--dy', Math.round((rnd() - 0.5) * 14) + 'px');
+          svg.appendChild(e);
+        }
+        function sq(x, y, s, fill, o) { add('rect', { x: x, y: y, width: s, height: s, rx: Math.round(s * 0.16), fill: fill }, o); }
+        if (t.fx === 'plus') {
+          // Cruz de cuadritos como la del logo de Volaris
+          var C = 22, cx = 196, cy = 79;
+          var arms = [
+            [0, -3, '#B0D0F0'], [0, -2, '#68A8D8'], [-1, -1, '#B0D0F0'], [0, -1, '#68A8D8'], [1, -1, '#B0D0F0'],
+            [-3, 0, '#D0A0C8'], [-2, 0, '#D0A0C8'], [-1, 0, '#902088'], [0, 0, '#3A0B36'], [1, 0, '#88C038'], [2, 0, '#D8E0A0'], [3, 0, '#D8E0A0'],
+            [-1, 1, '#D0A0C8'], [0, 1, '#902088'], [1, 1, '#88C038'], [0, 2, '#D0A0C8'], [0, 3, '#E8C8E2']
+          ];
+          arms.forEach(function (a) { sq(cx + a[0] * C, cy + a[1] * C, C - 2, a[2], a[2] === '#3A0B36' ? 0.9 : 0.95); });
+          [[52, 26], [92, 140], [276, 18]].forEach(function (p, n) {
+            var s = 9;
+            sq(p[0], p[1] - s, s - 1, '#68A8D8', 0.8);
+            sq(p[0] - s, p[1], s - 1, '#D0A0C8', 0.8);
+            sq(p[0], p[1], s - 1, n === 1 ? '#88C038' : '#902088', 0.9);
+            sq(p[0] + s, p[1], s - 1, '#88C038', 0.8);
+            sq(p[0], p[1] + s, s - 1, '#D0A0C8', 0.7);
+          });
+        } else if (t.fx === 'pixels') {
+          for (var row = 0; row < 7; row++) {
+            for (var col = 0; col < 12; col++) {
+              var chance = (col / 11) * 0.95 - 0.3;
+              if (rnd() > chance) continue;
+              sq(18 + col * 24, 6 + row * 24, 20, pick(), (0.35 + rnd() * 0.6).toFixed(2));
+            }
+          }
+        } else if (t.fx === 'rings') {
+          var cxr = 238, cyr = 90;
+          add('ellipse', { cx: cxr, cy: cyr, rx: 92, ry: 62, fill: 'none', stroke: t.pal[1], 'stroke-width': 10 }, 0.35);
+          add('ellipse', { cx: cxr, cy: cyr - 16, rx: 44, ry: 30, fill: 'none', stroke: t.pal[0], 'stroke-width': 9 }, 0.9);
+          add('ellipse', { cx: cxr, cy: cyr, rx: 18, ry: 58, fill: 'none', stroke: t.pal[2] || '#ffffff', 'stroke-width': 7 }, 0.55);
+          add('circle', { cx: 120, cy: 40, r: 7, fill: t.pal[0] }, 0.8);
+          add('circle', { cx: 150, cy: 150, r: 4, fill: t.pal[2] || '#ffffff' }, 0.7);
+          add('circle', { cx: 92, cy: 112, r: 12, fill: 'none', stroke: t.pal[1], 'stroke-width': 4 }, 0.6);
+        } else if (t.fx === 'arcs') {
+          // Rutas de vuelo: arcos punteados con un punto rojo en cada destino
+          [[60, 160, 290, 40, 150], [110, 175, 300, 110, 90], [150, 150, 260, 10, 210]].forEach(function (a, n) {
+            add('path', { d: 'M ' + a[0] + ' ' + a[1] + ' Q ' + a[4] + ' ' + (a[3] - 30) + ' ' + a[2] + ' ' + a[3], fill: 'none', stroke: n === 0 ? t.pal[2] : t.pal[1], 'stroke-width': n === 0 ? 3 : 2.5, 'stroke-dasharray': '2 9', 'stroke-linecap': 'round' }, n === 0 ? 0.85 : 0.6);
+            add('circle', { cx: a[2] - 4, cy: a[3] + 4, r: n === 0 ? 7 : 5, fill: t.pal[0] }, 0.95);
+            add('circle', { cx: a[0], cy: a[1], r: 4, fill: t.pal[2] }, 0.7);
+          });
+        } else if (t.fx === 'orbits') {
+          // Círculos concéntricos y un cuarto de círculo
+          var ox = 236, oy = 92;
+          [86, 66, 46].forEach(function (r, n) {
+            add('circle', { cx: ox, cy: oy, r: r, fill: 'none', stroke: n === 1 ? t.pal[0] : t.pal[2], 'stroke-width': n === 1 ? 10 : 2 }, n === 1 ? 0.85 : 0.35);
+          });
+          add('path', { d: 'M ' + ox + ' ' + oy + ' V ' + (oy - 34) + ' A 34 34 0 0 1 ' + (ox + 34) + ' ' + oy + ' Z', fill: t.pal[1] }, 0.9);
+          add('circle', { cx: 120, cy: 46, r: 5, fill: t.pal[1] }, 0.8);
+          add('circle', { cx: 140, cy: 150, r: 3, fill: t.pal[2] }, 0.7);
+        } else {
+          var n = t.fx === 'confetti' ? 26 : 11;
+          for (var b = 0; b < n; b++) {
+            var x = 70 + Math.pow(rnd(), 0.6) * 225, y = 10 + rnd() * 160;
+            if (t.fx === 'confetti' && b % 3 === 0) {
+              sq(x, y, 8 + Math.round(rnd() * 10), pick(), (0.6 + rnd() * 0.4).toFixed(2));
+            } else {
+              var r = t.fx === 'confetti' ? 4 + rnd() * 9 : 6 + Math.pow(rnd(), 2) * 40;
+              if (r > 18 && x < 150) x += 90;
+              add('circle', { cx: x.toFixed(1), cy: y.toFixed(1), r: r.toFixed(1), fill: pick() }, (r > 26 ? 0.35 : 0.5 + rnd() * 0.45).toFixed(2));
+            }
+          }
+        }
+        return svg;
+      }
+      function chapterBanner(i, data) {
+        var t = THEMES[i];
+        var banner = el('header', 'chapter__banner');
+        var text = el('div', 'chapter__banner-text');
+        text.appendChild(el('p', 'chapter__kicker', 'Capítulo ' + i));
+        text.appendChild(el('h2', 'chapter__title', CHAPTERS[i]));
+        var chip = el('p', 'chapter__company');
+        var dots = el('span', 'chapter__company-dots');
+        dots.setAttribute('aria-hidden', 'true');
+        t.bar.slice(0, 3).forEach(function (c) { var d = el('i'); d.style.background = c; dots.appendChild(d); });
+        chip.appendChild(dots);
+        chip.appendChild(el('span', null, i === 0 ? '19 empresas que conoces' : 'Caso: ' + (data ? data.empresa : '')));
+        text.appendChild(chip);
+        banner.appendChild(text);
+        banner.appendChild(chapterArt(i));
+        return banner;
+      }
+      function pagerLink(n, dir) {
+        var a = el('a', 'chapter-pager__link chapter-pager__link--' + dir);
+        a.href = '#cap-' + n;
+        applyTheme(a, n);
+        var text = el('span');
+        text.appendChild(el('span', 'chapter-pager__dir', (dir === 'prev' ? '← Anterior' : 'Siguiente →') + ' · Cap. ' + n));
+        text.appendChild(el('span', 'chapter-pager__name', CHAPTERS[n]));
+        a.appendChild(text);
+        var logos = el('span', 'chapter-pager__logos');
+        (LOGOS[n] || []).forEach(function (l) { var img = logoImg(l); img.alt = ''; logos.appendChild(img); });
+        a.appendChild(logos);
+        a.addEventListener('click', function (e) { e.preventDefault(); select(n, 'encabezado', true); });
+        return a;
+      }
+      function chapterPager(i) {
+        var nav = el('nav', 'chapter-pager');
+        nav.setAttribute('aria-label', 'Otros capítulos');
+        if (i > 0) nav.appendChild(pagerLink(i - 1, 'prev'));
+        if (i < CHAPTERS.length - 1) nav.appendChild(pagerLink(i + 1, 'next'));
+        return nav;
+      }
+      // Barra de lectura: avanza conforme se lee el capítulo
+      var readBar = el('div', 'read-bar');
+      readBar.setAttribute('aria-hidden', 'true');
+      var readTick = false;
+      function updateReadBar() {
+        readTick = false;
+        if (!article || !article.isConnected || !article.offsetParent) { readBar.style.setProperty('--p', 0); return; }
+        var max = document.documentElement.scrollHeight - window.innerHeight;
+        var p = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 1;
+        readBar.style.setProperty('--p', p.toFixed(4));
+      }
+      window.addEventListener('scroll', function () {
+        if (!readTick) { readTick = true; requestAnimationFrame(updateReadBar); }
+      }, { passive: true });
+      window.addEventListener('resize', updateReadBar);
+      // Las secciones aparecen al llegar a ellas
+      var revealer = ('IntersectionObserver' in window) ? new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (en.isIntersecting) { en.target.setAttribute('data-reveal', 'in'); revealer.unobserve(en.target); }
+        });
+      }, { rootMargin: '0px 0px -6% 0px' }) : null;
       function renderChapter(i) {
         article.innerHTML = '';
+        if (revealer) revealer.disconnect();
         var wrap = document.createElement('div');
         wrap.className = 'chapter';
-        var kicker = document.createElement('p');
-        kicker.className = 'chapter__kicker';
-        kicker.textContent = 'Capítulo ' + i;
-        var h2 = document.createElement('h2');
-        h2.className = 'chapter__title';
-        h2.textContent = CHAPTERS[i];
-        wrap.appendChild(kicker);
-        wrap.appendChild(h2);
+        applyTheme(wrap, i);
         var data = (window.MT_CASES || []).filter(function (c) { return c.n === i; })[0];
+        wrap.appendChild(chapterBanner(i, data));
+        var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
         SECTIONS.forEach(function (s, k) {
           var sec = document.createElement('section');
           sec.className = 'case-section';
@@ -1320,9 +1815,17 @@
             var p = el('p', 'case-section__pending', 'Contenido pendiente');
             sec.appendChild(p);
           }
+          if (k > 0 && revealer && !reduce) {
+            sec.setAttribute('data-reveal', '');
+            revealer.observe(sec);
+          }
           wrap.appendChild(sec);
         });
+        wrap.appendChild(chapterPager(i));
         article.appendChild(wrap);
+        readBar.style.background = barCss(THEMES[i]);
+        if (!readBar.isConnected) document.body.appendChild(readBar);
+        updateReadBar();
       }
       // Logos de las empresas de cada caso (img/logos)
       var LOGOS = {
@@ -1361,6 +1864,7 @@
           li.style.setProperty('--i', n);
           var a = el('a', 'logo-wall__tile');
           a.href = '#cap-' + cap;
+          applyTheme(a, Number(cap));
           a.setAttribute('aria-label', 'Capítulo ' + cap + ', ' + CHAPTERS[cap] + ': ' + logos.map(function (l) { return l[1]; }).join(' y '));
           var head = el('span', 'logo-wall__head');
           head.appendChild(el('span', 'logo-wall__num', cap));
@@ -1436,6 +1940,19 @@
             ul.appendChild(li);
           });
           box.appendChild(ul);
+          return box;
+        }
+        if (id === 'manual') box.className = 'case-body case-callout';
+        if (id === 'latas') {
+          box.className = 'case-body case-cans';
+          var icon = el('span', 'case-cans__icon');
+          icon.setAttribute('aria-hidden', 'true');
+          icon.innerHTML = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6.5" y="3.5" width="11" height="17" rx="3"/><path d="M6.5 7.5h11M6.5 16.5h11"/><path d="M10 2.5h4"/></svg>';
+          box.appendChild(icon);
+          var txt = el('div');
+          txt.appendChild(el('span', 'case-cans__label', 'Envases · Planta de latas'));
+          blocks.forEach(function (b) { txt.appendChild(el('p', null, b.text)); });
+          box.appendChild(txt);
           return box;
         }
         var list = null;
