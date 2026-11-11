@@ -705,6 +705,9 @@
       color: var(--muted);
     }
     .case-body strong { font-weight: 600; color: var(--ink); }
+    /* Negritas y palabras clave en el color de la empresa del capítulo */
+    .chapter .case-body strong { font-weight: 700; color: var(--c-ink); }
+    .chapter .case-cans strong { color: color-mix(in srgb, var(--c-ink) 30%, #ffffff); }
     .case-list, .case-bullets {
       margin: 0 0 14px;
       padding-left: 1.4em;
@@ -1986,11 +1989,51 @@
         return wall;
       }
       // Texto con negritas e itálicas: cada bloque trae tramos [texto, 'b' | 'i' | '']
-      function rich(node, b) {
-        if (!b.runs) { node.textContent = b.text; return node; }
-        b.runs.forEach(function (r) {
+      // Palabras clave que se resaltan en el color de la empresa:
+      // cifras (montos y porcentajes) siempre, y los conceptos del manual la primera vez que aparecen en cada sección.
+      var KEY_TERMS = [
+        'flujo libre de efectivo', 'valor del dinero en el tiempo', 'periodo de recuperación', 'inversiones de capital',
+        'utilidad de operación', 'margen de operación', 'recompra de acciones', 'costo de oportunidad', 'punto de equilibrio',
+        'factor de ocupación', 'estado de resultados', 'estados financieros', 'gastos de operación', 'flujo de efectivo',
+        'flujo de operación', 'caso de negocio', 'balance general', 'utilidad bruta', 'utilidad neta', 'margen bruto',
+        'margen neto', 'margen EBITDA', 'tipo de cambio', 'tiendas iguales', 'costos fijos', 'costo unitario',
+        'asiento-milla', 'flujo libre', 'depreciación', 'amortización', 'presupuesto', 'pronóstico', 'desperdicio',
+        'eficiencia', 'escenarios', 'dividendos', 'recompras', 'forecast', 'payback', 'EBITDA', 'CASM', 'VAN', 'TIR', 'NEXO'
+      ];
+      var FIGURE = '\\d{1,3}(?:,\\d{3})*(?:\\.\\d+)?\\s(?:mil\\s)?(?:millones|billones)(?:\\sde\\s(?:pesos|dólares|euros|yenes|vehículos))?|\\d+(?:\\.\\d+)?\\s?%';
+      // Distingue mayúsculas: las siglas (VAN, TIR) no deben confundirse con palabras como «van».
+      // Los conceptos en minúscula también se buscan con mayúscula inicial, por si abren una oración.
+      var KEY_VARIANTS = [];
+      KEY_TERMS.forEach(function (t) {
+        KEY_VARIANTS.push(t);
+        if (t[0] !== t[0].toUpperCase()) KEY_VARIANTS.push(t[0].toUpperCase() + t.slice(1));
+      });
+      var KEY_RE = new RegExp('(' + FIGURE + ')|(^|[^\\p{L}\\d-])(' + KEY_VARIANTS.map(function (t) { return t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }).join('|') + ')(?![\\p{L}\\d])', 'gu');
+      function emphasize(node, text, seen) {
+        var last = 0, m;
+        KEY_RE.lastIndex = 0;
+        while ((m = KEY_RE.exec(text))) {
+          var start = m.index, word = m[1], prefix = '';
+          if (!word) {
+            prefix = m[2];
+            word = m[3];
+            var key = word.toLowerCase();
+            if (seen.has(key)) continue;
+            seen.add(key);
+            start += prefix.length;
+          }
+          if (start > last) node.appendChild(document.createTextNode(text.slice(last, start)));
+          node.appendChild(el('strong', 'kw', word));
+          last = start + word.length;
+        }
+        if (last < text.length) node.appendChild(document.createTextNode(text.slice(last)));
+      }
+      function rich(node, b, seen) {
+        var runs = b.runs || [[b.text, '']];
+        runs.forEach(function (r) {
           if (r[1] === 'b') node.appendChild(el('strong', null, r[0]));
           else if (r[1] === 'i') node.appendChild(el('em', null, r[0]));
+          else if (seen) emphasize(node, r[0], seen);
           else node.appendChild(document.createTextNode(r[0]));
         });
         return node;
@@ -2059,11 +2102,13 @@
           box.appendChild(icon);
           var txt = el('div');
           txt.appendChild(el('span', 'case-cans__label', 'Envases · Planta de latas'));
-          blocks.forEach(function (b) { txt.appendChild(rich(el('p'), b)); });
+          var seenCans = new Set();
+          blocks.forEach(function (b) { txt.appendChild(rich(el('p'), b, seenCans)); });
           box.appendChild(txt);
           return box;
         }
         var list = null, listType = null;
+        var seen = id === 'pensar' ? null : new Set();
         blocks.forEach(function (b) {
           if (b.type === 'item' || b.type === 'bullet') {
             if (!list || listType !== b.type) {
@@ -2073,7 +2118,7 @@
                 : el('ul', 'case-bullets');
               box.appendChild(list);
             }
-            list.appendChild(rich(el('li'), b));
+            list.appendChild(rich(el('li'), b, seen));
             return;
           }
           list = null; listType = null;
@@ -2104,7 +2149,7 @@
           } else if (b.type === 'note') {
             box.appendChild(el('p', 'case-note', b.text));
           } else {
-            box.appendChild(rich(el('p'), b));
+            box.appendChild(rich(el('p'), b, seen));
           }
         });
         return box;
