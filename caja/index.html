@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>La caja de la planta</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--hueso:#F4F3F1;--ink:#1F1F1F;--rojo:#AA1124;--carbon:#262626;--muted:#6B6862;--linea:#DEDBD6;--blanco:#fff;--ok:#2E7D4F;--alerta:#B4610E}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Montserrat,system-ui,sans-serif;font-weight:500;background:var(--hueso);color:var(--ink);line-height:1.45;font-variant-numeric:tabular-nums}
+.wrap{max-width:560px;margin:0 auto;padding:16px 16px 48px}
+.fac .wrap{max-width:1180px;padding:24px 28px 48px}
+header.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+.kick{font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--rojo)}
+h1{font-size:22px;font-weight:700;line-height:1.2}
+.fac h1{font-size:30px}
+h2{font-size:16px;font-weight:700;margin:18px 0 8px}
+.fac h2{font-size:20px}
+p.sub{color:var(--muted);font-size:14px;margin-top:4px}
+.card{background:var(--blanco);border:1px solid var(--linea);border-radius:12px;padding:14px 16px;margin-top:12px}
+label{display:block;font-size:13px;font-weight:600;margin:12px 0 4px}
+label small{font-weight:500;color:var(--muted)}
+input[type=text],input[type=number],select{width:100%;font:inherit;font-size:18px;padding:10px 12px;border:1.5px solid var(--linea);border-radius:10px;background:#fff;color:var(--ink)}
+input:focus,select:focus{outline:none;border-color:var(--carbon)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1.5px solid var(--linea);background:#fff;border-radius:999px;padding:9px 14px;font:inherit;font-size:15px;font-weight:600;cursor:pointer;color:var(--ink)}
+.chip.on{color:#fff;border-color:transparent}
+button.btn{display:block;width:100%;font:inherit;font-size:16px;font-weight:700;padding:13px;border:0;border-radius:10px;background:var(--rojo);color:#fff;cursor:pointer;margin-top:16px}
+button.btn:disabled{opacity:.5;cursor:default}
+button.sec{background:var(--carbon)}
+button.ghost{background:transparent;color:var(--carbon);border:1.5px solid var(--linea)}
+.row{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px solid #EFEDEA;font-size:15px}
+.row:last-child{border-bottom:0}
+.row b{font-weight:700}
+.muted{color:var(--muted)}
+.msg{border-radius:10px;padding:12px 14px;margin-top:12px;font-size:14.5px}
+.msg.ok{background:#E7F3EC;color:#1E5A37}
+.msg.err{background:#FBE9EB;color:#7F0D1B}
+.msg.warn{background:#FDF1E2;color:#7A4108}
+.msg.info{background:#ECEAE6;color:var(--carbon)}
+.msg ul{margin:6px 0 0 18px}
+.msg li{margin-top:4px}
+.mesa-tag{display:inline-flex;align-items:center;gap:8px;font-weight:700;font-size:14px}
+.dot{width:12px;height:12px;border-radius:50%;display:inline-block}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{font-size:10px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);font-weight:600;text-align:right;padding:6px 6px;border-bottom:1.5px solid var(--linea)}
+td{text-align:right;padding:7px 6px;border-bottom:1px solid #EFEDEA}
+th:first-child,td:first-child{text-align:left}
+.fac table{font-size:20px}
+.fac th{font-size:13px}
+.fac td{padding:12px 8px}
+.grid5{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:12px}
+.st{background:#fff;border:1px solid var(--linea);border-radius:12px;padding:12px 14px;border-top:6px solid}
+.st .n{font-weight:700;font-size:18px}
+.st .s{font-size:14px;margin-top:6px}
+.bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.bar button.btn{width:auto;margin-top:0;padding:11px 18px;font-size:15px}
+.cols{display:grid;grid-template-columns:1fr 300px;gap:24px;align-items:start}
+#qr{background:#fff;padding:14px;border-radius:12px;border:1px solid var(--linea);display:inline-block}
+.small{font-size:12.5px}
+a{color:var(--rojo)}
+.pts{font-weight:700;color:var(--rojo)}
+@media (max-width:900px){.cols{grid-template-columns:1fr}.grid5{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"><p class="muted">Cargando…</p></div>
+
+<script src="vendor/supabase-2.45.4.min.js"></script>
+<script src="vendor/qrcode.min.js"></script>
+<script src="motor.js"></script>
+<script>
+const SB = supabase.createClient('https://stnzwajznjdcmjkrewyk.supabase.co', 'sb_publishable_Xg7V0CtvQ-Ws7WDwQZ9laQ_32ZZP_7e');
+const MESAS = [null, ['Azul', '#1F6DA5'], ['Verde', '#2E7D4F'], ['Naranja', '#D9822B'], ['Morado', '#6B4FA0'], ['Rojo', '#C0392B']];
+const ROLES = ['Vocero', 'Moderador', 'Tesorero', 'Integrante'];
+const CAMPOS = { cobros: 'Cobros del mes', proveedor: 'Pago al proveedor', cajaFinal: 'Caja al final del mes', utilidad: 'Utilidad del mes' };
+const q = new URLSearchParams(location.search);
+const FAC = q.get('modo') === 'facilitador';
+const app = document.getElementById('app');
+const $ = s => document.querySelector(s);
+const money = n => (n < 0 ? '−$' : '$') + Math.abs(n);
+const store = {
+  get(k) { try { return JSON.parse(localStorage.getItem('caja_' + k)); } catch (e) { return null; } },
+  set(k, v) { try { localStorage.setItem('caja_' + k, JSON.stringify(v)); } catch (e) {} }
+};
+let cfg = store.get('cfg') || {};
+if (q.get('p')) cfg.partida = q.get('p').toUpperCase();
+if (!cfg.partida) cfg.partida = 'EU-S2';
+let partida = null, mesa = null, enviando = false, armado = false, timer = null, borrador = {};
+
+function mesaTag(n) { const [c, h] = MESAS[n]; return `<span class="mesa-tag"><span class="dot" style="background:${h}"></span>Mesa ${n} · ${c}</span>`; }
+
+async function cargarPartida(code) {
+  const { data, error } = await SB.from('caja_partidas').select('*').eq('codigo', code).maybeSingle();
+  if (error) throw error; return data;
+}
+async function cargarMesa() {
+  const { data, error } = await SB.from('caja_mesas').select('*').eq('partida', cfg.partida).eq('mesa', cfg.mesa).maybeSingle();
+  if (error) throw error;
+  if (data) return data;
+  await SB.from('caja_mesas').upsert({ partida: cfg.partida, mesa: cfg.mesa, estado: Caja.estadoInicial() }, { onConflict: 'partida,mesa', ignoreDuplicates: true });
+  const r = await SB.from('caja_mesas').select('*').eq('partida', cfg.partida).eq('mesa', cfg.mesa).maybeSingle();
+  return r.data;
+}
+
+/* ---------- Celular: unirse ---------- */
+function vistaUnirse(err) {
+  app.innerHTML = `
+  <header class="top"><div><div class="kick">Finanzas para No Financieros · Sesión 2</div><h1>La caja de la planta</h1></div></header>
+  <p class="sub">Elijan su mesa y su rol. El vocero captura la decisión y los números; toda la mesa hace las cuentas en papel.</p>
+  <div class="card">
+    <label>Mesa</label><div class="chips" id="mesas">${[1,2,3,4,5].map(n => `<button class="chip" data-m="${n}">Mesa ${n} · ${MESAS[n][0]}</button>`).join('')}</div>
+    <label>Tu rol hoy</label><div class="chips" id="roles">${ROLES.map(r => `<button class="chip" data-r="${r}">${r}</button>`).join('')}</div>
+    <label>Código de la partida <small>(lo da el facilitador)</small></label><input type="text" id="cod" value="${cfg.partida}" autocapitalize="characters">
+    ${err ? `<div class="msg err">${err}</div>` : ''}
+    <button class="btn" id="entrar">Entrar</button>
+  </div>`;
+  let m = cfg.mesa, r = cfg.rol;
+  const pintar = () => {
+    document.querySelectorAll('#mesas .chip').forEach(b => { const on = +b.dataset.m === m; b.classList.toggle('on', on); b.style.background = on ? MESAS[+b.dataset.m][1] : ''; });
+    document.querySelectorAll('#roles .chip').forEach(b => { const on = b.dataset.r === r; b.classList.toggle('on', on); b.style.background = on ? 'var(--carbon)' : ''; });
+  };
+  pintar();
+  $('#mesas').onclick = e => { if (e.target.dataset.m) { m = +e.target.dataset.m; pintar(); } };
+  $('#roles').onclick = e => { if (e.target.dataset.r) { r = e.target.dataset.r; pintar(); } };
+  $('#entrar').onclick = async () => {
+    const code = $('#cod').value.trim().toUpperCase();
+    if (!m || !r) return vistaUnirse('Elijan la mesa y el rol.');
+    try {
+      const p = await cargarPartida(code);
+      if (!p) { cfg.mesa = m; cfg.rol = r; return vistaUnirse('Ese código no existe. Revísenlo con el facilitador.'); }
+      cfg = { partida: code, mesa: m, rol: r }; store.set('cfg', cfg); iniciarMesa();
+    } catch (e) { vistaUnirse('No hay conexión. Sigan con la hoja de papel y vuelvan a intentar.'); }
+  };
+}
+
+/* ---------- Celular: mesa ---------- */
+function iniciarMesa() { clearInterval(timer); armado = false; refrescarMesa(); timer = setInterval(refrescarMesa, 3000); }
+
+async function refrescarMesa() {
+  if (enviando) return;
+  try {
+    const p = await cargarPartida(cfg.partida);
+    if (!p) { clearInterval(timer); return vistaUnirse('El facilitador reinició o cerró la partida. Vuelvan a entrar.'); }
+    const m = await cargarMesa();
+    const cambio = !partida || !mesa || p.mes_actual !== partida.mes_actual || m.updated_at !== mesa.updated_at;
+    partida = p; mesa = m;
+    if (cambio || !armado) vistaMesa();
+    const red = $('#red'); if (red) red.textContent = '';
+  } catch (e) { const red = $('#red'); if (red) red.textContent = 'Sin conexión. Reintentando…'; }
+}
+
+function tablero(est, mes) {
+  const ini = mes <= 5 ? Caja.inicioDeMes(est, mes) : null;
+  const fac = est.facturas.slice().sort((a, b) => a.mes - b.mes).map(f => `<div class="row"><span>Factura que se cobra en el mes ${f.mes}</span><b>${money(f.monto)}</b></div>`).join('') || '<div class="row muted">Sin facturas pendientes</div>';
+  const av = est.avisos.map(a => `<div class="row"><span>Aviso del proveedor de aluminio, mes ${a.mes}</span><b>${money(a.monto)}</b></div>`).join('') || '<div class="row muted">Sin avisos</div>';
+  return `<div class="card">
+    <div class="row"><span>Caja en el banco al empezar${mes <= 5 ? ' el mes ' + mes : ''}</span><b>${money(est.caja)}</b></div>
+    <div class="row"><span>Crédito del banco por pagar</span><b>${money(est.credito)}</b></div>
+    ${ini && est.credito ? `<div class="row"><span>Intereses de este mes ($1 por cada $10)</span><b>${money(ini.intereses)}</b></div>` : ''}
+    <h2>Por cobrar</h2>${fac}
+    <h2>Por pagar</h2>${av}
+    <p class="small muted" style="margin-top:10px">Cifras en millones de pesos.</p>
+  </div>`;
+}
+
+function historial(est) {
+  if (!est.historial.length) return '';
+  return `<h2>Lo que llevan</h2><div class="card"><table><tr><th>Mes</th><th>Lotes</th><th>Pronto pago</th><th>Caja final</th><th>Utilidad</th><th>Puntos</th></tr>
+  ${est.historial.map(h => `<tr><td>${h.mes}</td><td>${h.decision.lotes}</td><td>${h.decision.pronto || '—'}</td><td>${money(h.resultado.cajaFinal)}</td><td>${money(h.resultado.utilidad)}</td><td>${h.puntos}</td></tr>`).join('')}
+  <tr><td><b>Total</b></td><td></td><td></td><td><b>${money(est.caja)}</b></td><td><b>${money(est.utilidadAcum)}</b></td><td class="pts">${est.puntos}</td></tr></table></div>`;
+}
+
+function avisoUltimo(est) {
+  const u = est.ultimo; if (!u) return '';
+  if (u.ok) return `<div class="msg ok"><b>Mes ${u.mes}: correcto${u.intento === 2 ? ' en el segundo intento' : ''}.</b> Ganan ${u.puntos} ${u.puntos === 1 ? 'punto' : 'puntos'}.</div>`;
+  const r = u.correctos;
+  return `<div class="msg warn"><b>Mes ${u.mes}: los números no cuadraron en el segundo intento.</b> Avanzan sin puntos. Estos eran los correctos; anótenlos en su hoja:
+    <ul><li>Cobros: ${money(r.cobros)}</li><li>Pago al proveedor: ${money(r.proveedor)}</li><li>Caja al final: ${money(r.cajaFinal)}</li><li>Utilidad: ${money(r.utilidad)}</li></ul></div>`;
+}
+
+function avisoPendiente(est, mes) {
+  const pe = est.pendiente; if (!pe || pe.mes !== mes) return '';
+  return `<div class="msg err"><b>Algo no cuadra. Tienen un segundo intento (vale 1 punto).</b>
+    <ul>${pe.fallos.map(c => `<li>${Caja.PISTAS[c](mes)}</li>`).join('')}</ul>
+    ${pe.bien.length ? `<p style="margin-top:6px">Ya están bien: ${pe.bien.map(c => CAMPOS[c].toLowerCase()).join(', ')}.</p>` : ''}</div>`;
+}
+
+function vistaMesa() {
+  armado = true;
+  const est = mesa.estado, mes = est.mesCompleto + 1, abierto = partida.mes_actual;
+  const esVocero = cfg.rol === 'Vocero';
+  let cuerpo = '';
+  if (mes > 5) {
+    cuerpo = `<div class="msg info"><b>Terminaron los cinco meses.</b> Utilidad acumulada ${money(est.utilidadAcum)} y caja ${money(est.caja)}${est.credito ? `, con ${money(est.credito)} de crédito por pagar` : ''}. Miren la pantalla: ¿la mesa con más utilidad es la que tiene más caja?</div>`;
+  } else if (abierto === 0) {
+    cuerpo = `<div class="msg info">Esperen a que el facilitador abra el mes 1. Mientras, revisen su tablero: esto es lo que tienen hoy.</div>`;
+  } else if (mes > abierto) {
+    cuerpo = `<div class="msg info">Ya enviaron el mes ${mes - 1}. Esperen a que el facilitador abra el mes ${mes}.</div>`;
+  } else {
+    const ped = Caja.PEDIDOS[mes];
+    cuerpo = `<div class="card"><div class="kick">Mes ${mes} de 5</div>
+      <h2 style="margin-top:4px">Este mes les piden ${ped} lotes</h2>
+      <p class="small">Cada lote se vende en $10 y cuesta $4 de aluminio y $2 de nómina. El gasto fijo es $2 al mes. El cliente paga a 2 meses; el aluminio se paga al mes siguiente; la nómina y el gasto fijo, este mes.</p>
+      ${mes >= 3 ? `<p class="small" style="margin-top:6px"><b>Pronto pago:</b> ${Caja.CLIENTE_NUEVO} de esos lotes son de un cliente nuevo. Si le hacen $1 de descuento por lote, paga en 1 mes en lugar de 2 ($9 por lote).</p>` : ''}
+      <p class="small" style="margin-top:6px"><b>Banco:</b> presta en múltiplos de $10. Cobra $1 al mes por cada $10, a partir del mes siguiente.</p></div>
+      ${avisoPendiente(est, mes)}
+      ${esVocero ? formulario(est, mes) : `<div class="msg info">El vocero captura la decisión. Ustedes hagan las cuentas en la hoja de caja y revísenlas con él antes de enviar.</div>`}`;
+  }
+  app.innerHTML = `
+    <header class="top"><div><div class="kick">La caja de la planta</div><div style="margin-top:4px">${mesaTag(cfg.mesa)} <span class="muted small">· ${cfg.rol}</span></div></div>
+      <div style="text-align:right"><div class="pts" style="font-size:22px">${est.puntos}</div><div class="small muted">puntos</div></div></header>
+    <div id="red" class="small" style="color:var(--rojo)"></div>
+    ${avisoUltimo(est)}
+    ${cuerpo}
+    ${mes <= 5 ? '<h2>Su tablero</h2>' + tablero(est, mes) : ''}
+    ${historial(est)}
+    <p class="small muted" style="margin-top:20px">Partida ${cfg.partida} · <a href="#" id="salir">cambiar de mesa o rol</a></p>`;
+  $('#salir').onclick = e => { e.preventDefault(); clearInterval(timer); vistaUnirse(); };
+  if (esVocero && mes <= 5 && mes <= abierto && abierto > 0) armarFormulario(est, mes);
+}
+
+function campo(id, lab, extra = '') { return `<label for="${id}">${lab}${extra}</label><input type="number" inputmode="numeric" id="${id}" value="${borrador[id] ?? ''}">`; }
+
+function formulario(est, mes) {
+  return `<div class="card"><h2 style="margin-top:0">1. La decisión</h2>
+    ${campo('lotes', 'Lotes a producir', ` <small>(de 0 a ${Caja.PEDIDOS[mes]})</small>`)}
+    ${mes >= 3 ? campo('pronto', 'Lotes con pronto pago', ` <small>(de 0 a ${Caja.CLIENTE_NUEVO})</small>`) : ''}
+    ${campo('pide', 'Crédito que piden al banco', ' <small>($0, $10, $20…)</small>')}
+    ${est.credito ? campo('devuelve', 'Crédito que devuelven', ` <small>(deben ${money(est.credito)})</small>`) : ''}
+    <h2>2. Sus números de papel</h2>
+    ${campo('cobros', CAMPOS.cobros)}${campo('proveedor', CAMPOS.proveedor)}${campo('cajaFinal', CAMPOS.cajaFinal)}${campo('utilidad', CAMPOS.utilidad)}
+    <div id="fmsg"></div>
+    <button class="btn" id="enviar">Enviar el mes ${mes}</button></div>`;
+}
+
+function armarFormulario(est, mes) {
+  document.querySelectorAll('input[type=number]').forEach(i => i.oninput = () => { borrador[i.id] = i.value; });
+  $('#enviar').onclick = () => enviar(est, mes);
+}
+
+async function enviar(est, mes) {
+  const v = id => { const el = $('#' + id); return el && el.value.trim() !== '' ? Number(el.value) : (el ? NaN : 0); };
+  const d = { lotes: v('lotes'), pronto: v('pronto'), pide: v('pide') || 0, devuelve: v('devuelve') || 0 };
+  if (Number.isNaN(d.pronto)) d.pronto = 0;
+  const fmsg = t => { $('#fmsg').innerHTML = `<div class="msg err">${t}</div>`; };
+  if (Number.isNaN(d.lotes)) return fmsg('Escriban cuántos lotes van a producir.');
+  const errD = Caja.validarDecision(est, mes, d); if (errD) return fmsg(errD);
+  const nums = { cobros: v('cobros'), proveedor: v('proveedor'), cajaFinal: v('cajaFinal'), utilidad: v('utilidad') };
+  if (Object.values(nums).some(Number.isNaN)) return fmsg('Llenen los cuatro números de su hoja.');
+  const r = Caja.calcular(est, mes, d);
+  if (r.cajaFinal < 0) return fmsg(`Con esa decisión la caja termina en ${money(r.cajaFinal)}: no alcanza para pagar la nómina y al proveedor. Pueden pedir crédito, ofrecer pronto pago o producir menos. Este intento no cuenta.`);
+  const fallos = Caja.comparar(r, nums);
+  const intento = est.pendiente && est.pendiente.mes === mes ? 2 : 1;
+  let nuevo;
+  if (!fallos.length) {
+    const pts = intento === 1 ? 2 : 1;
+    nuevo = Caja.aplicar(est, mes, d, r, pts); nuevo.ultimo = { mes, ok: true, intento, puntos: pts };
+  } else if (intento === 1) {
+    nuevo = JSON.parse(JSON.stringify(est));
+    nuevo.pendiente = { mes, fallos, bien: Object.keys(CAMPOS).filter(c => !fallos.includes(c)) };
+  } else {
+    nuevo = Caja.aplicar(est, mes, d, r, 0); nuevo.ultimo = { mes, ok: false, intento, correctos: r };
+  }
+  if (nuevo.mesCompleto === mes) { delete nuevo.pendiente; borrador = {}; }
+  enviando = true; $('#enviar').disabled = true;
+  try {
+    const e1 = await SB.from('caja_envios').insert({ partida: cfg.partida, mesa: cfg.mesa, mes, intento, decision: d, numeros: nums, correcto: !fallos.length });
+    if (e1.error) throw e1.error;
+    const e2 = await SB.from('caja_mesas').update({ estado: nuevo, updated_at: new Date().toISOString() }).eq('partida', cfg.partida).eq('mesa', cfg.mesa).select().single();
+    if (e2.error) throw e2.error;
+    mesa = e2.data; enviando = false; vistaMesa(); window.scrollTo(0, 0);
+  } catch (e) {
+    enviando = false; $('#enviar').disabled = false;
+    fmsg('No se pudo enviar. Revisen la conexión e intenten otra vez.');
+  }
+}
+
+/* ---------- Facilitador ---------- */
+let facMesas = [], confirmar = false;
+function bono(mesas) {
+  const term = mesas.filter(m => m.estado.mesCompleto === 5);
+  if (term.length === 0) return {};
+  const max = Math.max(...term.map(m => m.estado.utilidadAcum));
+  const out = {}; term.forEach(m => { if (m.estado.utilidadAcum === max) out[m.mesa] = 3; }); return out;
+}
+
+async function refrescarFac() {
+  try {
+    partida = await cargarPartida(cfg.partida);
+    const { data } = partida ? await SB.from('caja_mesas').select('*').eq('partida', cfg.partida).order('mesa') : { data: [] };
+    facMesas = data || []; vistaFac();
+  } catch (e) { const red = $('#red'); if (red) red.textContent = 'Sin conexión. Reintentando…'; }
+}
+
+function estadoMesa(m, abierto) {
+  if (!m) return '<span class="muted">Sin conectar</span>';
+  const e = m.estado;
+  if (e.mesCompleto >= abierto && abierto > 0) return `<b style="color:var(--ok)">Mes ${e.mesCompleto} enviado</b>`;
+  if (e.pendiente && e.pendiente.mes === e.mesCompleto + 1) return `<b style="color:var(--alerta)">Mes ${e.pendiente.mes}: segundo intento</b>`;
+  if (abierto === 0) return '<span class="muted">Conectada</span>';
+  return `<span>Trabajando el mes ${e.mesCompleto + 1}</span>`;
+}
+
+function grafica(mesas) {
+  const W = 760, H = 300, pad = 40, vals = mesas.flatMap(m => [m.estado.utilidadAcum, m.estado.caja]);
+  const max = Math.max(10, ...vals), gw = (W - pad * 2) / mesas.length, bw = Math.min(46, gw / 3), y = v => H - pad - (Math.max(0, v) / max) * (H - pad * 2);
+  let s = `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Utilidad acumulada contra caja por mesa"><line x1="${pad}" x2="${W - pad}" y1="${H - pad}" y2="${H - pad}" stroke="#BDB9B2"/>`;
+  mesas.forEach((m, i) => {
+    const x = pad + i * gw + gw / 2, u = m.estado.utilidadAcum, c = m.estado.caja;
+    s += `<rect x="${x - bw - 3}" y="${y(u)}" width="${bw}" height="${H - pad - y(u)}" fill="#262626" rx="3"/><text x="${x - bw / 2 - 3}" y="${y(u) - 6}" text-anchor="middle" font-size="15" font-weight="700">${money(u)}</text>`;
+    s += `<rect x="${x + 3}" y="${y(c)}" width="${bw}" height="${H - pad - y(c)}" fill="#AA1124" rx="3"/><text x="${x + bw / 2 + 3}" y="${y(c) - 6}" text-anchor="middle" font-size="15" font-weight="700" fill="#AA1124">${money(c)}</text>`;
+    s += `<text x="${x}" y="${H - pad + 22}" text-anchor="middle" font-size="15" font-weight="600">Mesa ${m.mesa}</text>`;
+  });
+  return s + `</svg><p class="small" style="margin-top:6px"><span class="dot" style="background:#262626"></span> Utilidad acumulada &nbsp; <span class="dot" style="background:#AA1124"></span> Caja al final</p>`;
+}
+
+function vistaFac() {
+  const abierto = partida ? partida.mes_actual : 0, vis = partida && partida.resultados_visibles;
+  const porMesa = {}; facMesas.forEach(m => porMesa[m.mesa] = m);
+  const b = bono(facMesas);
+  const todos = facMesas.length && facMesas.every(m => m.estado.mesCompleto === 5);
+  const tabla = facMesas.slice().sort((a, c) => (c.estado.puntos + (b[c.mesa] || 0)) - (a.estado.puntos + (b[a.mesa] || 0)));
+  const url = location.origin + location.pathname + '?p=' + encodeURIComponent(cfg.partida);
+  app.innerHTML = `
+  <header class="top"><div><div class="kick">Finanzas para No Financieros · Sesión 2 · Vista del facilitador</div><h1>La caja de la planta</h1></div>
+    <div class="bar"><input type="text" id="cod" value="${cfg.partida}" style="width:150px;font-size:16px">
+    <button class="btn ghost" id="cargar">Cargar</button>
+    <button class="btn ${confirmar ? '' : 'sec'}" id="reset">${partida ? (confirmar ? 'Confirmar: se borra todo' : 'Reiniciar partida') : 'Crear partida'}</button></div></header>
+  <div id="red" class="small" style="color:var(--rojo)"></div>
+  ${!partida ? '<div class="msg info">Esta partida no existe todavía. Créenla con el botón de arriba.</div>' : `
+  <div class="cols"><div>
+    <div class="bar">
+      <div style="font-size:22px;font-weight:700;margin-right:12px">${abierto === 0 ? 'Sin empezar' : 'Mes ' + abierto + ' de 5'}</div>
+      ${abierto < 5 ? `<button class="btn" id="abrir">Abrir mes ${abierto + 1}</button>` : ''}
+      <button class="btn ghost" id="vis">${vis ? 'Ocultar cifras' : 'Mostrar cifras'}</button>
+    </div>
+    <div class="grid5">${[1,2,3,4,5].map(n => `<div class="st" style="border-top-color:${MESAS[n][1]}"><div class="n">Mesa ${n}</div><div class="s">${estadoMesa(porMesa[n], abierto)}</div></div>`).join('')}</div>
+    ${vis && facMesas.length ? `<h2>Cómo van</h2><div class="card"><table><tr><th>Mesa</th><th>Caja</th><th>Utilidad acumulada</th><th>Crédito</th><th>Puntos</th></tr>
+      ${tabla.map(m => `<tr><td>${mesaTag(m.mesa)}</td><td>${money(m.estado.caja)}</td><td>${money(m.estado.utilidadAcum)}</td><td>${money(m.estado.credito)}</td><td class="pts">${m.estado.puntos + (b[m.mesa] || 0)}${b[m.mesa] ? ' <span class="small muted">(+3 mayor utilidad)</span>' : ''}</td></tr>`).join('')}</table></div>` : ''}
+    ${vis && todos ? `<h2>¿La mesa que más ganó es la que más caja tiene?</h2><div class="card">${grafica(facMesas)}</div>` : ''}
+  </div>
+  <div><div id="qr"></div><p class="small" style="margin-top:8px">Escaneen para entrar. Código: <b>${cfg.partida}</b></p><p class="small muted" style="word-break:break-all">${url}</p></div></div>`}`;
+  if (partida && window.QRCode) new QRCode($('#qr'), { text: url, width: 260, height: 260, colorDark: '#1F1F1F', colorLight: '#ffffff' });
+  $('#cargar').onclick = () => { const c = $('#cod').value.trim().toUpperCase(); if (!/^[A-Z0-9-]{2,20}$/.test(c)) return; cfg.partida = c; store.set('cfg', cfg); confirmar = false; refrescarFac(); };
+  $('#reset').onclick = async () => {
+    const c = $('#cod').value.trim().toUpperCase(); if (!/^[A-Z0-9-]{2,20}$/.test(c)) return;
+    if (partida && !confirmar) { confirmar = true; return vistaFac(); }
+    confirmar = false; cfg.partida = c; store.set('cfg', cfg);
+    await SB.from('caja_envios').delete().eq('partida', c);
+    await SB.from('caja_mesas').delete().eq('partida', c);
+    await SB.from('caja_partidas').upsert({ codigo: c, mes_actual: 0, resultados_visibles: false, updated_at: new Date().toISOString() }, { onConflict: 'codigo' });
+    refrescarFac();
+  };
+  const ab = $('#abrir'); if (ab) ab.onclick = async () => { await SB.from('caja_partidas').update({ mes_actual: abierto + 1, updated_at: new Date().toISOString() }).eq('codigo', cfg.partida); refrescarFac(); };
+  const vb = $('#vis'); if (vb) vb.onclick = async () => { await SB.from('caja_partidas').update({ resultados_visibles: !vis }).eq('codigo', cfg.partida); refrescarFac(); };
+}
+
+if (FAC) { document.body.classList.add('fac'); refrescarFac(); setInterval(() => { if (!confirmar && document.activeElement?.id !== 'cod') refrescarFac(); }, 3000); }
+else if (cfg.mesa && cfg.rol && cfg.partida) iniciarMesa();
+else vistaUnirse();
+</script>
+</body>
+</html>
