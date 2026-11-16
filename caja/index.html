@@ -65,6 +65,19 @@ button.btn.danger{background:var(--danger)}
 .msg.info{background:#ECE9E4;color:var(--env-ink)}
 .msg ul{margin:6px 0 0 18px}
 .msg li{margin-top:4px}
+.err-title{margin:0 0 4px}
+.err-sub{font-size:14px;color:var(--muted);margin:0 0 14px;line-height:1.5}
+.err-row{margin-top:14px}
+.err-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-size:17px}
+.err-lab{font-weight:600}
+.err-val{font-weight:600;color:var(--muted);white-space:nowrap}
+.err-row.top .err-val{color:var(--env-red)}
+.err-track{height:22px;background:#EBE7E1;border-radius:999px;margin-top:6px;overflow:hidden}
+.err-bar{height:100%;background:#9D988F;border-radius:999px;min-width:0}
+.err-row.top .err-bar{background:var(--env-red)}
+.fac .err-sub{font-size:16px}
+.fac .err-head{font-size:24px}
+.fac .err-track{height:34px}
 .mesa-tag{display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:15px}
 .dot{width:12px;height:12px;border-radius:50%;display:inline-block;flex:none}
 table{width:100%;border-collapse:collapse;font-size:13.5px;background:var(--table-bg)}
@@ -289,6 +302,7 @@ a{color:var(--env-red)}
 <script src="vendor/qrcode.min.js"></script>
 <script src="motor.js"></script>
 <script src="exportar.js"></script>
+<script src="errores.js"></script>
 <script>
 const SB = supabase.createClient('https://stnzwajznjdcmjkrewyk.supabase.co', 'sb_publishable_Xg7V0CtvQ-Ws7WDwQZ9laQ_32ZZP_7e');
 const MESAS = [null, ['Los Politos', '#1F6DA5'], ['Osos EUM', '#2E7D4F'], ['Actirent Envases', '#D9822B'], ['Equipo Dinamita', '#6B4FA0'], ['Los rentables', '#C0392B']];
@@ -306,7 +320,7 @@ const store = {
 let cfg = store.get('cfg') || {};
 if (q.get('p')) cfg.partida = q.get('p').toUpperCase();
 if (!cfg.partida) cfg.partida = 'EU-S2';
-let partida = null, mesa = null, enviando = false, armado = false, timer = null, borrador = {};
+let partida = null, mesa = null, enviando = false, armado = false, timer = null, borrador = {}, errMovil = null;
 
 function mesaTag(n) { const [c, h] = MESAS[n]; return `<span class="mesa-tag"><span class="dot" style="background:${h}"></span>${c}</span>`; }
 
@@ -349,7 +363,7 @@ function vistaUnirse(err) {
     try {
       const p = await cargarPartida(code);
       if (!p) { cfg.mesa = m; cfg.rol = r; return vistaUnirse('Ese código no existe. Revísenlo con el facilitador.'); }
-      cfg = { partida: code, mesa: m, rol: r }; store.set('cfg', cfg); iniciarMesa();
+      cfg = { partida: code, mesa: m, rol: r }; store.set('cfg', cfg); errMovil = null; iniciarMesa();
     } catch (e) { vistaUnirse('No hay conexión. Sigan con la hoja de papel y vuelvan a intentar.'); }
   };
 }
@@ -365,6 +379,14 @@ async function refrescarMesa() {
     const m = await cargarMesa();
     const cambio = !partida || !mesa || p.mes_actual !== partida.mes_actual || m.updated_at !== mesa.updated_at;
     partida = p; mesa = m;
+    // Al terminar el juego (todos los equipos cerraron el mes 5) se cargan los errores del primer intento
+    if (m.estado.mesCompleto === 5 && !errMovil) {
+      const todas = await SB.from('caja_mesas').select('mesa,estado').eq('partida', cfg.partida);
+      if (!todas.error && todas.data.length && todas.data.every(x => x.estado.mesCompleto === 5)) {
+        const env = await SB.from('caja_envios').select('mesa,mes,intento,correcto,fallos,decision,numeros').eq('partida', cfg.partida);
+        if (!env.error) { errMovil = CajaErrores.contar(env.data, todas.data, Caja); armado = false; }
+      }
+    }
     if (cambio || !armado) vistaMesa();
     const red = $('#red'); if (red) red.textContent = '';
   } catch (e) { const red = $('#red'); if (red) red.textContent = 'Sin conexión. Reintentando…'; }
@@ -412,7 +434,8 @@ function vistaMesa() {
   const esVocero = cfg.rol === 'Vocero';
   let cuerpo = '';
   if (mes > 5) {
-    cuerpo = `<div class="msg info"><b>Terminaron los cinco meses.</b> Utilidad acumulada ${money(est.utilidadAcum)} y caja ${money(est.caja)}${est.credito ? `, con ${money(est.credito)} de crédito por pagar` : ''}. Miren la pantalla: ¿el equipo con más utilidad es el que tiene más caja?</div>`;
+    cuerpo = `<div class="msg info"><b>Terminaron los cinco meses.</b> Utilidad acumulada ${money(est.utilidadAcum)} y caja ${money(est.caja)}${est.credito ? `, con ${money(est.credito)} de crédito por pagar` : ''}. Miren la pantalla: ¿el equipo con más utilidad es el que tiene más caja?</div>
+      ${errMovil ? `<div class="card">${CajaErrores.html(errMovil)}</div>` : '<p class="small muted" style="margin-top:12px">Cuando todos los equipos terminen, aquí aparecen los errores del primer intento.</p>'}`;
   } else if (abierto === 0) {
     cuerpo = `<div class="msg info">Esperen a que el facilitador abra el mes 1. Mientras, revisen su tablero: esto es lo que tienen hoy.</div>`;
   } else if (mes > abierto) {
@@ -497,7 +520,7 @@ async function enviar(est, mes) {
 }
 
 /* ---------- Facilitador ---------- */
-let facMesas = [], confirmar = false;
+let facMesas = [], confirmar = false, errFac = null; // errFac = { partida, datos }
 function bono(mesas) {
   const term = mesas.filter(m => m.estado.mesCompleto === 5);
   if (term.length === 0) return {};
@@ -509,7 +532,14 @@ async function refrescarFac() {
   try {
     partida = await cargarPartida(cfg.partida);
     const { data } = partida ? await SB.from('caja_mesas').select('*').eq('partida', cfg.partida).order('mesa') : { data: [] };
-    facMesas = data || []; vistaFac();
+    facMesas = data || [];
+    const fin = facMesas.length && facMesas.every(m => m.estado.mesCompleto === 5);
+    if (!fin) errFac = null;
+    else if (!errFac || errFac.partida !== cfg.partida) {
+      const env = await SB.from('caja_envios').select('mesa,mes,intento,correcto,fallos,decision,numeros').eq('partida', cfg.partida);
+      if (!env.error) errFac = { partida: cfg.partida, datos: CajaErrores.contar(env.data, facMesas, Caja) };
+    }
+    vistaFac();
   } catch (e) { const red = $('#red'); if (red) red.textContent = 'Sin conexión. Reintentando…'; }
 }
 
@@ -563,6 +593,7 @@ function vistaFac() {
     ${vis && facMesas.length ? `<h2>Cómo van</h2><div class="card"><table><tr><th>Equipo</th><th>Caja</th><th>Utilidad acumulada</th><th>Crédito</th><th>Puntos</th></tr>
       ${tabla.map(m => `<tr><td>${mesaTag(m.mesa)}</td><td>${money(m.estado.caja)}</td><td>${money(m.estado.utilidadAcum)}</td><td>${money(m.estado.credito)}</td><td class="pts">${m.estado.puntos + (b[m.mesa] || 0)}${b[m.mesa] ? ' <span class="small muted">(+3 mayor utilidad)</span>' : ''}</td></tr>`).join('')}</table></div>` : ''}
     ${vis && todos ? `<h2>¿El equipo que más ganó es el que más caja tiene?</h2><div class="card">${grafica(facMesas)}</div>` : ''}
+    ${vis && todos && errFac ? `<div class="card" style="margin-top:20px">${CajaErrores.html(errFac.datos)}</div>` : ''}
   </div>
   <div><div id="qr"></div><p class="small" style="margin-top:8px">Escaneen para entrar. Código: <b>${cfg.partida}</b></p><p class="small muted" style="word-break:break-all">${url}</p></div></div>`}`;
   if (partida && window.QRCode) new QRCode($('#qr'), { text: url, width: 260, height: 260, colorDark: '#1F1F1F', colorLight: '#ffffff' });
@@ -571,6 +602,7 @@ function vistaFac() {
     const c = $('#cod').value.trim().toUpperCase(); if (!/^[A-Z0-9-]{2,20}$/.test(c)) return;
     if (partida && !confirmar) { confirmar = true; return vistaFac(); }
     confirmar = false; cfg.partida = c; store.set('cfg', cfg);
+    errFac = null;
     await SB.from('caja_envios').delete().eq('partida', c);
     await SB.from('caja_mesas').delete().eq('partida', c);
     await SB.from('caja_partidas').upsert({ codigo: c, mes_actual: 0, resultados_visibles: false, updated_at: new Date().toISOString() }, { onConflict: 'codigo' });
