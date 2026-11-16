@@ -74,7 +74,7 @@ a{color:var(--rojo)}
 <script src="motor.js"></script>
 <script>
 const SB = supabase.createClient('https://stnzwajznjdcmjkrewyk.supabase.co', 'sb_publishable_Xg7V0CtvQ-Ws7WDwQZ9laQ_32ZZP_7e');
-const MESAS = [null, ['Azul', '#1F6DA5'], ['Verde', '#2E7D4F'], ['Naranja', '#D9822B'], ['Morado', '#6B4FA0'], ['Rojo', '#C0392B']];
+const MESAS = [null, ['Los Politos', '#1F6DA5'], ['Osos EUM', '#2E7D4F'], ['Actirent Envases', '#D9822B'], ['Equipo Dinamita', '#6B4FA0'], ['Los rentables', '#C0392B']];
 const ROLES = ['Vocero', 'Moderador', 'Tesorero', 'Integrante'];
 const CAMPOS = { cobros: 'Cobros del mes', proveedor: 'Pago al proveedor', cajaFinal: 'Caja al final del mes', utilidad: 'Utilidad del mes' };
 const q = new URLSearchParams(location.search);
@@ -91,7 +91,7 @@ if (q.get('p')) cfg.partida = q.get('p').toUpperCase();
 if (!cfg.partida) cfg.partida = 'EU-S2';
 let partida = null, mesa = null, enviando = false, armado = false, timer = null, borrador = {};
 
-function mesaTag(n) { const [c, h] = MESAS[n]; return `<span class="mesa-tag"><span class="dot" style="background:${h}"></span>Mesa ${n} · ${c}</span>`; }
+function mesaTag(n) { const [c, h] = MESAS[n]; return `<span class="mesa-tag"><span class="dot" style="background:${h}"></span>${c}</span>`; }
 
 async function cargarPartida(code) {
   const { data, error } = await SB.from('caja_partidas').select('*').eq('codigo', code).maybeSingle();
@@ -110,9 +110,9 @@ async function cargarMesa() {
 function vistaUnirse(err) {
   app.innerHTML = `
   <header class="top"><div><div class="kick">Finanzas para No Financieros · Sesión 2</div><h1>La caja de la planta</h1></div></header>
-  <p class="sub">Elijan su mesa y su rol. El vocero captura la decisión y los números; toda la mesa hace las cuentas en papel.</p>
+  <p class="sub">Elijan su equipo y su rol. El vocero captura la decisión y los números; toda la mesa hace las cuentas en papel.</p>
   <div class="card">
-    <label>Mesa</label><div class="chips" id="mesas">${[1,2,3,4,5].map(n => `<button class="chip" data-m="${n}">Mesa ${n} · ${MESAS[n][0]}</button>`).join('')}</div>
+    <label>Equipo</label><div class="chips" id="mesas">${[1,2,3,4,5].map(n => `<button class="chip" data-m="${n}">${MESAS[n][0]}</button>`).join('')}</div>
     <label>Tu rol hoy</label><div class="chips" id="roles">${ROLES.map(r => `<button class="chip" data-r="${r}">${r}</button>`).join('')}</div>
     <label>Código de la partida <small>(lo da el facilitador)</small></label><input type="text" id="cod" value="${cfg.partida}" autocapitalize="characters">
     ${err ? `<div class="msg err">${err}</div>` : ''}
@@ -128,7 +128,7 @@ function vistaUnirse(err) {
   $('#roles').onclick = e => { if (e.target.dataset.r) { r = e.target.dataset.r; pintar(); } };
   $('#entrar').onclick = async () => {
     const code = $('#cod').value.trim().toUpperCase();
-    if (!m || !r) return vistaUnirse('Elijan la mesa y el rol.');
+    if (!m || !r) return vistaUnirse('Elijan su equipo y su rol.');
     try {
       const p = await cargarPartida(code);
       if (!p) { cfg.mesa = m; cfg.rol = r; return vistaUnirse('Ese código no existe. Revísenlo con el facilitador.'); }
@@ -195,7 +195,7 @@ function vistaMesa() {
   const esVocero = cfg.rol === 'Vocero';
   let cuerpo = '';
   if (mes > 5) {
-    cuerpo = `<div class="msg info"><b>Terminaron los cinco meses.</b> Utilidad acumulada ${money(est.utilidadAcum)} y caja ${money(est.caja)}${est.credito ? `, con ${money(est.credito)} de crédito por pagar` : ''}. Miren la pantalla: ¿la mesa con más utilidad es la que tiene más caja?</div>`;
+    cuerpo = `<div class="msg info"><b>Terminaron los cinco meses.</b> Utilidad acumulada ${money(est.utilidadAcum)} y caja ${money(est.caja)}${est.credito ? `, con ${money(est.credito)} de crédito por pagar` : ''}. Miren la pantalla: ¿el equipo con más utilidad es el que tiene más caja?</div>`;
   } else if (abierto === 0) {
     cuerpo = `<div class="msg info">Esperen a que el facilitador abra el mes 1. Mientras, revisen su tablero: esto es lo que tienen hoy.</div>`;
   } else if (mes > abierto) {
@@ -218,7 +218,7 @@ function vistaMesa() {
     ${cuerpo}
     ${mes <= 5 ? '<h2>Su tablero</h2>' + tablero(est, mes) : ''}
     ${historial(est)}
-    <p class="small muted" style="margin-top:20px">Partida ${cfg.partida} · <a href="#" id="salir">cambiar de mesa o rol</a></p>`;
+    <p class="small muted" style="margin-top:20px">Partida ${cfg.partida} · <a href="#" id="salir">cambiar de equipo o rol</a></p>`;
   $('#salir').onclick = e => { e.preventDefault(); clearInterval(timer); vistaUnirse(); };
   if (esVocero && mes <= 5 && mes <= abierto && abierto > 0) armarFormulario(est, mes);
 }
@@ -308,12 +308,12 @@ function estadoMesa(m, abierto) {
 function grafica(mesas) {
   const W = 760, H = 300, pad = 40, vals = mesas.flatMap(m => [m.estado.utilidadAcum, m.estado.caja]);
   const max = Math.max(10, ...vals), gw = (W - pad * 2) / mesas.length, bw = Math.min(46, gw / 3), y = v => H - pad - (Math.max(0, v) / max) * (H - pad * 2);
-  let s = `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Utilidad acumulada contra caja por mesa"><line x1="${pad}" x2="${W - pad}" y1="${H - pad}" y2="${H - pad}" stroke="#BDB9B2"/>`;
+  let s = `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Utilidad acumulada contra caja por equipo"><line x1="${pad}" x2="${W - pad}" y1="${H - pad}" y2="${H - pad}" stroke="#BDB9B2"/>`;
   mesas.forEach((m, i) => {
     const x = pad + i * gw + gw / 2, u = m.estado.utilidadAcum, c = m.estado.caja;
     s += `<rect x="${x - bw - 3}" y="${y(u)}" width="${bw}" height="${H - pad - y(u)}" fill="#262626" rx="3"/><text x="${x - bw / 2 - 3}" y="${y(u) - 6}" text-anchor="middle" font-size="15" font-weight="700">${money(u)}</text>`;
     s += `<rect x="${x + 3}" y="${y(c)}" width="${bw}" height="${H - pad - y(c)}" fill="#AA1124" rx="3"/><text x="${x + bw / 2 + 3}" y="${y(c) - 6}" text-anchor="middle" font-size="15" font-weight="700" fill="#AA1124">${money(c)}</text>`;
-    s += `<text x="${x}" y="${H - pad + 22}" text-anchor="middle" font-size="15" font-weight="600">Mesa ${m.mesa}</text>`;
+    s += `<text x="${x}" y="${H - pad + 22}" text-anchor="middle" font-size="14" font-weight="600">${MESAS[m.mesa][0]}</text>`;
   });
   return s + `</svg><p class="small" style="margin-top:6px"><span class="dot" style="background:#262626"></span> Utilidad acumulada &nbsp; <span class="dot" style="background:#AA1124"></span> Caja al final</p>`;
 }
@@ -338,10 +338,10 @@ function vistaFac() {
       ${abierto < 5 ? `<button class="btn" id="abrir">Abrir mes ${abierto + 1}</button>` : ''}
       <button class="btn ghost" id="vis">${vis ? 'Ocultar cifras' : 'Mostrar cifras'}</button>
     </div>
-    <div class="grid5">${[1,2,3,4,5].map(n => `<div class="st" style="border-top-color:${MESAS[n][1]}"><div class="n">Mesa ${n}</div><div class="s">${estadoMesa(porMesa[n], abierto)}</div></div>`).join('')}</div>
-    ${vis && facMesas.length ? `<h2>Cómo van</h2><div class="card"><table><tr><th>Mesa</th><th>Caja</th><th>Utilidad acumulada</th><th>Crédito</th><th>Puntos</th></tr>
+    <div class="grid5">${[1,2,3,4,5].map(n => `<div class="st" style="border-top-color:${MESAS[n][1]}"><div class="n">${MESAS[n][0]}</div><div class="s">${estadoMesa(porMesa[n], abierto)}</div></div>`).join('')}</div>
+    ${vis && facMesas.length ? `<h2>Cómo van</h2><div class="card"><table><tr><th>Equipo</th><th>Caja</th><th>Utilidad acumulada</th><th>Crédito</th><th>Puntos</th></tr>
       ${tabla.map(m => `<tr><td>${mesaTag(m.mesa)}</td><td>${money(m.estado.caja)}</td><td>${money(m.estado.utilidadAcum)}</td><td>${money(m.estado.credito)}</td><td class="pts">${m.estado.puntos + (b[m.mesa] || 0)}${b[m.mesa] ? ' <span class="small muted">(+3 mayor utilidad)</span>' : ''}</td></tr>`).join('')}</table></div>` : ''}
-    ${vis && todos ? `<h2>¿La mesa que más ganó es la que más caja tiene?</h2><div class="card">${grafica(facMesas)}</div>` : ''}
+    ${vis && todos ? `<h2>¿El equipo que más ganó es el que más caja tiene?</h2><div class="card">${grafica(facMesas)}</div>` : ''}
   </div>
   <div><div id="qr"></div><p class="small" style="margin-top:8px">Escaneen para entrar. Código: <b>${cfg.partida}</b></p><p class="small muted" style="word-break:break-all">${url}</p></div></div>`}`;
   if (partida && window.QRCode) new QRCode($('#qr'), { text: url, width: 260, height: 260, colorDark: '#1F1F1F', colorLight: '#ffffff' });
