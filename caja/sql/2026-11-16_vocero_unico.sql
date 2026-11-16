@@ -7,11 +7,15 @@
 --    su equipo, su rol y la última vez que su celular se conectó. Así el facilitador ve quién está
 --    en cada equipo y puede elegir al nuevo vocero por nombre.
 -- 3. Da a caja_jugadores los mismos permisos abiertos que el resto de las tablas caja_*.
+-- 4. Agrega a caja_envios la columna deshecho: el facilitador puede deshacer el último mes de un
+--    equipo (por ejemplo, si alguien entró al equipo equivocado y envió). Los envíos de ese mes
+--    no se borran: quedan marcados como deshechos para no perder el rastro.
 --
 -- Se puede correr dos veces sin error: usa "if not exists" y borra las políticas antes de crearlas.
 
 alter table public.caja_mesas add column if not exists vocero_id text;
 alter table public.caja_mesas add column if not exists vocero_desde timestamptz;
+alter table public.caja_envios add column if not exists deshecho boolean not null default false;
 
 create table if not exists public.caja_jugadores (
   partida     text        not null references public.caja_partidas(codigo) on delete cascade,

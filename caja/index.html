@@ -83,6 +83,8 @@ th:first-child,td:first-child{text-align:left}
 .bar button.btn{width:auto;margin-top:0;padding:11px 18px;font-size:15px}
 .mini{margin-top:10px;font:inherit;font-size:12.5px;font-weight:600;padding:6px 10px;border:0;border-radius:10px;background:#E9E6E1;color:var(--ink);cursor:pointer;transition:background-color 200ms ease}
 .mini:hover{background:#DEDAD3}
+h3.gest{font-size:16px;font-weight:600;margin:20px 0 6px;padding-top:14px;border-top:1px solid var(--line-soft)}
+select.mover{font:inherit;font-size:14px;padding:7px 10px;border:1.5px solid var(--line);border-radius:10px;background:#fff;color:var(--ink)}
 .cols{display:grid;grid-template-columns:1fr 300px;gap:24px;align-items:start}
 #qr{background:#fff;padding:14px;border-radius:14px;border:1px solid var(--line);display:inline-block}
 .small{font-size:13px}
@@ -357,7 +359,7 @@ function vistaUnirse(err) {
     <p class="small muted" style="margin-top:8px">Solo una persona por equipo entra como vocero. Los demás eligen otro rol.</p>
     <label>Código de la partida <small>(lo da el facilitador)</small></label><input type="text" id="cod" value="${cfg.partida}" autocapitalize="characters">
     ${err ? `<div class="msg err">${err}</div>` : ''}
-    <button class="btn" id="entrar">Entrar</button>
+    <div id="paso-entrar"><button class="btn" id="entrar">Entrar</button></div>
   </div>`;
   let m = cfg.mesa, r = cfg.rol;
   const pintar = () => {
@@ -367,13 +369,20 @@ function vistaUnirse(err) {
   pintar();
   $('#mesas').onclick = e => { if (e.target.dataset.m) { m = +e.target.dataset.m; pintar(); } };
   $('#roles').onclick = e => { if (e.target.dataset.r) { r = e.target.dataset.r; pintar(); } };
-  $('#entrar').onclick = async () => {
+  const anterior = { partida: cfg.partida, mesa: cfg.mesa };
+  // Primer clic: revisa los datos y pide confirmar el equipo y el rol
+  $('#entrar').onclick = () => {
     const code = $('#cod').value.trim().toUpperCase(), nombre = $('#nombre').value.trim().replace(/\s+/g, ' ');
-    const anterior = { partida: cfg.partida, mesa: cfg.mesa };
     cfg.nombre = nombre; cfg.mesa = m; cfg.rol = r; cfg.partida = code;
     if (!nombre) return vistaUnirse('Escribe tu nombre.');
     if (!m || !r) return vistaUnirse('Elige tu equipo y tu rol.');
-    $('#entrar').disabled = true;
+    $('#paso-entrar').innerHTML = `<div class="msg info" style="border-left:6px solid ${MESAS[m][1]}">Vas a entrar a <b>${MESAS[m][0]}</b> como <b>${r.toLowerCase()}</b>, con el nombre <b>${esc(nombre)}</b>. ¿Es correcto?</div>
+      <button class="btn" id="si-entrar">Sí, entrar</button><button class="btn sec" id="no-entrar" style="margin-top:8px">Cambiar</button>`;
+    $('#no-entrar').onclick = () => vistaUnirse();
+    $('#si-entrar').onclick = () => entrar(code, nombre);
+  };
+  const entrar = async (code, nombre) => {
+    $('#si-entrar').disabled = true; $('#no-entrar').disabled = true;
     try {
       const p = await cargarPartida(code);
       if (!p) return vistaUnirse('Ese código no existe. Revísalo con el facilitador.');
@@ -402,10 +411,16 @@ async function refrescarMesa() {
   try {
     const p = await cargarPartida(cfg.partida);
     if (!p) { clearInterval(timer); return vistaUnirse('El facilitador reinició o cerró la partida. Vuelvan a entrar.'); }
+    const todos = await SB.from('caja_jugadores').select('dispositivo,nombre,rol,mesa').eq('partida', cfg.partida);
+    if (todos.error) throw todos.error;
+    const yo = todos.data.find(j => j.dispositivo === DISPOSITIVO);
+    if (!yo) { clearInterval(timer); partida = mesa = null; return vistaUnirse('El facilitador reinició la partida. Vuelve a entrar.'); }
+    if (yo.mesa !== cfg.mesa) {
+      cfg.mesa = yo.mesa; cfg.rol = yo.rol; store.set('cfg', cfg); borrador = {}; mesa = null;
+      avisar(`El facilitador te cambió a ${MESAS[yo.mesa][0]}. Ahora estás como ${yo.rol.toLowerCase()}.`);
+    }
     const m = await cargarMesa();
-    const js = await SB.from('caja_jugadores').select('dispositivo,nombre,rol').eq('partida', cfg.partida).eq('mesa', cfg.mesa);
-    if (js.error) throw js.error;
-    if (!js.data.some(j => j.dispositivo === DISPOSITIVO)) { clearInterval(timer); partida = mesa = null; return vistaUnirse('El facilitador reinició la partida. Vuelve a entrar.'); }
+    const js = { data: todos.data.filter(j => j.mesa === cfg.mesa) };
     const cambio = !partida || !mesa || p.mes_actual !== partida.mes_actual || m.updated_at !== mesa.updated_at || m.vocero_id !== mesa.vocero_id
       || js.data.map(j => j.nombre).join() !== jugadores.map(j => j.nombre).join();
     partida = p; mesa = m; jugadores = js.data;
@@ -478,7 +493,8 @@ function vistaMesa() {
         : `<div class="msg info">${nomVoc ? `<b>${esc(nomVoc)}</b> es el vocero y` : 'El vocero'} captura la decisión. Ustedes hagan las cuentas en la hoja de caja y revísenlas antes de enviar.</div>`}`;
   }
   app.innerHTML = `
-    <header class="top"><div><div class="kick">La caja de la planta</div><div style="margin-top:4px">${mesaTag(cfg.mesa)} <span class="muted small">· ${esc(cfg.nombre || '')} · ${esVocero ? 'Vocero' : esc(cfg.rol)}</span></div></div>
+    <header class="top"><div><div class="kick">La caja de la planta</div><div style="margin-top:4px">${mesaTag(cfg.mesa)} <span class="muted small">· ${esc(cfg.nombre || '')} · ${esVocero ? 'Vocero' : esc(cfg.rol)}</span></div>
+      <a href="#" class="small" id="salir-arriba">¿Equipo o rol equivocado? Cámbialo aquí</a></div>
       <div style="text-align:right"><div class="pts" style="font-size:22px">${est.puntos}</div><div class="small muted">puntos</div></div></header>
     <div id="red" class="small" style="color:var(--danger)"></div>
     ${aviso && Date.now() < avisoHasta ? `<div class="msg info"><b>${aviso}</b></div>` : ''}
@@ -487,7 +503,7 @@ function vistaMesa() {
     ${mes <= 5 ? '<h2>Su tablero</h2>' + tablero(est, mes) : ''}
     ${historial(est)}
     <p class="small muted" style="margin-top:20px">Partida ${cfg.partida} · <a href="#" id="salir">cambiar de equipo o rol</a></p>`;
-  $('#salir').onclick = e => { e.preventDefault(); clearInterval(timer); vistaUnirse(); };
+  $('#salir').onclick = $('#salir-arriba').onclick = e => { e.preventDefault(); clearInterval(timer); vistaUnirse(); };
   if (esVocero && mes <= 5 && mes <= abierto && abierto > 0) armarFormulario(est, mes);
 }
 
@@ -590,19 +606,42 @@ function voceroMesa(m) {
 function panelVocero() {
   if (!gestion) return '';
   const n = gestion.mesa, m = facMesas.find(x => x.mesa === n), act = m && m.vocero_id;
-  const lista = facJug.filter(j => j.mesa === n && j.dispositivo !== act);
+  const delEquipo = facJug.filter(j => j.mesa === n), lista = delEquipo.filter(j => j.dispositivo !== act);
   const sel = lista.find(j => j.dispositivo === gestion.sel), actual = facJug.find(j => j.dispositivo === act);
+  const est = m && m.estado, ult = est && est.historial[est.historial.length - 1];
+  let corregir = '';
+  if (est && est.pendiente) {
+    corregir = `<p class="small">Hay un primer intento fallido del mes ${est.pendiente.mes} esperando el segundo intento.</p>
+      ${gestion.deshacer ? `<div class="msg err"><b>¿Borrar el intento pendiente del mes ${est.pendiente.mes} de ${MESAS[n][0]}?</b> El equipo vuelve a tener primer intento en ese mes.</div><div class="bar"><button class="btn danger" id="deshacer-ok">Confirmar: borrar el intento</button><button class="btn ghost" id="deshacer-no">No</button></div>`
+        : '<button class="btn sec" id="deshacer" style="width:auto">Borrar el intento pendiente</button>'}`;
+  } else if (ult) {
+    corregir = `<p class="small">Último mes enviado: <b>mes ${ult.mes}</b> · ${ult.decision.lotes} lotes · caja ${money(ult.resultado.cajaFinal)} · utilidad ${money(ult.resultado.utilidad)} · ${ult.puntos} ${ult.puntos === 1 ? 'punto' : 'puntos'}.</p>
+      ${gestion.deshacer ? `<div class="msg err"><b>¿Deshacer el mes ${ult.mes} de ${MESAS[n][0]}?</b> El tablero vuelve a como estaba al empezar ese mes, se quitan sus ${ult.puntos} ${ult.puntos === 1 ? 'punto' : 'puntos'} y el vocero lo puede enviar de nuevo. Los envíos quedan en el reporte marcados como deshechos.</div><div class="bar"><button class="btn danger" id="deshacer-ok">Confirmar: deshacer el mes ${ult.mes}</button><button class="btn ghost" id="deshacer-no">No</button></div>`
+        : `<button class="btn sec" id="deshacer" style="width:auto">Deshacer el mes ${ult.mes}</button>`}`;
+  } else corregir = '<p class="small muted">Este equipo todavía no ha enviado ningún mes.</p>';
+  const otros = n2 => [1, 2, 3, 4, 5].filter(k => k !== n2).map(k => `<option value="${k}">${MESAS[k][0]}</option>`).join('');
   return `<div class="card" style="border-top:6px solid ${MESAS[n][1]}">
-    <h2 style="margin-top:0">Cambiar el vocero de ${MESAS[n][0]}</h2>
+    <div class="bar" style="justify-content:space-between"><h2 style="margin:0">Administrar ${MESAS[n][0]}</h2><button class="btn ghost" id="cancelar-gestion">Cerrar</button></div>
+
+    <h3 class="gest">Vocero</h3>
     <p class="small muted">${actual ? `Hoy el vocero es <b>${esc(actual.nombre)}</b>${senal(actual) ? ` (${senal(actual)})` : ''}. Al cambiarlo pasa a integrante y ya no puede enviar.` : 'Este equipo no tiene vocero.'} Elige quién lo reemplaza.</p>
-    ${lista.length ? `<div class="chips" id="cand" style="margin-top:12px">${lista.map(j => `<button class="chip${j.dispositivo === gestion.sel ? ' on' : ''}" data-d="${j.dispositivo}" style="${j.dispositivo === gestion.sel ? 'background:var(--carbon)' : ''}">${esc(j.nombre)} <span class="small" style="opacity:.75">· ${esc(j.rol)}${senal(j) ? ' · ' + senal(j) : ''}</span></button>`).join('')}</div>`
+    ${lista.length ? `<div class="chips" id="cand" style="margin-top:10px">${lista.map(j => `<button class="chip${j.dispositivo === gestion.sel ? ' on' : ''}" data-d="${j.dispositivo}" style="${j.dispositivo === gestion.sel ? 'background:var(--carbon)' : ''}">${esc(j.nombre)} <span class="small" style="opacity:.75">· ${esc(j.rol)}${senal(j) ? ' · ' + senal(j) : ''}</span></button>`).join('')}</div>`
       : '<div class="msg info">Nadie más de este equipo ha entrado al simulador. Pídeles que escaneen el QR y vuelve aquí.</div>'}
     ${sel ? `<div class="msg err"><b>¿Hacer vocero a ${esc(sel.nombre)} en ${MESAS[n][0]}?</b> Su celular podrá capturar y enviar en unos segundos.</div>` : ''}
-    <div class="bar" style="margin-top:14px">
+    <div class="bar" style="margin-top:12px">
       ${sel ? `<button class="btn" id="asignar">Confirmar: ${esc(sel.nombre)} es el vocero</button>` : ''}
       ${act ? '<button class="btn sec" id="liberar">Dejar sin vocero</button>' : ''}
-      <button class="btn ghost" id="cancelar-gestion">Cancelar</button>
-    </div></div>`;
+    </div>
+
+    <h3 class="gest">Jugadores</h3>
+    ${delEquipo.length ? delEquipo.map(j => `<div class="row" style="align-items:center"><span><b>${esc(j.nombre)}</b> <span class="small muted">· ${j.dispositivo === act ? 'Vocero' : esc(j.rol)}${senal(j) ? ' · ' + senal(j) : ''}</span></span>
+      <span class="bar"><select class="mover" data-mover="${j.dispositivo}" aria-label="Mover a ${esc(j.nombre)} a otro equipo"><option value="">Mover a…</option>${otros(n)}</select></span></div>`).join('')
+      : '<p class="small muted">Nadie ha entrado a este equipo.</p>'}
+    <p class="small muted" style="margin-top:6px">Si alguien entró al equipo equivocado, muévelo aquí. Si era el vocero, este equipo se queda sin vocero y en el nuevo entra como integrante.</p>
+
+    <h3 class="gest">Corregir el tablero</h3>
+    ${corregir}
+  </div>`;
 }
 
 function grafica(mesas) {
@@ -643,7 +682,7 @@ function vistaFac() {
     ${confirmar ? '<div class="msg err"><b>Reiniciar borra todos los datos de esta partida.</b> Si no los has guardado, descarga antes los resultados. Para cancelar, toca «Cargar».</div>' : ''}
     <div id="desc-msg" class="small muted" style="margin-top:8px"></div>
     <div class="grid5">${[1,2,3,4,5].map(n => `<div class="st" style="border-top-color:${MESAS[n][1]}"><div class="n">${MESAS[n][0]}</div><div class="s">${estadoMesa(porMesa[n], abierto)}</div>${voceroMesa(porMesa[n])}
-      ${porMesa[n] ? `<button class="mini" data-gestion="${n}">Cambiar vocero</button>` : ''}</div>`).join('')}</div>
+      ${porMesa[n] ? `<button class="mini" data-gestion="${n}">Administrar equipo</button>` : ''}</div>`).join('')}</div>
     ${panelVocero()}
     ${vis && facMesas.length ? `<h2>Cómo van</h2><div class="card"><table><tr><th>Equipo</th><th>Caja</th><th>Utilidad acumulada</th><th>Crédito</th><th>Puntos</th></tr>
       ${tabla.map(m => `<tr><td>${mesaTag(m.mesa)}</td><td>${money(m.estado.caja)}</td><td>${money(m.estado.utilidadAcum)}</td><td>${money(m.estado.credito)}</td><td class="pts">${m.estado.puntos + (b[m.mesa] || 0)}${b[m.mesa] ? ' <span class="small muted">(+3 mayor utilidad)</span>' : ''}</td></tr>`).join('')}</table></div>` : ''}
@@ -663,14 +702,49 @@ function vistaFac() {
     refrescarFac();
   };
   const ab = $('#abrir'); if (ab) ab.onclick = async () => { await SB.from('caja_partidas').update({ mes_actual: abierto + 1, updated_at: new Date().toISOString() }).eq('codigo', cfg.partida); refrescarFac(); };
-  document.querySelectorAll('[data-gestion]').forEach(b => b.onclick = () => { gestion = { mesa: +b.dataset.gestion, sel: null }; vistaFac(); });
+  document.querySelectorAll('[data-gestion]').forEach(b => b.onclick = () => { gestion = { mesa: +b.dataset.gestion, sel: null, deshacer: false }; vistaFac(); });
   const cand = $('#cand'); if (cand) cand.onclick = e => { const b = e.target.closest('[data-d]'); if (b) { gestion.sel = b.dataset.d; vistaFac(); } };
   const cg = $('#cancelar-gestion'); if (cg) cg.onclick = () => { gestion = null; vistaFac(); };
   const asg = $('#asignar'); if (asg) asg.onclick = () => cambiarVocero(gestion.mesa, gestion.sel);
+  document.querySelectorAll('[data-mover]').forEach(sl => sl.onchange = () => { if (sl.value) moverJugador(sl.dataset.mover, +sl.value); });
+  const dz = $('#deshacer'); if (dz) dz.onclick = () => { gestion.deshacer = true; vistaFac(); };
+  const dn = $('#deshacer-no'); if (dn) dn.onclick = () => { gestion.deshacer = false; vistaFac(); };
+  const dk = $('#deshacer-ok'); if (dk) dk.onclick = () => deshacer(gestion.mesa);
   const lib = $('#liberar'); if (lib) lib.onclick = () => cambiarVocero(gestion.mesa, null);
   const dh = $('#desc-html'); if (dh) dh.onclick = () => exportar('html');
   const dc = $('#desc-csv'); if (dc) dc.onclick = () => exportar('csv');
   const vb = $('#vis'); if (vb) vb.onclick = async () => { await SB.from('caja_partidas').update({ resultados_visibles: !vis }).eq('codigo', cfg.partida); refrescarFac(); };
+}
+
+async function moverJugador(disp, destino) {
+  const j = facJug.find(x => x.dispositivo === disp); if (!j) return;
+  try {
+    const origen = facMesas.find(x => x.mesa === j.mesa);
+    if (origen && origen.vocero_id === disp) await SB.from('caja_mesas').update({ vocero_id: null, vocero_desde: null }).eq('partida', cfg.partida).eq('mesa', j.mesa).eq('vocero_id', disp);
+    // El equipo de destino se crea si nadie había entrado todavía
+    await SB.from('caja_mesas').upsert({ partida: cfg.partida, mesa: destino, estado: Caja.estadoInicial() }, { onConflict: 'partida,mesa', ignoreDuplicates: true });
+    const r = await SB.from('caja_jugadores').update({ mesa: destino, rol: j.rol === 'Vocero' ? 'Integrante' : j.rol }).eq('partida', cfg.partida).eq('dispositivo', disp);
+    if (r.error) throw r.error;
+    gestion.sel = null; await refrescarFac();
+  } catch (e) { const red = $('#red'); if (red) red.textContent = 'No se pudo mover al jugador. Revisa la conexión e inténtalo otra vez.'; }
+}
+
+// Rehace el tablero con el historial sin el último mes (o solo borra el intento pendiente)
+async function deshacer(n) {
+  const m = facMesas.find(x => x.mesa === n); if (!m) return;
+  const est = m.estado; let nuevo, mesDeshecho;
+  if (est.pendiente) { mesDeshecho = est.pendiente.mes; nuevo = JSON.parse(JSON.stringify(est)); delete nuevo.pendiente; delete nuevo.ultimo; }
+  else {
+    const h = est.historial; if (!h.length) return; mesDeshecho = h[h.length - 1].mes;
+    nuevo = Caja.estadoInicial();
+    h.slice(0, -1).forEach(x => { nuevo = Caja.aplicar(nuevo, x.mes, x.decision, x.resultado, x.puntos); });
+  }
+  try {
+    const r = await SB.from('caja_mesas').update({ estado: nuevo, updated_at: new Date().toISOString() }).eq('partida', cfg.partida).eq('mesa', n);
+    if (r.error) throw r.error;
+    await SB.from('caja_envios').update({ deshecho: true }).eq('partida', cfg.partida).eq('mesa', n).eq('mes', mesDeshecho);
+    gestion.deshacer = false; await refrescarFac();
+  } catch (e) { const red = $('#red'); if (red) red.textContent = 'No se pudo deshacer. Revisa la conexión e inténtalo otra vez.'; }
 }
 
 async function cambiarVocero(n, nuevo) {

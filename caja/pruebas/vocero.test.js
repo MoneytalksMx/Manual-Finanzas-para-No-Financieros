@@ -39,19 +39,19 @@ const URL0 = process.env.CAJA_URL || 'http://localhost:8765/caja/';
   const F = await mk(1280, 900);
   await F.goto(URL0 + '?modo=facilitador'); await F.waitForTimeout(800); await F.click('#slots'); await F.keyboard.type('201126'); await F.waitForTimeout(2500);
   await F.fill('#cod', 'PRUEBA'); await F.click('#reset'); await F.waitForTimeout(1200);
-  const entrar = async (p, nombre, eq, rol, click = true) => { await p.goto(URL0 + '?p=PRUEBA'); await p.waitForTimeout(600); await p.fill('#nombre', nombre); await p.click(`[data-m="${eq}"]`); await p.click(`[data-r="${rol}"]`); if (click) { await p.click('#entrar'); await p.waitForTimeout(1500); } };
+  const entrar = async (p, nombre, eq, rol, click = true) => { await p.goto(URL0 + '?p=PRUEBA'); await p.waitForTimeout(600); await p.fill('#nombre', nombre); await p.click(`[data-m="${eq}"]`); await p.click(`[data-r="${rol}"]`); if (click) { await p.click('#entrar'); await p.click('#si-entrar'); await p.waitForTimeout(1500); } };
   const texto = p => p.locator('#app').innerText();
   // 1. Dos celulares eligen vocero: solo el primero queda
   const ana = await mk(), beto = await mk();
   await entrar(ana, 'Ana', 1, 'Vocero'); await entrar(beto, 'Beto', 1, 'Vocero');
   const tb = await texto(beto);
   ok('1. Segundo vocero rechazado', tb.includes('Ana ya tiene el rol de vocero en Los Politos. Elige otro rol.') && await beto.locator('#entrar').count() === 1, tb.split('\n').find(l => l.includes('vocero de')) || '');
-  await beto.click('[data-r="Moderador"]'); await beto.click('#entrar'); await beto.waitForTimeout(1500);
+  await beto.click('[data-r="Moderador"]'); await beto.click('#entrar'); await beto.click('#si-entrar'); await beto.waitForTimeout(1500);
   ok('1b. Entra como moderador sin formulario', await beto.locator('#enviar').count() === 0 && (await texto(beto)).includes('Moderador'));
   // 2. Dos registros en el mismo segundo
   const c1 = await mk(), c2 = await mk();
   await entrar(c1, 'Caro', 2, 'Vocero', false); await entrar(c2, 'Dani', 2, 'Vocero', false);
-  await Promise.all([c1.click('#entrar'), c2.click('#entrar')]); await c1.waitForTimeout(1800);
+  await c1.click('#entrar'); await c2.click('#entrar'); await Promise.all([c1.click('#si-entrar'), c2.click('#si-entrar')]); await c1.waitForTimeout(1800);
   const m2 = DB.caja_mesas.find(m => m.partida === 'PRUEBA' && m.mesa === 2);
   const v1 = (await c1.locator('#enviar').count()) + (await texto(c1)).includes('Esperen') , dentro = [await c1.locator('#entrar').count(), await c2.locator('#entrar').count()];
   ok('2. Mismo segundo: un solo vocero', !!m2.vocero_id && dentro.filter(x => x === 1).length === 1, `vocero=${DB.caja_jugadores.find(j => j.dispositivo === m2.vocero_id)?.nombre}`);
@@ -79,6 +79,42 @@ const URL0 = process.env.CAJA_URL || 'http://localhost:8765/caja/';
   ok('4. Cambio de vocero', ta.includes('El facilitador cambió al vocero de tu equipo. Ahora estás como integrante.') && tb2.includes('El facilitador te asignó como vocero'), `Ana formulario=${await ana.locator('#enviar').count()}, Beto ve aviso=${tb2.includes('asignó')}`);
   await F.click('#abrir'); await beto.waitForTimeout(3600);
   ok('4b. Nuevo vocero puede enviar, anterior no', await beto.locator('#enviar').count() === 1 && await ana.locator('#enviar').count() === 0);
+  // 9. Confirmación al entrar
+  const eva = await mk(); await entrar(eva, 'Eva', 2, 'Vocero', false); await eva.click('#entrar');
+  const conf = await eva.locator('#paso-entrar').innerText();
+  await eva.click('#no-entrar'); await eva.waitForTimeout(300);
+  ok('9. Pide confirmar equipo y rol', conf.includes('Vas a entrar a Osos EUM como vocero') && await eva.locator('#entrar').count() === 1);
+  // 10. Equipo equivocado: la persona se corrige sola desde la liga de arriba
+  const fer = await mk(); await entrar(fer, 'Fer', 5, 'Vocero');
+  const v5 = () => DB.caja_mesas.find(m => m.partida === 'PRUEBA' && m.mesa === 5).vocero_id;
+  const tenia = !!v5();
+  await fer.click('#salir-arriba'); await fer.waitForTimeout(300); await fer.click('[data-m="4"]'); await fer.click('[data-r="Vocero"]'); await fer.click('#entrar'); await fer.click('#si-entrar'); await fer.waitForTimeout(1500);
+  ok('10. Se cambia sola de equipo y libera el vocero del equipo equivocado', tenia && !v5() && (await texto(fer)).includes('Equipo Dinamita') && await fer.locator('#enviar').count() === 1);
+  // 11. El facilitador mueve a un jugador de equipo
+  await F.waitForTimeout(3500); await F.click('[data-gestion="1"]'); await F.waitForTimeout(300);
+  const anaId = DB.caja_jugadores.find(j => j.nombre === 'Ana').dispositivo;
+  await F.selectOption(`select[data-mover="${anaId}"]`, '3'); await F.waitForTimeout(800);
+  await ana.waitForTimeout(3800);
+  const tAna = await texto(ana);
+  ok('11. El facilitador mueve a Ana a Actirent Envases', tAna.includes('El facilitador te cambió a Actirent Envases') && DB.caja_jugadores.find(j => j.nombre === 'Ana').mesa === 3);
+  // 12. Deshacer el último mes de un equipo
+  await F.click('#cancelar-gestion'); await F.waitForTimeout(3500);
+  const est1 = () => DB.caja_mesas.find(m => m.partida === 'PRUEBA' && m.mesa === 1).estado;
+  const antesH = est1().historial.length, antesP = est1().puntos;
+  await F.click('[data-gestion="1"]'); await F.waitForTimeout(300); await F.click('#deshacer'); await F.waitForTimeout(200);
+  if (process.env.CAPTURAS) await F.screenshot({ path: process.env.CAPTURAS + '/admin.png', fullPage: true });
+  await F.click('#deshacer-ok'); await F.waitForTimeout(1200);
+  const marc = DB.caja_envios.filter(e => e.partida === 'PRUEBA' && e.mesa === 1 && e.mes === 1);
+  ok('12. Deshacer el mes 1 de Los Politos', antesH === 1 && est1().historial.length === 0 && est1().puntos === 0 && est1().caja === 5 && marc.length > 0 && marc.every(e => e.deshecho), `antes ${antesH} mes y ${antesP} puntos`);
+  await beto.waitForTimeout(3500);
+  ok('12b. El vocero puede volver a enviar el mes 1', await beto.locator('#enviar').count() === 1 && (await beto.locator('#enviar').innerText()).includes('mes 1'));
+  // 13. Borrar un intento pendiente
+  for (const [id, v] of [['lotes', 3], ['pide', 0], ['cobros', 99], ['proveedor', 12], ['cajaFinal', 15], ['utilidad', 10]]) await beto.fill('#' + id, String(v));
+  await beto.click('#enviar'); await beto.waitForTimeout(1200);
+  const conPend = !!est1().pendiente;
+  await F.click('#cancelar-gestion'); await F.waitForTimeout(3500); await F.click('[data-gestion="1"]'); await F.waitForTimeout(300); await F.click('#deshacer'); await F.click('#deshacer-ok'); await F.waitForTimeout(1200);
+  ok('13. Borrar el intento pendiente', conPend && !est1().pendiente && est1().historial.length === 0);
+  await F.click('#cancelar-gestion');
   // 6. Reiniciar
   await F.click('#reset'); await F.waitForTimeout(300); await F.click('#reset'); await F.waitForTimeout(1500);
   const sinVoc = DB.caja_mesas.filter(m => m.partida === 'PRUEBA').every(m => !m.vocero_id) && DB.caja_jugadores.filter(j => j.partida === 'PRUEBA').length === 0;

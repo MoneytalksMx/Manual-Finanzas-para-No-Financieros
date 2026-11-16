@@ -75,7 +75,7 @@
     }
 
     // Errores por campo (todos los intentos fallidos)
-    const fallidos = envios.filter(e => !e.correcto);
+    const fallidos = envios.filter(e => !e.correcto && !e.deshecho);
     const conteo = {}; Object.keys(CAMPOS).forEach(c => conteo[c] = { veces: 0, eq: new Set() });
     fallidos.forEach(e => (e.fallos || []).forEach(c => { if (conteo[c]) { conteo[c].veces++; conteo[c].eq.add(e.mesa); } }));
     const filasErr = Object.keys(CAMPOS).sort((a, c) => conteo[c].veces - conteo[a].veces)
@@ -94,7 +94,7 @@
         <tr class="total"><td>Total</td><td>${m.estado.historial.reduce((s, h) => s + h.decision.lotes, 0)}</td><td colspan="8"></td><td>${money(m.estado.caja)}</td><td>${money(m.estado.utilidadAcum)}</td><td>${m.estado.puntos}</td></tr></table></div>` : '<p class="nota">No envió ningún mes.</p>'}</section>`;
     }).join('');
 
-    const registro = envios.map(e => `<tr><td>${hora(e.created_at)}</td><td class="izq">${nombre(e.mesa)}</td><td>${e.mes}</td><td>${e.intento}</td><td class="izq">${e.decision.lotes} lotes${e.decision.pronto ? `, ${e.decision.pronto} pronto pago` : ''}${e.decision.pide ? `, pide ${money(e.decision.pide)}` : ''}${e.decision.devuelve ? `, devuelve ${money(e.decision.devuelve)}` : ''}</td><td>${money(e.numeros.cobros)} · ${money(e.numeros.proveedor)} · ${money(e.numeros.cajaFinal)} · ${money(e.numeros.utilidad)}</td><td class="${e.correcto ? 'ok' : 'mal'}">${e.correcto ? 'Correcto' : 'Falló: ' + (e.fallos || []).map(c => CAMPOS[c] ? CAMPOS[c].toLowerCase() : c).join(', ')}</td></tr>`).join('');
+    const registro = envios.map(e => `<tr><td>${hora(e.created_at)}</td><td class="izq">${nombre(e.mesa)}</td><td>${e.mes}</td><td>${e.intento}</td><td class="izq">${e.decision.lotes} lotes${e.decision.pronto ? `, ${e.decision.pronto} pronto pago` : ''}${e.decision.pide ? `, pide ${money(e.decision.pide)}` : ''}${e.decision.devuelve ? `, devuelve ${money(e.decision.devuelve)}` : ''}</td><td>${money(e.numeros.cobros)} · ${money(e.numeros.proveedor)} · ${money(e.numeros.cajaFinal)} · ${money(e.numeros.utilidad)}</td><td class="${e.deshecho ? '' : e.correcto ? 'ok' : 'mal'}">${e.deshecho ? 'Deshecho por el facilitador · ' : ''}${e.correcto ? 'Correcto' : 'Falló: ' + (e.fallos || []).map(c => CAMPOS[c] ? CAMPOS[c].toLowerCase() : c).join(', ')}</td></tr>`).join('');
 
     return `<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Resultados · La caja de la planta · ${esc(partida.codigo)}</title>
@@ -148,7 +148,7 @@ ${orden.map((m, i) => `<tr><td>${i + 1}</td><td class="izq">${tag(m.mesa)}</td><
 <h2>Dónde se equivocaron</h2>
 <div class="dos">
 <div><div class="tabla"><table><tr><th>Número</th><th>Veces que falló</th><th class="izq">Equipos</th></tr>${filasErr}</table></div>
-<p class="nota">Cuenta cada intento fallido. Un intento puede fallar en más de un número.</p></div>
+<p class="nota">Cuenta cada intento fallido, sin los que el facilitador deshizo. Un intento puede fallar en más de un número.</p></div>
 <div><div class="tabla"><table><tr><th>Equipo</th><th>Bien al 1.er intento</th><th>Bien al 2.º</th><th>Sin puntos</th></tr>${intentos}</table></div>
 <p class="nota">Meses por equipo según el intento en que cuadraron sus números.</p></div>
 </div>
