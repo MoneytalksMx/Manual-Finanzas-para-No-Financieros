@@ -100,6 +100,170 @@ a{color:var(--env-red)}
   .site-footer__inner{padding:28px 16px}
 }
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:1ms!important;animation:none!important}}
+    /* Basado en CodeSlots de React Bits (reactbits.dev), portado a JS + CSS sin dependencias */
+    .code-slots {
+      --cs-gap: 8px;
+      --cs-size: min(56px, calc((100vw - 32px - 5 * var(--cs-gap)) / 6));
+      --cs-height: calc(var(--cs-size) * 1.18);
+      --cs-radius: min(12px, calc(var(--cs-size) / 2));
+      --cs-font: calc(var(--cs-size) * 0.5);
+      --cs-pitch: calc(var(--cs-size) + var(--cs-gap));
+      --cs-slot: #e6e3de;
+      --cs-accent: var(--env-ink);
+      --cs-digit: #ffffff;
+      --cs-ease-spring: cubic-bezier(0.3, 1.35, 0.6, 1);
+      --cs-ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+      position: relative;
+      display: inline-block;
+    }
+    .code-slots__row {
+      position: relative;
+      display: inline-flex;
+      gap: var(--cs-gap);
+      cursor: text;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .code-slots__input {
+      position: absolute;
+      inset: 0;
+      z-index: 4;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      color: transparent;
+      caret-color: transparent;
+      font-size: 16px;
+      opacity: 0;
+      cursor: inherit;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+    .code-slots__slot {
+      position: relative;
+      width: var(--cs-size);
+      height: var(--cs-height);
+      border-radius: var(--cs-radius);
+      overflow: hidden;
+      background: var(--cs-slot);
+      transition: background-color 200ms ease;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    @media (hover: hover) and (pointer: fine) {
+      .code-slots__row[data-status="idle"]:hover .code-slots__slot:not([data-active]) {
+        background: color-mix(in srgb, var(--ink) 4%, var(--cs-slot));
+      }
+    }
+    .code-slots__slot[data-active] {
+      background: color-mix(in srgb, var(--ink) 9%, var(--cs-slot));
+    }
+    .code-slots__fill {
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: var(--cs-accent);
+      transform: scale(0);
+      transition: transform 300ms var(--cs-ease-out) var(--d, 0ms), background-color 200ms ease;
+    }
+    .code-slots__slot[data-filled] .code-slots__fill {
+      transform: scale(1);
+      transition-timing-function: var(--cs-ease-spring), ease;
+    }
+    .code-slots__digit {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      display: grid;
+      place-items: center;
+      color: var(--cs-digit);
+      font-size: var(--cs-font);
+      font-weight: 600;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: transform 300ms var(--cs-ease-out) var(--d, 0ms), opacity 300ms var(--cs-ease-out) var(--d, 0ms);
+    }
+    .code-slots__slot[data-filled] .code-slots__digit {
+      opacity: 1;
+      transform: translateY(0);
+      transition-timing-function: var(--cs-ease-spring), var(--cs-ease-out);
+    }
+    /* Error: las casillas se tiñen de rojo y se vacían en cascada */
+    .code-slots__row[data-status="error"] .code-slots__slot {
+      background: color-mix(in srgb, var(--danger) 18%, var(--cs-slot));
+    }
+    .code-slots__row[data-status="error"] .code-slots__fill { background: var(--danger); }
+    /* Éxito: los caracteres se hunden y una franja azul se abre desde el centro con la palomita */
+    .code-slots__row[data-status="success"] .code-slots__digit {
+      opacity: 0;
+      transform: translateY(calc(var(--cs-height) * 0.5));
+      transition: transform 300ms var(--cs-ease-out) var(--sd, 0ms), opacity 180ms ease var(--sd, 0ms);
+    }
+    .code-slots__wash {
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      display: grid;
+      place-items: center;
+      border-radius: var(--cs-radius);
+      background: var(--brand);
+      color: var(--cs-digit);
+      pointer-events: none;
+      clip-path: inset(0 50% round var(--cs-radius));
+      transition: clip-path 300ms var(--cs-ease-out);
+    }
+    .code-slots__row[data-status="success"] .code-slots__wash {
+      clip-path: inset(0 0% round var(--cs-radius));
+    }
+    .code-slots__check {
+      display: grid;
+      place-items: center;
+      opacity: 0;
+      transform: translateY(8px) scale(0.85);
+      transition: transform 350ms var(--cs-ease-spring), opacity 250ms ease;
+    }
+    .code-slots__check svg { width: calc(var(--cs-size) * 0.6); height: calc(var(--cs-size) * 0.6); }
+    .code-slots__row[data-status="success"] .code-slots__check {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      transition-delay: 280ms;
+    }
+    .code-slots__caret {
+      position: absolute;
+      z-index: 3;
+      top: 25%;
+      left: calc(var(--cs-size) / 2 - 0.75px);
+      width: 1.5px;
+      height: 50%;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateX(calc(var(--a, 0) * var(--cs-pitch)));
+      transition: transform 260ms var(--cs-ease-out);
+    }
+    .code-slots__caret[data-show] { opacity: 1; }
+    .code-slots__caret-line {
+      display: block;
+      width: 100%;
+      height: 100%;
+      background: var(--ink);
+      animation: code-slots-blink 1s linear infinite;
+    }
+    @keyframes code-slots-blink {
+      0%, 49.9% { opacity: 1; }
+      50%, 100% { opacity: 0; }
+    }
+
+.pin{display:flex;flex-direction:column;align-items:center;gap:16px;text-align:center;padding:48px 0 24px;transition:opacity 400ms ease,transform 400ms ease}
+.pin[data-leaving]{opacity:0;transform:translateY(-8px)}
+.pin__title{font-size:15px;font-weight:600}
+.pin__msg{min-height:1.4em;font-size:13px;color:var(--muted)}
+.pin__msg[data-tone="error"]{color:var(--danger)}
+.sr-only{position:absolute;width:1px;height:1px;margin:-1px;padding:0;border:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 </style>
 </head>
 <body>
@@ -124,6 +288,7 @@ a{color:var(--env-red)}
 <script src="vendor/supabase-2.45.4.min.js"></script>
 <script src="vendor/qrcode.min.js"></script>
 <script src="motor.js"></script>
+<script src="exportar.js"></script>
 <script>
 const SB = supabase.createClient('https://stnzwajznjdcmjkrewyk.supabase.co', 'sb_publishable_Xg7V0CtvQ-Ws7WDwQZ9laQ_32ZZP_7e');
 const MESAS = [null, ['Los Politos', '#1F6DA5'], ['Osos EUM', '#2E7D4F'], ['Actirent Envases', '#D9822B'], ['Equipo Dinamita', '#6B4FA0'], ['Los rentables', '#C0392B']];
@@ -320,7 +485,7 @@ async function enviar(est, mes) {
   if (nuevo.mesCompleto === mes) { delete nuevo.pendiente; borrador = {}; }
   enviando = true; $('#enviar').disabled = true;
   try {
-    const e1 = await SB.from('caja_envios').insert({ partida: cfg.partida, mesa: cfg.mesa, mes, intento, decision: d, numeros: nums, correcto: !fallos.length });
+    const e1 = await SB.from('caja_envios').insert({ partida: cfg.partida, mesa: cfg.mesa, mes, intento, decision: d, numeros: nums, correcto: !fallos.length, fallos });
     if (e1.error) throw e1.error;
     const e2 = await SB.from('caja_mesas').update({ estado: nuevo, updated_at: new Date().toISOString() }).eq('partida', cfg.partida).eq('mesa', cfg.mesa).select().single();
     if (e2.error) throw e2.error;
@@ -389,7 +554,11 @@ function vistaFac() {
       <div style="font-size:22px;font-weight:700;margin-right:12px">${abierto === 0 ? 'Sin empezar' : 'Mes ' + abierto + ' de 5'}</div>
       ${abierto < 5 ? `<button class="btn" id="abrir">Abrir mes ${abierto + 1}</button>` : ''}
       <button class="btn ghost" id="vis">${vis ? 'Ocultar cifras' : 'Mostrar cifras'}</button>
+      <button class="btn ghost" id="desc-html">Descargar resultados</button>
+      <button class="btn ghost" id="desc-csv">Datos en CSV</button>
     </div>
+    ${confirmar ? '<div class="msg err"><b>Reiniciar borra todos los datos de esta partida.</b> Si no los has guardado, descarga antes los resultados. Para cancelar, toca «Cargar».</div>' : ''}
+    <div id="desc-msg" class="small muted" style="margin-top:8px"></div>
     <div class="grid5">${[1,2,3,4,5].map(n => `<div class="st" style="border-top-color:${MESAS[n][1]}"><div class="n">${MESAS[n][0]}</div><div class="s">${estadoMesa(porMesa[n], abierto)}</div></div>`).join('')}</div>
     ${vis && facMesas.length ? `<h2>Cómo van</h2><div class="card"><table><tr><th>Equipo</th><th>Caja</th><th>Utilidad acumulada</th><th>Crédito</th><th>Puntos</th></tr>
       ${tabla.map(m => `<tr><td>${mesaTag(m.mesa)}</td><td>${money(m.estado.caja)}</td><td>${money(m.estado.utilidadAcum)}</td><td>${money(m.estado.credito)}</td><td class="pts">${m.estado.puntos + (b[m.mesa] || 0)}${b[m.mesa] ? ' <span class="small muted">(+3 mayor utilidad)</span>' : ''}</td></tr>`).join('')}</table></div>` : ''}
@@ -408,10 +577,106 @@ function vistaFac() {
     refrescarFac();
   };
   const ab = $('#abrir'); if (ab) ab.onclick = async () => { await SB.from('caja_partidas').update({ mes_actual: abierto + 1, updated_at: new Date().toISOString() }).eq('codigo', cfg.partida); refrescarFac(); };
+  const dh = $('#desc-html'); if (dh) dh.onclick = () => exportar('html');
+  const dc = $('#desc-csv'); if (dc) dc.onclick = () => exportar('csv');
   const vb = $('#vis'); if (vb) vb.onclick = async () => { await SB.from('caja_partidas').update({ resultados_visibles: !vis }).eq('codigo', cfg.partida); refrescarFac(); };
 }
 
-if (FAC) { document.body.classList.add('fac'); refrescarFac(); setInterval(() => { if (!confirmar && document.activeElement?.id !== 'cod') refrescarFac(); }, 3000); }
+async function exportar(tipo) {
+  const m = $('#desc-msg'); if (m) m.textContent = 'Preparando la descarga…';
+  try {
+    const p = await cargarPartida(cfg.partida); if (!p) throw new Error('sin partida');
+    const r1 = await SB.from('caja_mesas').select('*').eq('partida', cfg.partida).order('mesa'); if (r1.error) throw r1.error;
+    const r2 = await SB.from('caja_envios').select('*').eq('partida', cfg.partida).order('created_at'); if (r2.error) throw r2.error;
+    const hoy = new Date().toISOString().slice(0, 10), base = `resultados_caja_${cfg.partida}_${hoy}`;
+    const datos = { partida: p, mesas: r1.data || [], envios: r2.data || [], EQ: MESAS, origen: location.origin };
+    if (tipo === 'csv') CajaExportar.descargar(base + '.csv', CajaExportar.csv(datos), 'text/csv;charset=utf-8');
+    else CajaExportar.descargar(base + '.html', CajaExportar.html(datos), 'text/html;charset=utf-8');
+    if ($('#desc-msg')) $('#desc-msg').textContent = 'Listo: revisa tu carpeta de descargas.';
+  } catch (e) { if ($('#desc-msg')) $('#desc-msg').textContent = 'No se pudo descargar. Revisa la conexión e inténtalo otra vez.'; }
+}
+
+/* ---------- PIN del facilitador (CodeSlots de React Bits, portado a JS + CSS) ---------- */
+const PIN_HASH = '9f8a7a998fbd6cef928d4188e1106a4eed7fca9c36d394decd0ade8290fd79fc';
+const PIN_KEY = 'mt-caja-facilitador', PIN_MS = 12 * 60 * 60 * 1000;
+function pinValido() {
+  try { const d = JSON.parse(localStorage.getItem(PIN_KEY) || 'null'); if (d && d.h === PIN_HASH && Date.now() < d.exp) return true; } catch (e) {}
+  return false;
+}
+function vistaPin(alEntrar) {
+  const LENGTH = 6, CASCADE = 20, SETTLE = 300;
+  app.innerHTML = `<section class="pin" id="pin">
+    <div class="kick">Vista del facilitador</div>
+    <p class="pin__title" id="pin-title">Ingresa el PIN del facilitador</p>
+    <div class="code-slots"><div class="code-slots__row" id="slots" data-status="idle">
+      <input class="code-slots__input" id="pin-input" type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="off" maxlength="6" aria-labelledby="pin-title" aria-describedby="pin-status" autofocus>
+      <span class="code-slots__wash" aria-hidden="true"><span class="code-slots__check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 14l3.5 3.5L19 7"/></svg></span></span>
+      <span class="code-slots__caret" aria-hidden="true"><span class="code-slots__caret-line"></span></span>
+    </div></div>
+    <p class="pin__msg" id="pin-msg"></p><span class="sr-only" id="pin-status" aria-live="polite"></span></section>`;
+  const gate = $('#pin'), row = $('#slots'), input = $('#pin-input'), caret = row.querySelector('.code-slots__caret'), msg = $('#pin-msg'), status = $('#pin-status');
+  const slots = [], chars = []; let active = 0, state = 'idle', focused = false;
+  for (let i = 0; i < LENGTH; i++) {
+    const sl = document.createElement('span'); sl.className = 'code-slots__slot'; sl.setAttribute('aria-hidden', 'true');
+    sl.innerHTML = '<span class="code-slots__fill"></span><span class="code-slots__digit"></span>';
+    sl.style.setProperty('--sd', (60 + i * 30) + 'ms'); row.insertBefore(sl, row.querySelector('.code-slots__wash')); slots.push(sl); chars.push('');
+  }
+  const clean = r => String(r || '').replace(/[^0-9]/g, '');
+  const firstEmpty = () => { const k = chars.indexOf(''); return k === -1 ? LENGTH - 1 : k; };
+  function render() {
+    slots.forEach((sl, k) => sl.toggleAttribute('data-active', focused && k === active && state === 'idle'));
+    caret.style.setProperty('--a', active);
+    caret.toggleAttribute('data-show', focused && state === 'idle' && !chars[active]);
+    status.textContent = state === 'success' ? 'PIN aceptado' : chars.filter(Boolean).length + ' de ' + LENGTH + ' dígitos';
+  }
+  function land(k, ch, delay) { const sl = slots[k]; sl.style.setProperty('--d', delay + 'ms'); if (sl.hasAttribute('data-filled')) { sl.removeAttribute('data-filled'); void sl.offsetWidth; } sl.querySelector('.code-slots__digit').textContent = ch; sl.setAttribute('data-filled', ''); }
+  function clearSlot(k, delay) { slots[k].style.setProperty('--d', (delay || 0) + 'ms'); slots[k].removeAttribute('data-filled'); chars[k] = ''; }
+  function insert(raw, from) {
+    const c = clean(raw); if (!c || state !== 'idle') return;
+    if (msg.dataset.tone) { msg.textContent = ''; delete msg.dataset.tone; }
+    let k = from === undefined ? active : from;
+    for (let j = 0; j < c.length && k < LENGTH; j++, k++) { chars[k] = c[j]; land(k, c[j], j * CASCADE); }
+    active = Math.min(k, LENGTH - 1); render();
+    if (chars.every(Boolean)) verify(chars.join(''));
+  }
+  async function sha256(t) { const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(t)); return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join(''); }
+  async function verify(code) { state = 'checking'; render(); let h = ''; try { h = await sha256(code); } catch (e) {} h === PIN_HASH ? succeed() : fail(); }
+  function succeed() {
+    state = 'success'; row.dataset.status = 'success'; input.blur(); input.readOnly = true; msg.textContent = ''; render();
+    try { localStorage.setItem(PIN_KEY, JSON.stringify({ h: PIN_HASH, exp: Date.now() + PIN_MS })); } catch (e) {}
+    setTimeout(() => { gate.setAttribute('data-leaving', ''); setTimeout(alEntrar, 400); }, 900);
+  }
+  function fail() {
+    state = 'error'; row.dataset.status = 'error'; msg.dataset.tone = 'error'; msg.textContent = 'PIN incorrecto. Inténtalo de nuevo.'; render();
+    setTimeout(() => {
+      const filled = []; chars.forEach((c, k) => { if (c) filled.push(k); });
+      filled.reverse().forEach((k, n) => clearSlot(k, n * CASCADE)); active = 0; caret.style.setProperty('--a', 0);
+      setTimeout(() => { state = 'idle'; row.dataset.status = 'idle'; render(); }, (filled.length - 1) * CASCADE + SETTLE);
+    }, 450);
+  }
+  input.addEventListener('keydown', e => {
+    if (state !== 'idle' || e.metaKey || e.ctrlKey || e.altKey) return;
+    const key = e.key;
+    if (/^[0-9]$/.test(key)) { e.preventDefault(); insert(key); }
+    else if (key === 'Backspace') { e.preventDefault(); if (chars[active]) clearSlot(active); else if (active > 0) { active -= 1; clearSlot(active); } render(); }
+    else if (key === 'Delete') { e.preventDefault(); clearSlot(active); render(); }
+    else if (key === 'ArrowLeft') { e.preventDefault(); active = Math.max(active - 1, 0); render(); }
+    else if (key === 'ArrowRight') { e.preventDefault(); active = Math.min(active + 1, firstEmpty()); render(); }
+  });
+  input.addEventListener('input', () => { const v = input.value; input.value = ''; if (state !== 'idle') return; const c = clean(v); if (c) insert(c, c.length === 1 ? active : 0); });
+  input.addEventListener('paste', e => { e.preventDefault(); if (state === 'idle') insert(e.clipboardData.getData('text'), 0); });
+  input.addEventListener('focus', () => { focused = true; render(); });
+  input.addEventListener('blur', () => { focused = false; render(); });
+  row.addEventListener('mousedown', e => {
+    e.preventDefault();
+    if (state === 'idle') { const rect = row.getBoundingClientRect(); active = Math.max(0, Math.min(Math.floor((e.clientX - rect.left) / (rect.width / LENGTH)), firstEmpty())); }
+    input.focus(); render();
+  });
+  render(); input.focus();
+}
+
+function iniciarFac() { refrescarFac(); setInterval(() => { if (!confirmar && document.activeElement?.id !== 'cod') refrescarFac(); }, 3000); }
+if (FAC) { document.body.classList.add('fac'); pinValido() ? iniciarFac() : vistaPin(iniciarFac); }
 else if (cfg.mesa && cfg.rol && cfg.partida) iniciarMesa();
 else vistaUnirse();
 </script>
