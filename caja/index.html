@@ -478,7 +478,7 @@ function vistaMesa() {
   if (mes > 5) {
     cuerpo = `<div class="msg info"><b>Terminaron los cinco meses.</b> Utilidad acumulada ${money(est.utilidadAcum)} y caja ${money(est.caja)}${est.credito ? `, con ${money(est.credito)} de crédito por pagar` : ''}. Miren la pantalla: ¿el equipo con más utilidad es el que tiene más caja?</div>`;
   } else if (abierto === 0) {
-    cuerpo = `<div class="msg info">Esperen a que el facilitador abra el mes 1. Mientras, revisen su tablero: esto es lo que tienen hoy.</div>`;
+    cuerpo = `<div class="msg info">Esperen a que el facilitador abra el mes 1. El juego empieza cuando los cinco equipos tienen vocero.${!mesa.vocero_id ? ' <b>Su equipo todavía no tiene vocero:</b> elijan a una persona y que entre con ese rol.' : ''} Mientras, revisen su tablero: esto es lo que tienen hoy.</div>`;
   } else if (mes > abierto) {
     cuerpo = `<div class="msg info">Ya enviaron el mes ${mes - 1}. Esperen a que el facilitador abra el mes ${mes}.</div>`;
   } else {
@@ -660,6 +660,8 @@ function grafica(mesas) {
 function vistaFac() {
   const abierto = partida ? partida.mes_actual : 0, vis = partida && partida.resultados_visibles;
   const porMesa = {}; facMesas.forEach(m => porMesa[m.mesa] = m);
+  // El juego empieza solo cuando los cinco equipos tienen vocero
+  const faltan = [1, 2, 3, 4, 5].filter(n => !porMesa[n] || !porMesa[n].vocero_id), bloqueado = abierto === 0 && faltan.length > 0;
   const b = bono(facMesas);
   const todos = facMesas.length && facMesas.every(m => m.estado.mesCompleto === 5);
   const tabla = facMesas.slice().sort((a, c) => (c.estado.puntos + (b[c.mesa] || 0)) - (a.estado.puntos + (b[a.mesa] || 0)));
@@ -674,11 +676,12 @@ function vistaFac() {
   <div class="cols"><div>
     <div class="bar">
       <div style="font-size:22px;font-weight:700;margin-right:12px">${abierto === 0 ? 'Sin empezar' : 'Mes ' + abierto + ' de 5'}</div>
-      ${abierto < 5 ? `<button class="btn" id="abrir">Abrir mes ${abierto + 1}</button>` : ''}
+      ${abierto < 5 ? `<button class="btn" id="abrir"${bloqueado ? ' disabled' : ''}>Abrir mes ${abierto + 1}</button>` : ''}
       <button class="btn ghost" id="vis">${vis ? 'Ocultar cifras' : 'Mostrar cifras'}</button>
       <button class="btn ghost" id="desc-html">Descargar resultados</button>
       <button class="btn ghost" id="desc-csv">Datos en CSV</button>
     </div>
+    ${bloqueado ? `<div class="msg warn"><b>Para empezar, cada equipo necesita un vocero.</b> Falta${faltan.length > 1 ? 'n' : ''}: ${faltan.map(n => MESAS[n][0]).join(', ')}. Pide que alguien de ${faltan.length > 1 ? 'cada uno' : 'ese equipo'} entre como vocero o asígnalo en «Administrar equipo».</div>` : ''}
     ${confirmar ? '<div class="msg err"><b>Reiniciar borra todos los datos de esta partida.</b> Si no los has guardado, descarga antes los resultados. Para cancelar, toca «Cargar».</div>' : ''}
     <div id="desc-msg" class="small muted" style="margin-top:8px"></div>
     <div class="grid5">${[1,2,3,4,5].map(n => `<div class="st" style="border-top-color:${MESAS[n][1]}"><div class="n">${MESAS[n][0]}</div><div class="s">${estadoMesa(porMesa[n], abierto)}</div>${voceroMesa(porMesa[n])}
@@ -701,7 +704,7 @@ function vistaFac() {
     await SB.from('caja_partidas').upsert({ codigo: c, mes_actual: 0, resultados_visibles: false, updated_at: new Date().toISOString() }, { onConflict: 'codigo' });
     refrescarFac();
   };
-  const ab = $('#abrir'); if (ab) ab.onclick = async () => { await SB.from('caja_partidas').update({ mes_actual: abierto + 1, updated_at: new Date().toISOString() }).eq('codigo', cfg.partida); refrescarFac(); };
+  const ab = $('#abrir'); if (ab) ab.onclick = async () => { if (bloqueado) return; await SB.from('caja_partidas').update({ mes_actual: abierto + 1, updated_at: new Date().toISOString() }).eq('codigo', cfg.partida); refrescarFac(); };
   document.querySelectorAll('[data-gestion]').forEach(b => b.onclick = () => { gestion = { mesa: +b.dataset.gestion, sel: null, deshacer: false }; vistaFac(); });
   const cand = $('#cand'); if (cand) cand.onclick = e => { const b = e.target.closest('[data-d]'); if (b) { gestion.sel = b.dataset.d; vistaFac(); } };
   const cg = $('#cancelar-gestion'); if (cg) cg.onclick = () => { gestion = null; vistaFac(); };

@@ -55,6 +55,16 @@ const URL0 = process.env.CAJA_URL || 'http://localhost:8765/caja/';
   const m2 = DB.caja_mesas.find(m => m.partida === 'PRUEBA' && m.mesa === 2);
   const v1 = (await c1.locator('#enviar').count()) + (await texto(c1)).includes('Esperen') , dentro = [await c1.locator('#entrar').count(), await c2.locator('#entrar').count()];
   ok('2. Mismo segundo: un solo vocero', !!m2.vocero_id && dentro.filter(x => x === 1).length === 1, `vocero=${DB.caja_jugadores.find(j => j.dispositivo === m2.vocero_id)?.nombre}`);
+  // 14. No se puede abrir el mes 1 hasta que los cinco equipos tengan vocero
+  await F.waitForTimeout(3500);
+  const bloq1 = await F.locator('#abrir').isDisabled(), avisoF = await F.locator('#app').innerText();
+  const gabo = await mk(); await entrar(gabo, 'Gabo', 3, 'Vocero');
+  const hugo = await mk(); await entrar(hugo, 'Hugo', 4, 'Vocero');
+  await F.waitForTimeout(3500);
+  const bloq2 = await F.locator('#abrir').isDisabled(), avisoF2 = await F.locator('#app').innerText();
+  const iris = await mk(); await entrar(iris, 'Iris', 5, 'Vocero');
+  await F.waitForTimeout(3500);
+  ok('14. El mes 1 se abre solo con los cinco voceros', bloq1 && avisoF.includes('Actirent Envases, Equipo Dinamita, Los rentables') && bloq2 && avisoF2.includes('Falta: Los rentables') && !(await F.locator('#abrir').isDisabled()));
   // abrir mes 1 para que exista formulario
   await F.click('#abrir'); await ana.waitForTimeout(3500);
   ok('3a. Vocero ve formulario; moderador no', await ana.locator('#enviar').count() === 1 && await beto.locator('#enviar').count() === 0);
@@ -85,11 +95,10 @@ const URL0 = process.env.CAJA_URL || 'http://localhost:8765/caja/';
   await eva.click('#no-entrar'); await eva.waitForTimeout(300);
   ok('9. Pide confirmar equipo y rol', conf.includes('Vas a entrar a Osos EUM como vocero') && await eva.locator('#entrar').count() === 1);
   // 10. Equipo equivocado: la persona se corrige sola desde la liga de arriba
-  const fer = await mk(); await entrar(fer, 'Fer', 5, 'Vocero');
   const v5 = () => DB.caja_mesas.find(m => m.partida === 'PRUEBA' && m.mesa === 5).vocero_id;
   const tenia = !!v5();
-  await fer.click('#salir-arriba'); await fer.waitForTimeout(300); await fer.click('[data-m="4"]'); await fer.click('[data-r="Vocero"]'); await fer.click('#entrar'); await fer.click('#si-entrar'); await fer.waitForTimeout(1500);
-  ok('10. Se cambia sola de equipo y libera el vocero del equipo equivocado', tenia && !v5() && (await texto(fer)).includes('Equipo Dinamita') && await fer.locator('#enviar').count() === 1);
+  await iris.click('#salir-arriba'); await iris.waitForTimeout(300); await iris.click('[data-m="3"]'); await iris.click('[data-r="Moderador"]'); await iris.click('#entrar'); await iris.click('#si-entrar'); await iris.waitForTimeout(1500);
+  ok('10. Se cambia sola de equipo y libera el vocero del equipo equivocado', tenia && !v5() && (await texto(iris)).includes('Actirent Envases') && await iris.locator('#enviar').count() === 0);
   // 11. El facilitador mueve a un jugador de equipo
   await F.waitForTimeout(3500); await F.click('[data-gestion="1"]'); await F.waitForTimeout(300);
   const anaId = DB.caja_jugadores.find(j => j.nombre === 'Ana').dispositivo;
@@ -121,7 +130,7 @@ const URL0 = process.env.CAJA_URL || 'http://localhost:8765/caja/';
   await ana.waitForTimeout(3500);
   ok('6. Reiniciar deja equipos sin vocero', sinVoc && await ana.locator('#nombre').count() === 1);
   // 8. 390 px sin corte
-  const anchos = []; for (const p of [ana, beto, c1, c2]) anchos.push(await p.evaluate(() => document.documentElement.scrollWidth));
+  const anchos = []; for (const p of [ana, beto, c1, c2, iris]) anchos.push(await p.evaluate(() => document.documentElement.scrollWidth));
   ok('8. A 390 px no hay desplazamiento lateral', anchos.every(w => w <= 390), anchos.join(', '));
   console.log(R.join('\n'));
   await b.close();
