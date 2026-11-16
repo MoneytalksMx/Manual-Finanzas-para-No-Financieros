@@ -54,7 +54,7 @@
     return s + '</svg>' + (sin.length ? `<p class="nota">Sin meses enviados: ${sin.map(m => esc(EQ[m.mesa][0])).join(', ')}.</p>` : '') + '<p class="nota">Si dos equipos tomaron las mismas decisiones, sus líneas se enciman.</p>';
   }
 
-  function html({ partida, mesas, envios, EQ, origen }) {
+  function html({ partida, mesas, envios, jugadores = [], EQ, origen }) {
     const b = bono(mesas), ahora = new Date();
     const pts = m => m.estado.puntos + (b[m.mesa] || 0);
     const orden = mesas.slice().sort((a, c) => pts(c) - pts(a) || c.estado.utilidadAcum - a.estado.utilidadAcum);
@@ -88,6 +88,7 @@
     const detalle = mesas.map(m => {
       const filas = m.estado.historial.map(h => `<tr><td>${h.mes}</td><td>${h.decision.lotes}</td><td>${h.decision.pronto || '—'}</td><td>${h.decision.pide ? money(h.decision.pide) : '—'}</td><td>${h.decision.devuelve ? money(h.decision.devuelve) : '—'}</td><td>${money(h.resultado.cobros)}</td><td>${money(h.resultado.proveedor)}</td><td>${money(h.resultado.nomina)}</td><td>${h.resultado.intereses ? money(h.resultado.intereses) : '—'}</td><td>${h.resultado.descuento ? money(h.resultado.descuento) : '—'}</td><td><b>${money(h.resultado.cajaFinal)}</b></td><td><b>${money(h.resultado.utilidad)}</b></td><td>${h.puntos}</td></tr>`).join('');
       return `<section class="equipo"><h3>${tag(m.mesa)}</h3>
+        ${(() => { const js = jugadores.filter(j => j.mesa === m.mesa); return js.length ? `<p class="nota">Integrantes: ${js.map(j => esc(j.nombre) + (j.dispositivo === m.vocero_id ? ' (vocero)' : '')).join(', ')}</p>` : ''; })()}
         <p class="nota">${m.estado.mesCompleto} de 5 meses · ${pts(m)} puntos${b[m.mesa] ? ' (incluye +3 por mayor utilidad)' : ''} · por cobrar al final ${money(porCobrar(m))} · crédito por pagar ${money(m.estado.credito)}</p>
         ${filas ? `<div class="tabla"><table><tr><th>Mes</th><th>Lotes</th><th>Pronto pago</th><th>Crédito pedido</th><th>Crédito devuelto</th><th>Cobros</th><th>Proveedor</th><th>Nómina</th><th>Intereses</th><th>Descuento</th><th>Caja final</th><th>Utilidad</th><th>Puntos</th></tr>${filas}
         <tr class="total"><td>Total</td><td>${m.estado.historial.reduce((s, h) => s + h.decision.lotes, 0)}</td><td colspan="8"></td><td>${money(m.estado.caja)}</td><td>${money(m.estado.utilidadAcum)}</td><td>${m.estado.puntos}</td></tr></table></div>` : '<p class="nota">No envió ningún mes.</p>'}</section>`;

@@ -81,6 +81,8 @@ th:first-child,td:first-child{text-align:left}
 .st .s{font-size:14px;margin-top:6px}
 .bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
 .bar button.btn{width:auto;margin-top:0;padding:11px 18px;font-size:15px}
+.mini{margin-top:10px;font:inherit;font-size:12.5px;font-weight:600;padding:6px 10px;border:0;border-radius:10px;background:#E9E6E1;color:var(--ink);cursor:pointer;transition:background-color 200ms ease}
+.mini:hover{background:#DEDAD3}
 .cols{display:grid;grid-template-columns:1fr 300px;gap:24px;align-items:start}
 #qr{background:#fff;padding:14px;border-radius:14px;border:1px solid var(--line);display:inline-block}
 .small{font-size:13px}
@@ -306,7 +308,15 @@ const store = {
 let cfg = store.get('cfg') || {};
 if (q.get('p')) cfg.partida = q.get('p').toUpperCase();
 if (!cfg.partida) cfg.partida = 'EU-S2';
-let partida = null, mesa = null, enviando = false, armado = false, timer = null, borrador = {};
+let partida = null, mesa = null, jugadores = [], enviando = false, armado = false, timer = null, borrador = {}, aviso = '', avisoHasta = 0, tick = 0;
+const avisar = t => { aviso = t; avisoHasta = Date.now() + 30000; };
+// Id aleatorio de este celular: decide quién es el vocero de cada equipo
+const DISPOSITIVO = (() => {
+  const nuevo = () => (crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).slice(2, 12)).replace(/-/g, '');
+  try { let id = localStorage.getItem('caja_dispositivo'); if (!id) { id = nuevo(); localStorage.setItem('caja_dispositivo', id); } return id; } catch (e) { return nuevo(); }
+})();
+const esc = t => String(t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const nombreDe = id => { const j = jugadores.find(x => x.dispositivo === id); return j ? j.nombre : ''; };
 
 function mesaTag(n) { const [c, h] = MESAS[n]; return `<span class="mesa-tag"><span class="dot" style="background:${h}"></span>${c}</span>`; }
 
@@ -314,23 +324,37 @@ async function cargarPartida(code) {
   const { data, error } = await SB.from('caja_partidas').select('*').eq('codigo', code).maybeSingle();
   if (error) throw error; return data;
 }
-async function cargarMesa() {
-  const { data, error } = await SB.from('caja_mesas').select('*').eq('partida', cfg.partida).eq('mesa', cfg.mesa).maybeSingle();
+async function cargarMesa(p = cfg.partida, n = cfg.mesa) {
+  const { data, error } = await SB.from('caja_mesas').select('*').eq('partida', p).eq('mesa', n).maybeSingle();
   if (error) throw error;
   if (data) return data;
-  await SB.from('caja_mesas').upsert({ partida: cfg.partida, mesa: cfg.mesa, estado: Caja.estadoInicial() }, { onConflict: 'partida,mesa', ignoreDuplicates: true });
-  const r = await SB.from('caja_mesas').select('*').eq('partida', cfg.partida).eq('mesa', cfg.mesa).maybeSingle();
-  return r.data;
+  await SB.from('caja_mesas').upsert({ partida: p, mesa: n, estado: Caja.estadoInicial() }, { onConflict: 'partida,mesa', ignoreDuplicates: true });
+  const r = await SB.from('caja_mesas').select('*').eq('partida', p).eq('mesa', n).maybeSingle();
+  if (r.error) throw r.error; return r.data;
+}
+// La base de datos decide: solo se registra si el equipo no tiene vocero o ya es este celular
+async function tomarVocero(p, n) {
+  const { data, error } = await SB.from('caja_mesas').update({ vocero_id: DISPOSITIVO, vocero_desde: new Date().toISOString() })
+    .eq('partida', p).eq('mesa', n).or(`vocero_id.is.null,vocero_id.eq.${DISPOSITIVO}`).select('mesa');
+  if (error) throw error; return data.length === 1;
+}
+async function soltarVocero(p, n) {
+  await SB.from('caja_mesas').update({ vocero_id: null, vocero_desde: null }).eq('partida', p).eq('mesa', n).eq('vocero_id', DISPOSITIVO);
+}
+async function guardarJugador(rol) {
+  await SB.from('caja_jugadores').update({ rol, visto_at: new Date().toISOString() }).eq('partida', cfg.partida).eq('dispositivo', DISPOSITIVO);
 }
 
 /* ---------- Celular: unirse ---------- */
 function vistaUnirse(err) {
   app.innerHTML = `
   <header class="top"><div><div class="kick">Finanzas para No Financieros · Sesión 2</div><h1>La caja de la planta</h1></div></header>
-  <p class="sub">Elijan su equipo y su rol. El vocero captura la decisión y los números; toda la mesa hace las cuentas en papel.</p>
+  <p class="sub">Escribe tu nombre y elige tu equipo y tu rol. El vocero captura la decisión y los números; todo el equipo hace las cuentas en papel.</p>
   <div class="card">
+    <label for="nombre">Tu nombre</label><input type="text" id="nombre" maxlength="40" autocomplete="given-name" value="${esc(cfg.nombre || '')}">
     <label>Equipo</label><div class="chips" id="mesas">${[1,2,3,4,5].map(n => `<button class="chip" data-m="${n}">${MESAS[n][0]}</button>`).join('')}</div>
     <label>Tu rol hoy</label><div class="chips" id="roles">${ROLES.map(r => `<button class="chip" data-r="${r}">${r}</button>`).join('')}</div>
+    <p class="small muted" style="margin-top:8px">Solo una persona por equipo entra como vocero. Los demás eligen otro rol.</p>
     <label>Código de la partida <small>(lo da el facilitador)</small></label><input type="text" id="cod" value="${cfg.partida}" autocapitalize="characters">
     ${err ? `<div class="msg err">${err}</div>` : ''}
     <button class="btn" id="entrar">Entrar</button>
@@ -344,12 +368,28 @@ function vistaUnirse(err) {
   $('#mesas').onclick = e => { if (e.target.dataset.m) { m = +e.target.dataset.m; pintar(); } };
   $('#roles').onclick = e => { if (e.target.dataset.r) { r = e.target.dataset.r; pintar(); } };
   $('#entrar').onclick = async () => {
-    const code = $('#cod').value.trim().toUpperCase();
-    if (!m || !r) return vistaUnirse('Elijan su equipo y su rol.');
+    const code = $('#cod').value.trim().toUpperCase(), nombre = $('#nombre').value.trim().replace(/\s+/g, ' ');
+    const anterior = { partida: cfg.partida, mesa: cfg.mesa };
+    cfg.nombre = nombre; cfg.mesa = m; cfg.rol = r; cfg.partida = code;
+    if (!nombre) return vistaUnirse('Escribe tu nombre.');
+    if (!m || !r) return vistaUnirse('Elige tu equipo y tu rol.');
+    $('#entrar').disabled = true;
     try {
       const p = await cargarPartida(code);
-      if (!p) { cfg.mesa = m; cfg.rol = r; return vistaUnirse('Ese código no existe. Revísenlo con el facilitador.'); }
-      cfg = { partida: code, mesa: m, rol: r }; store.set('cfg', cfg); iniciarMesa();
+      if (!p) return vistaUnirse('Ese código no existe. Revísalo con el facilitador.');
+      const fila = await cargarMesa(code, m);
+      if (r === 'Vocero') {
+        if (!(await tomarVocero(code, m))) {
+          const { data } = await SB.from('caja_jugadores').select('nombre').eq('partida', code).eq('dispositivo', fila.vocero_id || '').maybeSingle();
+          cfg.rol = null;
+          return vistaUnirse(`${data ? esc(data.nombre) : 'Alguien más'} ya tiene el rol de vocero en ${MESAS[m][0]}. Elige otro rol.`);
+        }
+      } else if (fila.vocero_id === DISPOSITIVO) await soltarVocero(code, m);
+      // Si este celular era vocero de otro equipo, deja ese lugar libre
+      if (anterior.mesa && (anterior.mesa !== m || anterior.partida !== code)) await soltarVocero(anterior.partida, anterior.mesa);
+      const j = await SB.from('caja_jugadores').upsert({ partida: code, dispositivo: DISPOSITIVO, mesa: m, nombre, rol: r, visto_at: new Date().toISOString() }, { onConflict: 'partida,dispositivo' });
+      if (j.error) throw j.error;
+      cfg = { partida: code, mesa: m, rol: r, nombre }; store.set('cfg', cfg); aviso = ''; avisoHasta = 0; iniciarMesa();
     } catch (e) { vistaUnirse('No hay conexión. Sigan con la hoja de papel y vuelvan a intentar.'); }
   };
 }
@@ -363,9 +403,18 @@ async function refrescarMesa() {
     const p = await cargarPartida(cfg.partida);
     if (!p) { clearInterval(timer); return vistaUnirse('El facilitador reinició o cerró la partida. Vuelvan a entrar.'); }
     const m = await cargarMesa();
-    const cambio = !partida || !mesa || p.mes_actual !== partida.mes_actual || m.updated_at !== mesa.updated_at;
-    partida = p; mesa = m;
-    if (cambio || !armado) vistaMesa();
+    const js = await SB.from('caja_jugadores').select('dispositivo,nombre,rol').eq('partida', cfg.partida).eq('mesa', cfg.mesa);
+    if (js.error) throw js.error;
+    if (!js.data.some(j => j.dispositivo === DISPOSITIVO)) { clearInterval(timer); partida = mesa = null; return vistaUnirse('El facilitador reinició la partida. Vuelve a entrar.'); }
+    const cambio = !partida || !mesa || p.mes_actual !== partida.mes_actual || m.updated_at !== mesa.updated_at || m.vocero_id !== mesa.vocero_id
+      || js.data.map(j => j.nombre).join() !== jugadores.map(j => j.nombre).join();
+    partida = p; mesa = m; jugadores = js.data;
+    // El rol de vocero lo decide la base de datos; si el facilitador lo cambió, este celular se ajusta
+    const esVoc = m.vocero_id === DISPOSITIVO;
+    if (cfg.rol === 'Vocero' && !esVoc) { cfg.rol = 'Integrante'; store.set('cfg', cfg); avisar('El facilitador cambió al vocero de tu equipo. Ahora estás como integrante.'); guardarJugador('Integrante'); }
+    else if (esVoc && cfg.rol !== 'Vocero') { cfg.rol = 'Vocero'; store.set('cfg', cfg); avisar('El facilitador te asignó como vocero de tu equipo. Ahora tú capturas y envías.'); guardarJugador('Vocero'); }
+    if (++tick % 4 === 0) SB.from('caja_jugadores').update({ visto_at: new Date().toISOString() }).eq('partida', cfg.partida).eq('dispositivo', DISPOSITIVO).then(() => {});
+    if (cambio || !armado || (aviso && Date.now() > avisoHasta)) { if (Date.now() > avisoHasta) aviso = ''; vistaMesa(); }
     const red = $('#red'); if (red) red.textContent = '';
   } catch (e) { const red = $('#red'); if (red) red.textContent = 'Sin conexión. Reintentando…'; }
 }
@@ -409,7 +458,7 @@ function avisoPendiente(est, mes) {
 function vistaMesa() {
   armado = true;
   const est = mesa.estado, mes = est.mesCompleto + 1, abierto = partida.mes_actual;
-  const esVocero = cfg.rol === 'Vocero';
+  const esVocero = mesa.vocero_id === DISPOSITIVO, nomVoc = nombreDe(mesa.vocero_id);
   let cuerpo = '';
   if (mes > 5) {
     cuerpo = `<div class="msg info"><b>Terminaron los cinco meses.</b> Utilidad acumulada ${money(est.utilidadAcum)} y caja ${money(est.caja)}${est.credito ? `, con ${money(est.credito)} de crédito por pagar` : ''}. Miren la pantalla: ¿el equipo con más utilidad es el que tiene más caja?</div>`;
@@ -425,12 +474,14 @@ function vistaMesa() {
       ${mes >= 3 ? `<p class="small" style="margin-top:6px"><b>Pronto pago:</b> ${Caja.CLIENTE_NUEVO} de esos lotes son de un cliente nuevo. Si le hacen $1 de descuento por lote, paga en 1 mes en lugar de 2 ($9 por lote).</p>` : ''}
       <p class="small" style="margin-top:6px"><b>Banco:</b> presta en múltiplos de $10. Cobra $1 al mes por cada $10, a partir del mes siguiente.</p></div>
       ${avisoPendiente(est, mes)}
-      ${esVocero ? formulario(est, mes) : `<div class="msg info">El vocero captura la decisión. Ustedes hagan las cuentas en la hoja de caja y revísenlas con él antes de enviar.</div>`}`;
+      ${esVocero ? formulario(est, mes) : !mesa.vocero_id ? `<div class="msg err"><b>Su equipo no tiene vocero.</b> Avísenle al facilitador para que asigne uno.</div>`
+        : `<div class="msg info">${nomVoc ? `<b>${esc(nomVoc)}</b> es el vocero y` : 'El vocero'} captura la decisión. Ustedes hagan las cuentas en la hoja de caja y revísenlas antes de enviar.</div>`}`;
   }
   app.innerHTML = `
-    <header class="top"><div><div class="kick">La caja de la planta</div><div style="margin-top:4px">${mesaTag(cfg.mesa)} <span class="muted small">· ${cfg.rol}</span></div></div>
+    <header class="top"><div><div class="kick">La caja de la planta</div><div style="margin-top:4px">${mesaTag(cfg.mesa)} <span class="muted small">· ${esc(cfg.nombre || '')} · ${esVocero ? 'Vocero' : esc(cfg.rol)}</span></div></div>
       <div style="text-align:right"><div class="pts" style="font-size:22px">${est.puntos}</div><div class="small muted">puntos</div></div></header>
     <div id="red" class="small" style="color:var(--danger)"></div>
+    ${aviso && Date.now() < avisoHasta ? `<div class="msg info"><b>${aviso}</b></div>` : ''}
     ${avisoUltimo(est)}
     ${cuerpo}
     ${mes <= 5 ? '<h2>Su tablero</h2>' + tablero(est, mes) : ''}
@@ -485,11 +536,17 @@ async function enviar(est, mes) {
   if (nuevo.mesCompleto === mes) { delete nuevo.pendiente; borrador = {}; }
   enviando = true; $('#enviar').disabled = true;
   try {
-    const e1 = await SB.from('caja_envios').insert({ partida: cfg.partida, mesa: cfg.mesa, mes, intento, decision: d, numeros: nums, correcto: !fallos.length, fallos });
-    if (e1.error) throw e1.error;
-    const e2 = await SB.from('caja_mesas').update({ estado: nuevo, updated_at: new Date().toISOString() }).eq('partida', cfg.partida).eq('mesa', cfg.mesa).select().single();
+    // Solo se guarda si la base de datos confirma que este celular es el vocero del equipo
+    const e2 = await SB.from('caja_mesas').update({ estado: nuevo, updated_at: new Date().toISOString() })
+      .eq('partida', cfg.partida).eq('mesa', cfg.mesa).eq('vocero_id', DISPOSITIVO).select();
     if (e2.error) throw e2.error;
-    mesa = e2.data; enviando = false; vistaMesa(); window.scrollTo(0, 0);
+    if (e2.data.length !== 1) {
+      enviando = false; cfg.rol = 'Integrante'; store.set('cfg', cfg); guardarJugador('Integrante');
+      avisar('Este celular ya no es el vocero del equipo. El envío no se guardó.');
+      mesa = await cargarMesa(); vistaMesa(); window.scrollTo(0, 0); return;
+    }
+    await SB.from('caja_envios').insert({ partida: cfg.partida, mesa: cfg.mesa, mes, intento, decision: d, numeros: nums, correcto: !fallos.length, fallos });
+    mesa = e2.data[0]; enviando = false; vistaMesa(); window.scrollTo(0, 0);
   } catch (e) {
     enviando = false; $('#enviar').disabled = false;
     fmsg('No se pudo enviar. Revisen la conexión e intenten otra vez.');
@@ -497,7 +554,7 @@ async function enviar(est, mes) {
 }
 
 /* ---------- Facilitador ---------- */
-let facMesas = [], confirmar = false;
+let facMesas = [], facJug = [], confirmar = false, gestion = null; // gestion = { mesa, sel }
 function bono(mesas) {
   const term = mesas.filter(m => m.estado.mesCompleto === 5);
   if (term.length === 0) return {};
@@ -509,7 +566,8 @@ async function refrescarFac() {
   try {
     partida = await cargarPartida(cfg.partida);
     const { data } = partida ? await SB.from('caja_mesas').select('*').eq('partida', cfg.partida).order('mesa') : { data: [] };
-    facMesas = data || []; vistaFac();
+    const jj = partida ? await SB.from('caja_jugadores').select('*').eq('partida', cfg.partida).order('nombre') : { data: [] };
+    facMesas = data || []; facJug = jj.data || []; vistaFac();
   } catch (e) { const red = $('#red'); if (red) red.textContent = 'Sin conexión. Reintentando…'; }
 }
 
@@ -520,6 +578,31 @@ function estadoMesa(m, abierto) {
   if (e.pendiente && e.pendiente.mes === e.mesCompleto + 1) return `<b style="color:var(--alerta)">Mes ${e.pendiente.mes}: segundo intento</b>`;
   if (abierto === 0) return '<span class="muted">Conectada</span>';
   return `<span>Trabajando el mes ${e.mesCompleto + 1}</span>`;
+}
+
+const senal = j => { const s = (Date.now() - new Date(j.visto_at).getTime()) / 1000; return s < 45 ? '' : s < 120 ? 'sin señal hace 1 min' : `sin señal hace ${Math.round(s / 60)} min`; };
+function voceroMesa(m) {
+  if (!m) return '';
+  const j = facJug.find(x => x.dispositivo === m.vocero_id);
+  if (!m.vocero_id) return '<div class="s" style="color:var(--danger);font-weight:600">Sin vocero</div>';
+  return `<div class="s">Vocero: <b>${j ? esc(j.nombre) : 'sin nombre'}</b>${j && senal(j) ? ` <span style="color:var(--danger)">· ${senal(j)}</span>` : ''}</div>`;
+}
+function panelVocero() {
+  if (!gestion) return '';
+  const n = gestion.mesa, m = facMesas.find(x => x.mesa === n), act = m && m.vocero_id;
+  const lista = facJug.filter(j => j.mesa === n && j.dispositivo !== act);
+  const sel = lista.find(j => j.dispositivo === gestion.sel), actual = facJug.find(j => j.dispositivo === act);
+  return `<div class="card" style="border-top:6px solid ${MESAS[n][1]}">
+    <h2 style="margin-top:0">Cambiar el vocero de ${MESAS[n][0]}</h2>
+    <p class="small muted">${actual ? `Hoy el vocero es <b>${esc(actual.nombre)}</b>${senal(actual) ? ` (${senal(actual)})` : ''}. Al cambiarlo pasa a integrante y ya no puede enviar.` : 'Este equipo no tiene vocero.'} Elige quién lo reemplaza.</p>
+    ${lista.length ? `<div class="chips" id="cand" style="margin-top:12px">${lista.map(j => `<button class="chip${j.dispositivo === gestion.sel ? ' on' : ''}" data-d="${j.dispositivo}" style="${j.dispositivo === gestion.sel ? 'background:var(--carbon)' : ''}">${esc(j.nombre)} <span class="small" style="opacity:.75">· ${esc(j.rol)}${senal(j) ? ' · ' + senal(j) : ''}</span></button>`).join('')}</div>`
+      : '<div class="msg info">Nadie más de este equipo ha entrado al simulador. Pídeles que escaneen el QR y vuelve aquí.</div>'}
+    ${sel ? `<div class="msg err"><b>¿Hacer vocero a ${esc(sel.nombre)} en ${MESAS[n][0]}?</b> Su celular podrá capturar y enviar en unos segundos.</div>` : ''}
+    <div class="bar" style="margin-top:14px">
+      ${sel ? `<button class="btn" id="asignar">Confirmar: ${esc(sel.nombre)} es el vocero</button>` : ''}
+      ${act ? '<button class="btn sec" id="liberar">Dejar sin vocero</button>' : ''}
+      <button class="btn ghost" id="cancelar-gestion">Cancelar</button>
+    </div></div>`;
 }
 
 function grafica(mesas) {
@@ -559,7 +642,9 @@ function vistaFac() {
     </div>
     ${confirmar ? '<div class="msg err"><b>Reiniciar borra todos los datos de esta partida.</b> Si no los has guardado, descarga antes los resultados. Para cancelar, toca «Cargar».</div>' : ''}
     <div id="desc-msg" class="small muted" style="margin-top:8px"></div>
-    <div class="grid5">${[1,2,3,4,5].map(n => `<div class="st" style="border-top-color:${MESAS[n][1]}"><div class="n">${MESAS[n][0]}</div><div class="s">${estadoMesa(porMesa[n], abierto)}</div></div>`).join('')}</div>
+    <div class="grid5">${[1,2,3,4,5].map(n => `<div class="st" style="border-top-color:${MESAS[n][1]}"><div class="n">${MESAS[n][0]}</div><div class="s">${estadoMesa(porMesa[n], abierto)}</div>${voceroMesa(porMesa[n])}
+      ${porMesa[n] ? `<button class="mini" data-gestion="${n}">Cambiar vocero</button>` : ''}</div>`).join('')}</div>
+    ${panelVocero()}
     ${vis && facMesas.length ? `<h2>Cómo van</h2><div class="card"><table><tr><th>Equipo</th><th>Caja</th><th>Utilidad acumulada</th><th>Crédito</th><th>Puntos</th></tr>
       ${tabla.map(m => `<tr><td>${mesaTag(m.mesa)}</td><td>${money(m.estado.caja)}</td><td>${money(m.estado.utilidadAcum)}</td><td>${money(m.estado.credito)}</td><td class="pts">${m.estado.puntos + (b[m.mesa] || 0)}${b[m.mesa] ? ' <span class="small muted">(+3 mayor utilidad)</span>' : ''}</td></tr>`).join('')}</table></div>` : ''}
     ${vis && todos ? `<h2>¿El equipo que más ganó es el que más caja tiene?</h2><div class="card">${grafica(facMesas)}</div>` : ''}
@@ -572,14 +657,31 @@ function vistaFac() {
     if (partida && !confirmar) { confirmar = true; return vistaFac(); }
     confirmar = false; cfg.partida = c; store.set('cfg', cfg);
     await SB.from('caja_envios').delete().eq('partida', c);
+    await SB.from('caja_jugadores').delete().eq('partida', c);
     await SB.from('caja_mesas').delete().eq('partida', c);
     await SB.from('caja_partidas').upsert({ codigo: c, mes_actual: 0, resultados_visibles: false, updated_at: new Date().toISOString() }, { onConflict: 'codigo' });
     refrescarFac();
   };
   const ab = $('#abrir'); if (ab) ab.onclick = async () => { await SB.from('caja_partidas').update({ mes_actual: abierto + 1, updated_at: new Date().toISOString() }).eq('codigo', cfg.partida); refrescarFac(); };
+  document.querySelectorAll('[data-gestion]').forEach(b => b.onclick = () => { gestion = { mesa: +b.dataset.gestion, sel: null }; vistaFac(); });
+  const cand = $('#cand'); if (cand) cand.onclick = e => { const b = e.target.closest('[data-d]'); if (b) { gestion.sel = b.dataset.d; vistaFac(); } };
+  const cg = $('#cancelar-gestion'); if (cg) cg.onclick = () => { gestion = null; vistaFac(); };
+  const asg = $('#asignar'); if (asg) asg.onclick = () => cambiarVocero(gestion.mesa, gestion.sel);
+  const lib = $('#liberar'); if (lib) lib.onclick = () => cambiarVocero(gestion.mesa, null);
   const dh = $('#desc-html'); if (dh) dh.onclick = () => exportar('html');
   const dc = $('#desc-csv'); if (dc) dc.onclick = () => exportar('csv');
   const vb = $('#vis'); if (vb) vb.onclick = async () => { await SB.from('caja_partidas').update({ resultados_visibles: !vis }).eq('codigo', cfg.partida); refrescarFac(); };
+}
+
+async function cambiarVocero(n, nuevo) {
+  const m = facMesas.find(x => x.mesa === n), antes = m && m.vocero_id;
+  try {
+    const r = await SB.from('caja_mesas').update({ vocero_id: nuevo, vocero_desde: nuevo ? new Date().toISOString() : null }).eq('partida', cfg.partida).eq('mesa', n);
+    if (r.error) throw r.error;
+    if (antes) await SB.from('caja_jugadores').update({ rol: 'Integrante' }).eq('partida', cfg.partida).eq('dispositivo', antes);
+    if (nuevo) await SB.from('caja_jugadores').update({ rol: 'Vocero' }).eq('partida', cfg.partida).eq('dispositivo', nuevo);
+    gestion = null; refrescarFac();
+  } catch (e) { const red = $('#red'); if (red) red.textContent = 'No se pudo cambiar el vocero. Revisa la conexión e inténtalo otra vez.'; }
 }
 
 async function exportar(tipo) {
@@ -589,7 +691,8 @@ async function exportar(tipo) {
     const r1 = await SB.from('caja_mesas').select('*').eq('partida', cfg.partida).order('mesa'); if (r1.error) throw r1.error;
     const r2 = await SB.from('caja_envios').select('*').eq('partida', cfg.partida).order('created_at'); if (r2.error) throw r2.error;
     const hoy = new Date().toISOString().slice(0, 10), base = `resultados_caja_${cfg.partida}_${hoy}`;
-    const datos = { partida: p, mesas: r1.data || [], envios: r2.data || [], EQ: MESAS, origen: location.origin };
+    const r3 = await SB.from('caja_jugadores').select('*').eq('partida', cfg.partida).order('nombre');
+    const datos = { partida: p, mesas: r1.data || [], envios: r2.data || [], jugadores: r3.data || [], EQ: MESAS, origen: location.origin };
     if (tipo === 'csv') CajaExportar.descargar(base + '.csv', CajaExportar.csv(datos), 'text/csv;charset=utf-8');
     else CajaExportar.descargar(base + '.html', CajaExportar.html(datos), 'text/html;charset=utf-8');
     if ($('#desc-msg')) $('#desc-msg').textContent = 'Listo: revisa tu carpeta de descargas.';
@@ -675,7 +778,7 @@ function vistaPin(alEntrar) {
   render(); input.focus();
 }
 
-function iniciarFac() { refrescarFac(); setInterval(() => { if (!confirmar && document.activeElement?.id !== 'cod') refrescarFac(); }, 3000); }
+function iniciarFac() { refrescarFac(); setInterval(() => { if (!confirmar && !gestion && document.activeElement?.id !== 'cod') refrescarFac(); }, 3000); }
 if (FAC) { document.body.classList.add('fac'); pinValido() ? iniciarFac() : vistaPin(iniciarFac); }
 else if (cfg.mesa && cfg.rol && cfg.partida) iniciarMesa();
 else vistaUnirse();
