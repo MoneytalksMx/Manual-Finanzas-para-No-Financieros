@@ -432,8 +432,8 @@ function vistaMesa() {
       <div style="text-align:right"><div class="pts" style="font-size:22px">${est.puntos}</div><div class="small muted">puntos</div></div></header>
     <div id="red" class="small" style="color:var(--danger)"></div>
     ${avisoUltimo(est)}
-    ${cuerpo}
     ${mes <= 5 ? '<h2>Su tablero</h2>' + tablero(est, mes) : ''}
+    ${cuerpo}
     ${historial(est)}
     <p class="small muted" style="margin-top:20px">Partida ${cfg.partida} · <a href="#" id="salir">cambiar de equipo o rol</a></p>`;
   $('#salir').onclick = e => { e.preventDefault(); clearInterval(timer); vistaUnirse(); };
