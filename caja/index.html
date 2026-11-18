@@ -65,6 +65,28 @@ button.btn.danger{background:var(--danger)}
 .msg.info{background:#ECE9E4;color:var(--env-ink)}
 .msg ul{margin:6px 0 0 18px}
 .msg li{margin-top:4px}
+.v{margin-top:10px}
+.v-sub{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600}
+.v-ico{display:inline-flex;width:26px;height:26px;flex:none}
+.v-ico svg{width:100%;height:100%;fill:none;stroke:var(--env-ink);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.v-barra{display:flex;gap:3px;margin-top:8px;height:52px}
+.v-barra>div{border-radius:10px;display:flex;flex-direction:column;justify-content:center;align-items:center;color:#fff;line-height:1.15;min-width:0}
+.v-barra span{font-size:11px;font-weight:600;opacity:.95}
+.v-barra b{font-size:17px}
+.v-barra .al{background:#8C8780}.v-barra .no{background:#B4AFA7}.v-barra .ut{background:var(--ok)}
+.v-nota{font-size:13px;color:var(--muted);margin-top:6px}
+.v-linea{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px;position:relative}
+.v-linea:before{content:"";position:absolute;left:8%;right:8%;top:6px;height:2px;background:#D6D1C9}
+.v-paso{position:relative;display:flex;flex-direction:column;gap:6px}
+.v-punto{width:14px;height:14px;border-radius:50%;background:var(--env-ink);border:3px solid #fff;box-sizing:content-box;margin:-3px 0 0 -3px;position:relative;z-index:1}
+.v-mes{font-weight:700;font-size:14px;line-height:1.2}
+.v-mes span{display:block;font-weight:500;font-size:12px;color:var(--muted)}
+.v-mov{border-radius:10px;padding:6px 8px;line-height:1.25}
+.v-mov b{display:block;font-size:14px}
+.v-mov span{font-size:11.5px}
+.v-mov.sale{background:#FBEDE6;color:#8A2E08}
+.v-mov.entra{background:#EAF3EE;color:#1E5A37}
+.v-caja{display:flex;gap:10px;align-items:flex-start;background:var(--bg);border-radius:12px;padding:10px 12px;margin-top:10px;font-size:13.5px;line-height:1.45}
 .mesa-tag{display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:15px}
 .dot{width:12px;height:12px;border-radius:50%;display:inline-block;flex:none}
 table{width:100%;border-collapse:collapse;font-size:13.5px;background:var(--table-bg)}
@@ -434,6 +456,35 @@ async function refrescarMesa() {
   } catch (e) { const red = $('#red'); if (red) red.textContent = 'Sin conexión. Reintentando…'; }
 }
 
+// Explicación visual del mes: un lote, cuándo entra y sale el dinero, pronto pago y banco
+const ICO = {
+  lata: '<svg viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" cy="5" rx="6" ry="2"/><path d="M6 5v14c0 1.1 2.7 2 6 2s6-.9 6-2V5"/><path d="M6 9.5c0 1.1 2.7 2 6 2s6-.9 6-2"/></svg>',
+  banco: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9.5L12 4l9 5.5"/><path d="M5.5 10v8M10 10v8M14 10v8M18.5 10v8M3 20.5h18"/></svg>',
+  cliente: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4M9.5 12h6M9.5 15.5h6"/></svg>'
+};
+function visualMes(mes, ped) {
+  const paso = (m, cuando, items) => `<div class="v-paso"><div class="v-punto"></div><div class="v-mes">Mes ${m}<span>${cuando}</span></div>${items}</div>`;
+  const sale = (t, d) => `<div class="v-mov sale"><b>− ${t}</b><span>${d}</span></div>`;
+  const entra = (t, d) => `<div class="v-mov entra"><b>+ ${t}</b><span>${d}</span></div>`;
+  return `<div class="v">
+    <div class="v-sub"><span class="v-ico">${ICO.lata}</span><span>Un lote de latas se vende en <b>$10</b></span></div>
+    <div class="v-barra" role="img" aria-label="De cada lote de $10: $4 de aluminio, $2 de nómina y energía y $4 de utilidad">
+      <div class="al" style="flex:4"><span>Aluminio</span><b>$4</b></div>
+      <div class="no" style="flex:2"><span>Nómina</span><b>$2</b></div>
+      <div class="ut" style="flex:4"><span>Utilidad</span><b>$4</b></div>
+    </div>
+    <p class="v-nota">Además, <b>$2 de gastos fijos</b> cada mes, aunque no produzcan nada.</p>
+    <div class="v-sub" style="margin-top:16px">Cuándo sale y entra el dinero de los lotes de este mes</div>
+    <div class="v-linea">
+      ${paso(mes, 'este mes', sale('$2 por lote', 'Nómina y energía') + sale('$2', 'Gastos fijos'))}
+      ${paso(mes + 1, 'al mes siguiente', sale('$4 por lote', 'Aluminio al proveedor') + (mes >= 3 ? entra('$9 por lote', 'Cliente nuevo, si le dan pronto pago') : ''))}
+      ${paso(mes + 2, 'en 2 meses', entra('$10 por lote', 'Cobro de la venta'))}
+    </div>
+    ${mes >= 3 ? `<div class="v-caja"><span class="v-ico">${ICO.cliente}</span><div><b>Cliente nuevo:</b> ${Caja.CLIENTE_NUEVO} de los ${ped} lotes son suyos. Si le hacen $1 de descuento por lote, paga en 1 mes en lugar de 2: $9 por lote.</div></div>` : ''}
+    <div class="v-caja"><span class="v-ico">${ICO.banco}</span><div><b>Banco:</b> presta en múltiplos de $10 y cobra $1 al mes por cada $10, desde el mes siguiente.</div></div>
+  </div>`;
+}
+
 function tablero(est, mes) {
   const ini = mes <= 5 ? Caja.inicioDeMes(est, mes) : null;
   const fac = est.facturas.slice().sort((a, b) => a.mes - b.mes).map(f => `<div class="row"><span>Factura que se cobra en el mes ${f.mes}</span><b>${money(f.monto)}</b></div>`).join('') || '<div class="row muted">Sin facturas pendientes</div>';
@@ -485,9 +536,7 @@ function vistaMesa() {
     const ped = Caja.PEDIDOS[mes];
     cuerpo = `<div class="card"><div class="kick">Mes ${mes} de 5</div>
       <h2 style="margin-top:4px">Este mes les piden ${ped} lotes</h2>
-      <p class="small">Cada lote se vende en $10 y cuesta $4 de aluminio y $2 de nómina. El gasto fijo es $2 al mes. El cliente paga a 2 meses; el aluminio se paga al mes siguiente; la nómina y el gasto fijo, este mes.</p>
-      ${mes >= 3 ? `<p class="small" style="margin-top:6px"><b>Pronto pago:</b> ${Caja.CLIENTE_NUEVO} de esos lotes son de un cliente nuevo. Si le hacen $1 de descuento por lote, paga en 1 mes en lugar de 2 ($9 por lote).</p>` : ''}
-      <p class="small" style="margin-top:6px"><b>Banco:</b> presta en múltiplos de $10. Cobra $1 al mes por cada $10, a partir del mes siguiente.</p></div>
+      ${visualMes(mes, ped)}</div>
       ${avisoPendiente(est, mes)}
       ${esVocero ? formulario(est, mes) : !mesa.vocero_id ? `<div class="msg err"><b>Su equipo no tiene vocero.</b> Avísenle al facilitador para que asigne uno.</div>`
         : `<div class="msg info">${nomVoc ? `<b>${esc(nomVoc)}</b> es el vocero y` : 'El vocero'} captura la decisión. Ustedes hagan las cuentas en la hoja de caja y revísenlas antes de enviar.</div>`}`;
