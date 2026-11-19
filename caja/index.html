@@ -99,6 +99,10 @@ button.btn.danger{background:var(--danger)}
 .rc-fila{display:flex;gap:8px;align-items:flex-start;margin-top:8px}
 .rc-fila img{height:14px;width:auto;flex:none;margin-top:3px}
 .rc-ico{width:18px;height:18px;flex:none;color:#8A1020}.rc-ico svg{width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linejoin:round;stroke-linecap:round}
+.g-cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin:10px 0 4px}
+.g-cal span{border:1.5px solid #D6D1C9;border-radius:8px;text-align:center;font-weight:700;font-size:13px;padding:6px 0}
+.g-cal .paso{background:#F1EEE9;border-color:#F1EEE9;color:#9D988F}
+.g-cal .hoy{background:var(--env-red);border-color:var(--env-red);color:#fff;font-size:14px;transform:scale(1.12);box-shadow:0 2px 8px rgba(170,17,36,.3)}
 .modal{position:fixed;inset:0;background:rgba(38,38,38,.55);display:flex;align-items:center;justify-content:center;padding:16px;z-index:50}
 .modal-caja{background:#fff;border-radius:18px;padding:8px 16px 16px;max-width:440px;width:100%;max-height:90vh;overflow:auto;box-shadow:0 12px 40px rgba(0,0,0,.25)}
 .modal-caja .msg{font-size:15.5px}
@@ -447,7 +451,7 @@ function visualMes(mes, ped) {
   return `<div class="v">
     <div class="v-sub">Estamos en ${MES_LARGO[mes + 1]}</div>
     <div class="v-cal" role="img" aria-label="Calendario de enero a julio. Hoy están en ${MES_LARGO[mes + 1]}.">${cal}</div>
-    <p class="v-nota">Enero y febrero ya pasaron: lo que vendieron en enero se cobra en marzo, y lo de febrero en abril.</p>
+    <p class="v-nota">${mes === 1 ? '<b>Empieza el juego.</b> ' : ''}La planta ya venía operando: lo que vendieron en enero se cobra en marzo, y lo de febrero en abril.</p>
     <div class="v-sub" style="margin-top:16px"><span class="v-ico">${ICO.lata}</span><span>Un lote de latas se vende en <b>$10</b></span></div>
     <div class="v-gr">
       <div class="v-et">Gastos variables · $6 por lote</div>
@@ -521,7 +525,7 @@ function vistaMesa() {
   if (mes > 5) {
     cuerpo = `<div class="msg info"><b>Terminaron los cinco meses.</b> Utilidad acumulada ${money(est.utilidadAcum)} y caja ${money(est.caja)}${est.credito ? `, con ${money(est.credito)} de crédito por pagar` : ''}. Miren la pantalla: ¿el equipo con más utilidad es el que tiene más caja?</div>`;
   } else if (abierto === 0) {
-    cuerpo = `<div class="msg info">Esperen a que el facilitador abra marzo. Mientras, revisen su tablero: esto es lo que tienen hoy. <a href="#" id="ver-guia">Ver cómo se juega</a></div>`;
+    cuerpo = `<div class="msg info"><b>Arrancamos en MARZO.</b> La planta ya venía operando: en su tablero están los cobros y pagos pendientes de enero y febrero. Esperen a que el facilitador abra marzo. Mientras, revisen su tablero: esto es lo que tienen hoy. <a href="#" id="ver-guia">Ver cómo se juega</a></div>`;
   } else if (mes > abierto) {
     cuerpo = `<div class="msg info">Ya enviaron ${nombreMes(mes - 1)}. Esperen a que el facilitador abra ${nombreMes(mes)}.</div>`;
   } else {
@@ -551,7 +555,9 @@ function vistaMesa() {
 const GUIA_JUG = [
   ['Ustedes dirigen la Planta Delta', `<img class="pd-logo grande" src="img/planta-delta.png" alt="Planta Delta"><p>Durante cinco meses, de <b>marzo a julio</b>, deciden cuántos lotes de latas producir.</p><p>Gana la mesa con <b>más utilidad acumulada</b>, sin quedarse nunca con la caja en negativo.</p>`],
   ['Cuánto cuesta un lote', `<ul><li>Se vende en <b>$10</b>. El cliente paga <b>2 meses después</b>.</li><li>Aluminio <b>$4</b>: se paga al proveedor <b>el mes siguiente</b>.</li><li>Nómina y energía <b>$2</b>: se pagan <b>el mismo mes</b>.</li><li>Gastos fijos <b>$2 al mes</b>, aunque no produzcan nada.</li></ul><p class="muted">Cifras en millones de pesos.</p>`],
-  ['Con qué empiezan', `<ul><li><b>$5</b> en su cuenta de BBVA.</li><li>Facturas de clientes por cobrar: <b>$30 en marzo</b> (lo que vendieron en enero) y <b>$30 en abril</b> (lo de febrero).</li><li>Factura del proveedor de aluminio: <b>$12 en marzo</b>.</li></ul><p>Lo ven en su tablero, aquí abajo y en el de papel.</p>`],
+  ['Hoy es MARZO', `<div class="g-cal"><span class="paso">Ene</span><span class="paso">Feb</span><span class="hoy">MAR</span><span>Abr</span><span>May</span><span>Jun</span><span>Jul</span></div>
+    <p>El juego empieza en <b>marzo</b>, pero la Planta Delta <b>ya venía operando</b> desde antes. Por eso traen cobros y pagos pendientes de enero y febrero:</p>
+    <ul><li><b>Cobrar $30 en marzo</b>: lo que vendieron en enero.</li><li><b>Cobrar $30 en abril</b>: lo que vendieron en febrero.</li><li><b>Pagar $12 en marzo</b>: el aluminio de febrero.</li><li>Y tienen <b>$5</b> en su cuenta de BBVA.</li></ul><p>Todo esto ya está en su tablero, aquí abajo y en el de papel.</p>`],
   ['Qué hacen cada mes', `<ol><li>El facilitador abre el mes.</li><li>Deciden cuántos lotes producir, hasta lo que les piden.</li><li>Hacen las cuentas en la hoja de caja.</li><li>El vocero captura la decisión y cuatro números: cobros, pago al proveedor, caja al final y utilidad.</li><li>Ponen las tarjetas en su tablero de papel.</li></ol>`],
   ['Si la caja no alcanza', `<ul><li><b>Crédito de Banamex</b> en múltiplos de $10 ($0, $10, $20…). Cuesta $1 al mes por cada $10, desde el mes siguiente. Lo devuelven cuando quieran.</li><li><b>Pronto pago:</b> desde mayo llega un cliente nuevo con 6 lotes. Si le hacen $1 de descuento por lote, les paga en 1 mes en lugar de 2.</li><li><b>Producir menos</b> de lo que les piden.</li></ul><p>Si con su decisión la caja termina en negativo, el envío no se acepta.</p>`],
   ['Cómo ganan puntos', `<ul><li><b>2 puntos</b> si sus cuatro números están bien a la primera.</li><li><b>1 punto</b> si quedan bien en el segundo intento.</li><li>Si no, avanzan sin puntos y les mostramos los números correctos para que los anoten.</li><li>Al final, <b>3 puntos extra</b> a la mesa con más utilidad acumulada.</li></ul>`]
