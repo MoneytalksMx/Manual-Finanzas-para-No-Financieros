@@ -90,7 +90,7 @@ button.btn.danger{background:var(--danger)}
 .t-ficha.cob{background:#E8F0F8;color:#164F78}
 .t-ficha.pag{background:#FBEEF0;color:#8A1020}
 .t-vacio{font-size:12px;color:#B4AFA7;text-align:center;padding:10px 0}
-.guia{border-top:4px solid var(--env-red)}
+.modal-caja .guia{border:0;box-shadow:none;padding:8px 0 0;margin:0;background:none}
 .g-pts{display:flex;gap:5px;margin-top:8px}.g-pts span{flex:1;height:5px;border-radius:3px;background:#E2DED7}.g-pts span.on{background:var(--env-red)}
 .g-txt{font-size:15px;line-height:1.55}.g-txt p{margin:8px 0 0}.g-txt ul,.g-txt ol{margin:8px 0 0 20px;padding:0}.g-txt li{margin-top:6px}
 .g-bot{display:flex;gap:8px;margin-top:16px}.g-bot .btn{margin-top:0}.g-bot .btn.ghost{flex:0 0 32%}
@@ -517,7 +517,7 @@ function vistaMesa() {
   if (mes > 5) {
     cuerpo = `<div class="msg info"><b>Terminaron los cinco meses.</b> Utilidad acumulada ${money(est.utilidadAcum)} y caja ${money(est.caja)}${est.credito ? `, con ${money(est.credito)} de crédito por pagar` : ''}. Miren la pantalla: ¿el equipo con más utilidad es el que tiene más caja?</div>`;
   } else if (abierto === 0) {
-    cuerpo = guiaHecha() ? `<div class="msg info"><b>Listo.</b> Esperen a que el facilitador abra marzo. Mientras, revisen su tablero: esto es lo que tienen hoy. <a href="#" id="ver-guia">Ver otra vez cómo se juega</a></div>` : guiaHTML(GUIA_JUG, guiaJug, 'Listo');
+    cuerpo = `<div class="msg info">Esperen a que el facilitador abra marzo. Mientras, revisen su tablero: esto es lo que tienen hoy. <a href="#" id="ver-guia">Ver cómo se juega</a></div>`;
   } else if (mes > abierto) {
     cuerpo = `<div class="msg info">Ya enviaron ${nombreMes(mes - 1)}. Esperen a que el facilitador abra ${nombreMes(mes)}.</div>`;
   } else {
@@ -559,9 +559,24 @@ const GUIA_FAC = [
   ['El calendario', `<p>El juego va de <b>marzo a julio</b>: marzo es el mes 1 de la hoja de caja y julio el mes 5.</p><p>En marzo se cobra lo que vendieron en enero, y en abril lo de febrero.</p>`],
   ['Cómo avanzar', `<ul><li>Abre un mes cuando todas las mesas enviaron el anterior. Los recuadros de abajo te dicen quién falta.</li><li>«Mostrar cifras» proyecta caja, utilidad y puntos. Ocúltalas mientras deciden.</li><li>Al terminar julio, descarga los resultados.</li></ul>`]
 ];
-let guiaJug = 0, guiaFac = 0;
-const claveGuia = () => `caja-guia-${cfg.partida}-${cfg.mesa}`;
-function guiaHecha() { try { return localStorage.getItem(claveGuia()) === '1'; } catch (e) { return false; } }
+// Las instrucciones salen en ventana emergente al empezar cada partida nueva (la clave cambia al reiniciar).
+const claveGuia = quien => `caja-guia-${cfg.partida}-${quien}-${partida ? partida.updated_at : ''}`;
+function guiaHecha(quien) { try { return localStorage.getItem(claveGuia(quien)) === '1'; } catch (e) { return false; } }
+function marcarGuia(quien) { try { localStorage.setItem(claveGuia(quien), '1'); } catch (e) {} }
+function abrirGuia(pasos, fin, alTerminar) {
+  if ($('#guia-modal')) return;
+  let i = 0;
+  const fondo = document.createElement('div');
+  fondo.id = 'guia-modal'; fondo.className = 'modal';
+  const pintar = () => {
+    fondo.innerHTML = `<div class="modal-caja" role="dialog" aria-modal="true">${guiaHTML(pasos, i, fin)}</div>`;
+    fondo.querySelector('.modal-caja').scrollTop = 0;
+    fondo.querySelector('#g-ok').onclick = () => { if (i < pasos.length - 1) { i++; pintar(); } else { fondo.remove(); alTerminar(); } };
+    const at = fondo.querySelector('#g-atras'); if (at) at.onclick = () => { i--; pintar(); };
+    fondo.querySelector('#g-ok').focus();
+  };
+  document.body.appendChild(fondo); pintar();
+}
 function guiaHTML(pasos, i, fin) {
   const [t, cuerpo] = pasos[i], ult = i === pasos.length - 1;
   return `<div class="card guia"><div class="kick">Antes de empezar · paso ${i + 1} de ${pasos.length}</div>
@@ -570,10 +585,9 @@ function guiaHTML(pasos, i, fin) {
     <div class="g-bot">${i > 0 ? '<button class="btn ghost" id="g-atras">Atrás</button>' : ''}<button class="btn" id="g-ok">${ult ? fin : 'Entendido'}</button></div></div>`;
 }
 function armarGuiaJug() {
-  const ver = $('#ver-guia'); if (ver) ver.onclick = e => { e.preventDefault(); try { localStorage.removeItem(claveGuia()); } catch (x) {} guiaJug = 0; vistaMesa(); };
-  const ok = $('#g-ok'); if (!ok) return;
-  ok.onclick = () => { if (guiaJug < GUIA_JUG.length - 1) guiaJug++; else { try { localStorage.setItem(claveGuia(), '1'); } catch (e) {} guiaJug = 0; } vistaMesa(); window.scrollTo(0, 0); };
-  const at = $('#g-atras'); if (at) at.onclick = () => { guiaJug--; vistaMesa(); };
+  const quien = 'm' + cfg.mesa;
+  const ver = $('#ver-guia'); if (ver) ver.onclick = e => { e.preventDefault(); abrirGuia(GUIA_JUG, 'Listo', () => marcarGuia(quien)); };
+  if (!guiaHecha(quien)) abrirGuia(GUIA_JUG, 'Listo', () => marcarGuia(quien));
 }
 
 // Ventana emergente con el resultado del envío. Cada celular la ve una vez y la cierra con «Aceptar»;
@@ -707,14 +721,13 @@ function vistaFac() {
     <div class="bar">
       <div style="font-size:22px;font-weight:700;margin-right:12px">${abierto === 0 ? 'Sin empezar' : Nombre(abierto) + ' · mes ' + abierto + ' de 5'}</div>
       ${abierto > 0 && abierto < 5 ? `<button class="btn" id="abrir">Abrir ${nombreMes(abierto + 1)} (mes ${abierto + 1})</button>` : ''}
-      ${abierto === 0 && guiaFac >= GUIA_FAC.length ? `<button class="btn" id="abrir">Abrir marzo (mes 1)</button> <a href="#" id="fg-otra" class="small">Ver instrucciones</a>` : ''}
+      ${abierto === 0 ? (guiaHecha('fac') ? `<button class="btn" id="abrir">Abrir marzo (mes 1)</button> <a href="#" id="fg-otra" class="small">Ver instrucciones</a>` : '<button class="btn" id="fg-otra">Ver instrucciones para empezar</button>') : ''}
       <button class="btn ghost" id="vis">${vis ? 'Ocultar cifras' : 'Mostrar cifras'}</button>
       <button class="btn ghost" id="desc-html">Descargar resultados</button>
       <button class="btn ghost" id="desc-csv">Datos en CSV</button>
     </div>
     ${confirmar ? '<div class="msg err"><b>Reiniciar borra todos los datos de esta partida.</b> Si no los has guardado, descarga antes los resultados. Para cancelar, toca «Cargar».</div>' : ''}
     <div id="desc-msg" class="small muted" style="margin-top:8px"></div>
-    ${abierto === 0 && guiaFac < GUIA_FAC.length ? guiaHTML(GUIA_FAC, guiaFac, 'Listo') : ''}
     <div class="grid5">${[1,2,3,4,5].map(n => `<div class="st" style="border-top-color:${MESAS[n][1]}"><div class="n">${MESAS[n][0]}</div><div class="s">${estadoMesa(porMesa[n], abierto)}</div></div>`).join('')}</div>
     ${vis && facMesas.length ? `<h2>Cómo van</h2><div class="card"><table><tr><th>Equipo</th><th>Caja</th><th>Utilidad acumulada</th><th>Crédito</th><th>Puntos</th></tr>
       ${tabla.map(m => `<tr><td>${mesaTag(m.mesa)}</td><td>${money(m.estado.caja)}</td><td>${money(m.estado.utilidadAcum)}</td><td>${money(m.estado.credito)}</td><td class="pts">${m.estado.puntos + (b[m.mesa] || 0)}${b[m.mesa] ? ' <span class="small muted">(+3 mayor utilidad)</span>' : ''}</td></tr>`).join('')}</table></div>` : ''}
@@ -732,9 +745,9 @@ function vistaFac() {
     await SB.from('caja_partidas').upsert({ codigo: c, mes_actual: 0, resultados_visibles: false, updated_at: new Date().toISOString() }, { onConflict: 'codigo' });
     refrescarFac();
   };
-  const gok = $('#g-ok'); if (gok) gok.onclick = () => { guiaFac++; vistaFac(); };
-  const gat = $('#g-atras'); if (gat) gat.onclick = () => { guiaFac--; vistaFac(); };
-  const fgo = $('#fg-otra'); if (fgo) fgo.onclick = e => { e.preventDefault(); guiaFac = 0; vistaFac(); };
+  const finGuiaFac = () => { marcarGuia('fac'); vistaFac(); };
+  const fgo = $('#fg-otra'); if (fgo) fgo.onclick = e => { e.preventDefault(); abrirGuia(GUIA_FAC, 'Listo', finGuiaFac); };
+  if (partida && abierto === 0 && !guiaHecha('fac')) abrirGuia(GUIA_FAC, 'Listo', finGuiaFac);
   const ab = $('#abrir'); if (ab) ab.onclick = async () => { await SB.from('caja_partidas').update({ mes_actual: abierto + 1, updated_at: new Date().toISOString() }).eq('codigo', cfg.partida); refrescarFac(); };
   const dh = $('#desc-html'); if (dh) dh.onclick = () => exportar('html');
   const dc = $('#desc-csv'); if (dc) dc.onclick = () => exportar('csv');
