@@ -552,13 +552,7 @@ const GUIA_JUG = [
   ['Si la caja no alcanza', `<ul><li><b>Crédito de Banamex</b> en múltiplos de $10 ($0, $10, $20…). Cuesta $1 al mes por cada $10, desde el mes siguiente. Lo devuelven cuando quieran.</li><li><b>Pronto pago:</b> desde mayo llega un cliente nuevo con 6 lotes. Si le hacen $1 de descuento por lote, les paga en 1 mes en lugar de 2.</li><li><b>Producir menos</b> de lo que les piden.</li></ul><p>Si con su decisión la caja termina en negativo, el envío no se acepta.</p>`],
   ['Cómo ganan puntos', `<ul><li><b>2 puntos</b> si sus cuatro números están bien a la primera.</li><li><b>1 punto</b> si quedan bien en el segundo intento.</li><li>Si no, avanzan sin puntos y les mostramos los números correctos para que los anoten.</li><li>Al final, <b>3 puntos extra</b> a la mesa con más utilidad acumulada.</li></ul>`]
 ];
-const GUIA_FAC = [
-  ['Que entren todos', `<p>Proyecta esta pantalla. Cada persona escanea el QR, elige su equipo y su rol.</p><p>Revisa abajo que aparezcan las cinco mesas como «Conectada».</p>`],
-  ['Un vocero por mesa', `<p>Solo el vocero captura en el celular. Los demás hacen las cuentas en la hoja de caja y las revisan con él antes de enviar.</p>`],
-  ['Las reglas', `<p>Los jugadores están leyendo en su celular la misma explicación, paso a paso: el lote de $10, el aluminio que se paga al mes siguiente, el cobro a 2 meses, el crédito y el pronto pago.</p><p>Repásala con las láminas del juego mientras la leen.</p>`],
-  ['El calendario', `<p>El juego va de <b>marzo a julio</b>: marzo es el mes 1 de la hoja de caja y julio el mes 5.</p><p>En marzo se cobra lo que vendieron en enero, y en abril lo de febrero.</p>`],
-  ['Cómo avanzar', `<ul><li>Abre un mes cuando todas las mesas enviaron el anterior. Los recuadros de abajo te dicen quién falta.</li><li>«Mostrar cifras» proyecta caja, utilidad y puntos. Ocúltalas mientras deciden.</li><li>Al terminar julio, descarga los resultados.</li></ul>`]
-];
+const GUIA_FAC = GUIA_JUG; // el facilitador ve las mismas instrucciones que los jugadores
 // Las instrucciones salen en ventana emergente al empezar cada partida nueva (la clave cambia al reiniciar).
 const claveGuia = quien => `caja-guia-${cfg.partida}-${quien}-${partida ? partida.updated_at : ''}`;
 function guiaHecha(quien) { try { return localStorage.getItem(claveGuia(quien)) === '1'; } catch (e) { return false; } }
