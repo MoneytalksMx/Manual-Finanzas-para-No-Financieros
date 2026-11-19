@@ -108,6 +108,10 @@ button.btn.danger{background:var(--danger)}
 .g-txt{font-size:15px;line-height:1.55}.g-txt p{margin:8px 0 0}.g-txt ul,.g-txt ol{margin:8px 0 0 20px;padding:0}.g-txt li{margin-top:6px}
 .g-bot{display:flex;gap:8px;margin-top:16px}.g-bot .btn{margin-top:0}.g-bot .btn.ghost{flex:0 0 32%}
 .pd-logo{height:20px;width:auto;display:block;opacity:.9}.pd-logo.der{height:30px;align-self:center}.pd-logo.fac{height:30px;display:inline-block}.pd-logo.grande{height:44px;margin:10px 0 4px}
+.recuerda{background:#FFF7E6;border:1.5px solid #F0C36D;border-radius:12px;padding:10px 12px;margin-top:14px;font-size:14px;line-height:1.4}
+.rc-fila{display:flex;gap:8px;align-items:flex-start;margin-top:8px}
+.rc-fila img{height:14px;width:auto;flex:none;margin-top:3px}
+.rc-ico{width:18px;height:18px;flex:none;color:#8A1020}.rc-ico svg{width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linejoin:round;stroke-linecap:round}
 .modal{position:fixed;inset:0;background:rgba(38,38,38,.55);display:flex;align-items:center;justify-content:center;padding:16px;z-index:50}
 .modal-caja{background:#fff;border-radius:18px;padding:8px 16px 16px;max-width:440px;width:100%;max-height:90vh;overflow:auto;box-shadow:0 12px 40px rgba(0,0,0,.25)}
 .modal-caja .msg{font-size:15.5px}
@@ -548,7 +552,7 @@ function vistaMesa() {
     cuerpo = `<div class="card"><div class="kick">Mes ${mes} de 5</div>
       <h2 style="margin-top:4px">Este mes les piden ${ped} lotes</h2>
       ${visualMes(mes, ped)}</div>
-      ${esVocero ? formulario(est, mes) : `<div class="msg info">El vocero captura la decisión. Ustedes hagan las cuentas en la hoja de caja y revísenlas con él antes de enviar.</div>`}`;
+      ${esVocero ? formulario(est, mes) : `<div class="msg info">El vocero captura la decisión. Ustedes hagan las cuentas en la hoja de caja y revísenlas con él antes de enviar.</div>${recordatorio(mes)}`}`;
   }
   app.innerHTML = `
     <header class="top"><div><img class="pd-logo" src="img/planta-delta.png" alt="Planta Delta"><div class="kick" style="margin-top:6px">La caja de la planta</div><div style="margin-top:4px">${mesaTag(cfg.mesa)} <span class="muted small">· ${cfg.rol}</span></div></div>
@@ -627,6 +631,11 @@ function avisoEmergente(est, mes) {
 
 function campo(id, lab, extra = '') { return `<label for="${id}">${lab}${extra}</label><input type="number" inputmode="numeric" id="${id}" value="${borrador[id] ?? ''}">`; }
 
+function recordatorio(mes) {
+  return `<div class="recuerda"><b>Antes de enviar, recuerden:</b>
+    <div class="rc-fila"><img src="img/planta-delta.png" alt="Planta Delta"><span>Planta Delta les da a sus clientes <b>2 meses de crédito</b>: lo que venden en ${nombreMes(mes)} se cobra en ${nombreMes(mes + 2)}.</span></div>
+    <div class="rc-fila"><span class="rc-ico">${ICO.factura}</span><span>El proveedor de aluminio les da <b>1 mes de crédito</b>: el aluminio de ${nombreMes(mes)} se paga en ${nombreMes(mes + 1)}.</span></div></div>`;
+}
 function formulario(est, mes) {
   return `<div class="card"><h2 style="margin-top:0">1. La decisión</h2>
     ${campo('lotes', 'Lotes a producir', ` <small>(de 0 a ${Caja.PEDIDOS[mes]})</small>`)}
@@ -635,6 +644,7 @@ function formulario(est, mes) {
     ${est.credito ? campo('devuelve', 'Crédito que devuelven', ` <small>(deben ${money(est.credito)})</small>`) : ''}
     <h2>2. Sus números de papel</h2>
     ${campo('cobros', CAMPOS.cobros)}${campo('proveedor', CAMPOS.proveedor)}${campo('cajaFinal', CAMPOS.cajaFinal)}${campo('utilidad', CAMPOS.utilidad)}
+    ${recordatorio(mes)}
     <div id="fmsg"></div>
     <button class="btn" id="enviar">Enviar el mes ${mes}</button></div>`;
 }
