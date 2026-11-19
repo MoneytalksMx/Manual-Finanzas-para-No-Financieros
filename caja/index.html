@@ -86,19 +86,18 @@ button.btn.danger{background:var(--danger)}
 .v-barra>div{border-radius:10px;display:flex;flex-direction:column;justify-content:center;align-items:center;color:#fff;line-height:1.15;min-width:0}
 .v-barra span{font-size:11px;font-weight:600;opacity:.95}
 .v-barra b{font-size:17px}
-.v-barra .al{background:#8C8780}.v-barra .no{background:#B4AFA7}.v-barra .ut{background:var(--ok)}
+.v-barra .al{background:#8C8780}.v-barra .no{background:#B4AFA7}.v-barra .fi{background:#5E5A55}
 .v-nota{font-size:13px;color:var(--muted);margin-top:6px}
-.v-linea{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px;position:relative}
-.v-linea:before{content:"";position:absolute;left:8%;right:8%;top:6px;height:2px;background:#D6D1C9}
-.v-paso{position:relative;display:flex;flex-direction:column;gap:6px}
-.v-punto{width:14px;height:14px;border-radius:50%;background:var(--env-ink);border:3px solid #fff;box-sizing:content-box;margin:-3px 0 0 -3px;position:relative;z-index:1}
-.v-mes{font-weight:700;font-size:14px;line-height:1.2}
-.v-mes span{display:block;font-weight:500;font-size:12px;color:var(--muted)}
-.v-mov{border-radius:10px;padding:6px 8px;line-height:1.25}
-.v-mov b{display:block;font-size:14px}
-.v-mov span{font-size:11.5px}
-.v-mov.sale{background:#FBEDE6;color:#8A2E08}
-.v-mov.entra{background:#EAF3EE;color:#1E5A37}
+.v-gr{margin-top:10px}
+.v-et{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.v-cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:8px}
+.v-cm{border:1.5px solid #D6D1C9;border-radius:10px;padding:6px 0;text-align:center;line-height:1.15;color:var(--env-ink)}
+.v-cm b{display:block;font-size:14px}
+.v-cm span{font-size:10.5px;color:var(--muted)}
+.v-cm.paso{background:#F1EEE9;border-color:#F1EEE9;color:#9D988F}
+.v-cm.paso span{color:#B4AFA7}
+.v-cm.hoy{background:var(--env-red);border-color:var(--env-red);color:#fff;box-shadow:0 2px 8px rgba(170,17,36,.28)}
+.v-cm.hoy span{color:#fff;opacity:.9}
 .v-caja{display:flex;gap:10px;align-items:flex-start;background:var(--bg);border-radius:12px;padding:10px 12px;margin-top:10px;font-size:13.5px;line-height:1.45}
 .mesa-tag{display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:15px}
 .dot{width:12px;height:12px;border-radius:50%;display:inline-block;flex:none}
@@ -421,22 +420,28 @@ const ICO = {
   cliente: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4M9.5 12h6M9.5 15.5h6"/></svg>'
 };
 function visualMes(mes, ped) {
-  const paso = (m, cuando, items) => `<div class="v-paso"><div class="v-punto"></div><div class="v-mes">Mes ${m}<span>${cuando}</span></div>${items}</div>`;
-  const sale = (t, d) => `<div class="v-mov sale"><b>− ${t}</b><span>${d}</span></div>`;
-  const entra = (t, d) => `<div class="v-mov entra"><b>+ ${t}</b><span>${d}</span></div>`;
+  const MESES = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul'];
+  const cal = MESES.map((n, i) => {
+    const m = i - 1, cls = m === mes ? 'hoy' : m < mes ? 'paso' : '';
+    return `<div class="v-cm ${cls}"${m === mes ? ' aria-current="true"' : ''}><b>${n}</b><span>Mes ${m < 0 ? '−1' : m}</span></div>`;
+  }).join('');
   return `<div class="v">
-    <div class="v-sub"><span class="v-ico">${ICO.lata}</span><span>Un lote de latas se vende en <b>$10</b></span></div>
-    <div class="v-barra" role="img" aria-label="De cada lote de $10: $4 de aluminio, $2 de nómina y energía y $4 de utilidad">
-      <div class="al" style="flex:4"><span>Aluminio</span><b>$4</b></div>
-      <div class="no" style="flex:2"><span>Nómina</span><b>$2</b></div>
-      <div class="ut" style="flex:4"><span>Utilidad</span><b>$4</b></div>
+    <div class="v-sub">En qué mes están</div>
+    <div class="v-cal" role="img" aria-label="Calendario de enero a julio. Marzo es el mes 1. Hoy están en ${MESES[mes + 1].toLowerCase()}, mes ${mes}.">${cal}</div>
+    <p class="v-nota">Enero y febrero ya pasaron: lo que vendieron en enero se cobra en marzo, y lo de febrero en abril.</p>
+    <div class="v-sub" style="margin-top:16px"><span class="v-ico">${ICO.lata}</span><span>Un lote de latas se vende en <b>$10</b></span></div>
+    <div class="v-gr">
+      <div class="v-et">Gastos variables · $6 por lote</div>
+      <div class="v-barra" role="img" aria-label="Gastos variables por lote: $4 de aluminio y $2 de nómina y energía">
+        <div class="al" style="flex:4"><span>Aluminio</span><b>$4</b></div>
+        <div class="no" style="flex:2"><span>Nómina y energía</span><b>$2</b></div>
+      </div>
+      <p class="v-nota">Suben con cada lote que producen.</p>
     </div>
-    <p class="v-nota">Además, <b>$2 de gastos fijos</b> cada mes, aunque no produzcan nada.</p>
-    <div class="v-sub" style="margin-top:16px">Cuándo sale y entra el dinero de los lotes de este mes</div>
-    <div class="v-linea">
-      ${paso(mes, 'este mes', sale('$2 por lote', 'Nómina y energía') + sale('$2', 'Gastos fijos'))}
-      ${paso(mes + 1, 'al mes siguiente', sale('$4 por lote', 'Aluminio al proveedor') + (mes >= 3 ? entra('$9 por lote', 'Cliente nuevo, si le dan pronto pago') : ''))}
-      ${paso(mes + 2, 'en 2 meses', entra('$10 por lote', 'Cobro de la venta'))}
+    <div class="v-gr">
+      <div class="v-et">Gastos fijos · $2 al mes</div>
+      <div class="v-barra"><div class="fi" style="flex:1"><span>Gastos fijos</span><b>$2</b></div></div>
+      <p class="v-nota">Se pagan cada mes, aunque no produzcan nada.</p>
     </div>
     ${mes >= 3 ? `<div class="v-caja"><span class="v-ico">${ICO.cliente}</span><div><b>Cliente nuevo:</b> ${Caja.CLIENTE_NUEVO} de los ${ped} lotes son suyos. Si le hacen $1 de descuento por lote, paga en 1 mes en lugar de 2: $9 por lote.</div></div>` : ''}
     <div class="v-caja"><span class="v-ico">${ICO.banco}</span><div><b>Banco:</b> presta en múltiplos de $10 y cobra $1 al mes por cada $10, desde el mes siguiente.</div></div>
