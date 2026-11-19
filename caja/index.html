@@ -493,7 +493,7 @@ function visualMes(mes, ped) {
 function tablero(est, mes) {
   const ini = mes <= 5 ? Caja.inicioDeMes(est, mes) : null;
   const fac = est.facturas.slice().sort((a, b) => a.mes - b.mes).map(f => `<div class="row"><span>Factura que se cobra en el mes ${f.mes}</span><b>${money(f.monto)}</b></div>`).join('') || '<div class="row muted">Sin facturas pendientes</div>';
-  const av = est.avisos.map(a => `<div class="row"><span>Aviso del proveedor de aluminio, mes ${a.mes}</span><b>${money(a.monto)}</b></div>`).join('') || '<div class="row muted">Sin avisos</div>';
+  const av = est.avisos.map(a => `<div class="row"><span>Factura del proveedor de aluminio que se paga en el mes ${a.mes}</span><b>${money(a.monto)}</b></div>`).join('') || '<div class="row muted">Sin avisos</div>';
   return `<div class="card">
     <div class="row"><span>Caja en el banco al empezar${mes <= 5 ? ' el mes ' + mes : ''}</span><b>${money(est.caja)}</b></div>
     <div class="row"><span>Crédito del banco por pagar</span><b>${money(est.credito)}</b></div>
