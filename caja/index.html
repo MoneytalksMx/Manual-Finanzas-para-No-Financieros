@@ -65,6 +65,10 @@ button.btn.danger{background:var(--danger)}
 .msg.info{background:#ECE9E4;color:var(--env-ink)}
 .msg ul{margin:6px 0 0 18px}
 .msg li{margin-top:4px}
+.modal{position:fixed;inset:0;background:rgba(38,38,38,.55);display:flex;align-items:center;justify-content:center;padding:16px;z-index:50}
+.modal-caja{background:#fff;border-radius:18px;padding:8px 16px 16px;max-width:440px;width:100%;max-height:90vh;overflow:auto;box-shadow:0 12px 40px rgba(0,0,0,.25)}
+.modal-caja .msg{font-size:15.5px}
+.modal-caja .btn{margin-top:14px;width:100%}
 .v{margin-top:10px}
 .v-sub{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600}
 .v-ico{display:inline-flex;width:26px;height:26px;flex:none}
@@ -478,20 +482,38 @@ function vistaMesa() {
     cuerpo = `<div class="card"><div class="kick">Mes ${mes} de 5</div>
       <h2 style="margin-top:4px">Este mes les piden ${ped} lotes</h2>
       ${visualMes(mes, ped)}</div>
-      ${avisoPendiente(est, mes)}
       ${esVocero ? formulario(est, mes) : `<div class="msg info">El vocero captura la decisión. Ustedes hagan las cuentas en la hoja de caja y revísenlas con él antes de enviar.</div>`}`;
   }
   app.innerHTML = `
     <header class="top"><div><div class="kick">La caja de la planta</div><div style="margin-top:4px">${mesaTag(cfg.mesa)} <span class="muted small">· ${cfg.rol}</span></div></div>
       <div style="text-align:right"><div class="pts" style="font-size:22px">${est.puntos}</div><div class="small muted">puntos</div></div></header>
     <div id="red" class="small" style="color:var(--danger)"></div>
-    ${avisoUltimo(est)}
+    ${avisoPendiente(est, mes) || avisoUltimo(est)}
     ${mes <= 5 ? '<h2>Su tablero</h2>' + tablero(est, mes) : ''}
     ${cuerpo}
     ${historial(est)}
     <p class="small muted" style="margin-top:20px">Partida ${cfg.partida} · <a href="#" id="salir">cambiar de equipo o rol</a></p>`;
   $('#salir').onclick = e => { e.preventDefault(); clearInterval(timer); vistaUnirse(); };
   if (esVocero && mes <= 5 && mes <= abierto && abierto > 0) armarFormulario(est, mes);
+  avisoEmergente(est, mes);
+}
+
+// Ventana emergente con el resultado del envío. Cada celular la ve una vez y la cierra con «Aceptar»;
+// el mismo aviso queda arriba del tablero.
+function avisoEmergente(est, mes) {
+  const pe = est.pendiente && est.pendiente.mes === mes ? est.pendiente : null, u = est.ultimo;
+  const clave = pe ? `p${pe.mes}` : u ? `u${u.mes}-${u.intento}-${u.ok ? 1 : 0}` : '';
+  const k = `caja-aviso-${cfg.partida}-${cfg.mesa}`;
+  let visto = ''; try { visto = localStorage.getItem(k) || ''; } catch (e) {}
+  if (!clave) { try { localStorage.removeItem(k); } catch (e) {} return; } // partida nueva o reiniciada
+  if (clave === visto || $('#modal')) return;
+  const html = pe ? avisoPendiente(est, mes) : avisoUltimo(est);
+  const fondo = document.createElement('div');
+  fondo.id = 'modal'; fondo.className = 'modal';
+  fondo.innerHTML = `<div class="modal-caja" role="alertdialog" aria-modal="true">${html}<button class="btn" id="aceptar">Aceptar</button></div>`;
+  document.body.appendChild(fondo);
+  $('#aceptar').onclick = () => { try { localStorage.setItem(k, clave); } catch (e) {} fondo.remove(); };
+  $('#aceptar').focus();
 }
 
 function campo(id, lab, extra = '') { return `<label for="${id}">${lab}${extra}</label><input type="number" inputmode="numeric" id="${id}" value="${borrador[id] ?? ''}">`; }
