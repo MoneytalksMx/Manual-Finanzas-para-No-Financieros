@@ -65,6 +65,30 @@ button.btn.danger{background:var(--danger)}
 .msg.info{background:#ECE9E4;color:var(--env-ink)}
 .msg ul{margin:6px 0 0 18px}
 .msg li{margin-top:4px}
+.t-top{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.t-tile{display:flex;gap:8px;align-items:flex-start;background:var(--bg);border-radius:12px;padding:10px}
+.t-tile span{display:block;font-size:12px;color:var(--muted);line-height:1.25}
+.t-tile b{display:block;font-size:24px;line-height:1.15;margin-top:2px}
+.t-tile small{display:block;font-size:11.5px;color:var(--danger)}
+.t-tile.cred .v-ico{opacity:.55}
+.t-ley{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;font-size:12px;color:var(--muted);margin-top:4px}
+.t-ley span{width:12px;height:12px;border-radius:3px;display:inline-block}
+.t-ley .cob{background:#1F6DA5}.t-ley .pag{background:#AA1124;margin-left:6px}
+.t-lin{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px}
+.t-col{border:1.5px solid #E2DED7;border-radius:12px;padding:6px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.t-col.hoy{border-color:var(--env-red);box-shadow:0 0 0 2px rgba(170,17,36,.12)}
+.t-mes{font-weight:700;font-size:14px;line-height:1.15;text-align:center}
+.t-mes span{display:block;font-weight:500;font-size:10.5px;color:var(--muted)}
+.t-col.hoy .t-mes{color:var(--env-red)}.t-col.hoy .t-mes span{color:var(--env-red)}
+.t-ficha{border-radius:8px;padding:6px 7px;line-height:1.2}
+.t-fr{display:flex;align-items:center;gap:4px}
+.t-ficha b{display:block;font-size:15px}
+.t-ficha>span{display:block;font-size:11px;margin-top:2px}
+.t-fi{width:18px;height:18px;flex:none}
+.t-fi svg{width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linejoin:round;stroke-linecap:round}
+.t-ficha.cob{background:#E8F0F8;color:#164F78}
+.t-ficha.pag{background:#FBEEF0;color:#8A1020}
+.t-vacio{font-size:12px;color:#B4AFA7;text-align:center;padding:10px 0}
 .modal{position:fixed;inset:0;background:rgba(38,38,38,.55);display:flex;align-items:center;justify-content:center;padding:16px;z-index:50}
 .modal-caja{background:#fff;border-radius:18px;padding:8px 16px 16px;max-width:440px;width:100%;max-height:90vh;overflow:auto;box-shadow:0 12px 40px rgba(0,0,0,.25)}
 .modal-caja .msg{font-size:15.5px}
@@ -430,17 +454,27 @@ function visualMes(mes, ped) {
   </div>`;
 }
 
+const NOMBRE_MES = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep'];
+ICO.factura = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l3 3v15l-2-1.2-2 1.2-2-1.2-2 1.2-2-1.2L6 21z"/><path d="M9 9h6M9 12.5h6M9 16h4"/></svg>';
 function tablero(est, mes) {
   const ini = mes <= 5 ? Caja.inicioDeMes(est, mes) : null;
-  const fac = est.facturas.slice().sort((a, b) => a.mes - b.mes).map(f => `<div class="row"><span>Factura que se cobra en el mes ${f.mes}</span><b>${money(f.monto)}</b></div>`).join('') || '<div class="row muted">Sin facturas pendientes</div>';
-  const av = est.avisos.map(a => `<div class="row"><span>Factura del proveedor de aluminio que se paga en el mes ${a.mes}</span><b>${money(a.monto)}</b></div>`).join('') || '<div class="row muted">Sin avisos</div>';
+  const meses = [mes, mes + 1, mes + 2];
+  const ficha = (cls, signo, monto, quien, aria) => `<div class="t-ficha ${cls}" aria-label="${aria} ${money(monto)}"><div class="t-fr"><span class="t-fi">${ICO.factura}</span><b>${signo} ${money(monto)}</b></div><span>${quien}</span></div>`;
+  const cols = meses.map(m => {
+    const fs = est.facturas.filter(f => f.mes === m).map(f => ficha('cob', '+', f.monto, 'Cobro a cliente', 'Factura de cliente que se cobra este mes:'));
+    const as = est.avisos.filter(a => a.mes === m).map(a => ficha('pag', '−', a.monto, 'Pago de aluminio', 'Factura del proveedor de aluminio que se paga este mes:'));
+    return `<div class="t-col${m === mes ? ' hoy' : ''}"><div class="t-mes">${NOMBRE_MES[m + 1] || ''}<span>${m === mes ? 'este mes · ' : ''}mes ${m}</span></div>${fs.join('')}${as.join('')}${fs.length + as.length ? '' : '<div class="t-vacio">Nada</div>'}</div>`;
+  }).join('');
+  const pendientes = est.facturas.length + est.avisos.length;
   return `<div class="card">
-    <div class="row"><span>Caja en el banco al empezar${mes <= 5 ? ' el mes ' + mes : ''}</span><b>${money(est.caja)}</b></div>
-    <div class="row"><span>Crédito del banco por pagar</span><b>${money(est.credito)}</b></div>
-    ${ini && est.credito ? `<div class="row"><span>Intereses de este mes ($1 por cada $10)</span><b>${money(ini.intereses)}</b></div>` : ''}
-    <h2>Por cobrar</h2>${fac}
-    <h2>Por pagar</h2>${av}
-    <p class="small muted" style="margin-top:10px">Cifras en millones de pesos.</p>
+    <div class="t-top">
+      <div class="t-tile"><span class="v-ico">${ICO.banco}</span><div><span>Caja en el banco${mes <= 5 ? ' al empezar' : ''}</span><b>${money(est.caja)}</b></div></div>
+      <div class="t-tile cred"><span class="v-ico">${ICO.banco}</span><div><span>Crédito por pagar</span><b>${money(est.credito)}</b>${ini && est.credito ? `<small>Intereses este mes: ${money(ini.intereses)}</small>` : ''}</div></div>
+    </div>
+    ${pendientes ? `<div class="v-sub" style="margin-top:14px">Facturas por cobrar y por pagar</div>
+    <div class="t-ley"><span class="cob"></span>Por cobrar: entra dinero <span class="pag"></span>Por pagar: sale dinero</div>
+    <div class="t-lin">${cols}</div>` : '<p class="muted" style="margin-top:12px">Sin facturas pendientes.</p>'}
+    <p class="small muted" style="margin-top:10px">Cifras en millones de pesos. Igual que en su tablero de papel: las tarjetas azules se cobran y las rojas se pagan.</p>
   </div>`;
 }
 
