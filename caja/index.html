@@ -77,7 +77,7 @@ button.btn.danger{background:var(--danger)}
 .t-lin{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px}
 .t-col{border:1.5px solid #E2DED7;border-radius:12px;padding:6px;display:flex;flex-direction:column;gap:6px;min-width:0}
 .t-col.hoy{border-color:var(--env-red);box-shadow:0 0 0 2px rgba(170,17,36,.12)}
-.t-mes{font-weight:700;font-size:14px;line-height:1.15;text-align:center}
+.t-mes{font-weight:700;font-size:14px;line-height:1.15;text-align:center;min-height:30px}
 .t-mes span{display:block;font-weight:500;font-size:10.5px;color:var(--muted)}
 .t-col.hoy .t-mes{color:var(--env-red)}.t-col.hoy .t-mes span{color:var(--env-red)}
 .t-ficha{border-radius:8px;padding:6px 7px;line-height:1.2}
@@ -89,6 +89,10 @@ button.btn.danger{background:var(--danger)}
 .t-ficha.cob{background:#E8F0F8;color:#164F78}
 .t-ficha.pag{background:#FBEEF0;color:#8A1020}
 .t-vacio{font-size:12px;color:#B4AFA7;text-align:center;padding:10px 0}
+.guia{border-top:4px solid var(--env-red)}
+.g-pts{display:flex;gap:5px;margin-top:8px}.g-pts span{flex:1;height:5px;border-radius:3px;background:#E2DED7}.g-pts span.on{background:var(--env-red)}
+.g-txt{font-size:15px;line-height:1.55}.g-txt p{margin:8px 0 0}.g-txt ul,.g-txt ol{margin:8px 0 0 20px;padding:0}.g-txt li{margin-top:6px}
+.g-bot{display:flex;gap:8px;margin-top:16px}.g-bot .btn{margin-top:0}.g-bot .btn.ghost{flex:0 0 32%}
 .modal{position:fixed;inset:0;background:rgba(38,38,38,.55);display:flex;align-items:center;justify-content:center;padding:16px;z-index:50}
 .modal-caja{background:#fff;border-radius:18px;padding:8px 16px 16px;max-width:440px;width:100%;max-height:90vh;overflow:auto;box-shadow:0 12px 40px rgba(0,0,0,.25)}
 .modal-caja .msg{font-size:15.5px}
@@ -106,7 +110,7 @@ button.btn.danger{background:var(--danger)}
 .v-gr{margin-top:10px}
 .v-et{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
 .v-cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:8px}
-.v-cm{border:1.5px solid #D6D1C9;border-radius:10px;padding:6px 0;text-align:center;line-height:1.15;color:var(--env-ink)}
+.v-cm{border:1.5px solid #D6D1C9;border-radius:10px;padding:9px 0;text-align:center;line-height:1.15;color:var(--env-ink)}
 .v-cm b{display:block;font-size:14px}
 .v-cm span{font-size:10.5px;color:var(--muted)}
 .v-cm.paso{background:#F1EEE9;border-color:#F1EEE9;color:#9D988F}
@@ -489,15 +493,18 @@ const ICO = {
   banco: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9.5L12 4l9 5.5"/><path d="M5.5 10v8M10 10v8M14 10v8M18.5 10v8M3 20.5h18"/></svg>',
   cliente: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4M9.5 12h6M9.5 15.5h6"/></svg>'
 };
+const MES_LARGO = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre'];
+const nombreMes = m => MES_LARGO[m + 1] || '';
+const Nombre = m => { const n = nombreMes(m); return n.charAt(0).toUpperCase() + n.slice(1); };
 function visualMes(mes, ped) {
   const MESES = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul'];
   const cal = MESES.map((n, i) => {
     const m = i - 1, cls = m === mes ? 'hoy' : m < mes ? 'paso' : '';
-    return `<div class="v-cm ${cls}"${m === mes ? ' aria-current="true"' : ''}><b>${n}</b><span>Mes ${m < 0 ? '−1' : m}</span></div>`;
+    return `<div class="v-cm ${cls}"${m === mes ? ' aria-current="true"' : ''}><b>${n}</b></div>`;
   }).join('');
   return `<div class="v">
-    <div class="v-sub">En qué mes están</div>
-    <div class="v-cal" role="img" aria-label="Calendario de enero a julio. Marzo es el mes 1. Hoy están en ${MESES[mes + 1].toLowerCase()}, mes ${mes}.">${cal}</div>
+    <div class="v-sub">Estamos en ${MES_LARGO[mes + 1]}</div>
+    <div class="v-cal" role="img" aria-label="Calendario de enero a julio. Hoy están en ${MES_LARGO[mes + 1]}.">${cal}</div>
     <p class="v-nota">Enero y febrero ya pasaron: lo que vendieron en enero se cobra en marzo, y lo de febrero en abril.</p>
     <div class="v-sub" style="margin-top:16px"><span class="v-ico">${ICO.lata}</span><span>Un lote de latas se vende en <b>$10</b></span></div>
     <div class="v-gr">
@@ -527,7 +534,7 @@ function tablero(est, mes) {
   const cols = meses.map(m => {
     const fs = est.facturas.filter(f => f.mes === m).map(f => ficha('cob', '+', f.monto, 'Cobro a cliente', 'Factura de cliente que se cobra este mes:'));
     const as = est.avisos.filter(a => a.mes === m).map(a => ficha('pag', '−', a.monto, 'Pago de aluminio', 'Factura del proveedor de aluminio que se paga este mes:'));
-    return `<div class="t-col${m === mes ? ' hoy' : ''}"><div class="t-mes">${NOMBRE_MES[m + 1] || ''}<span>${m === mes ? 'este mes · ' : ''}mes ${m}</span></div>${fs.join('')}${as.join('')}${fs.length + as.length ? '' : '<div class="t-vacio">Nada</div>'}</div>`;
+    return `<div class="t-col${m === mes ? ' hoy' : ''}"><div class="t-mes">${NOMBRE_MES[m + 1] || ''}${m === mes ? '<span>este mes</span>' : ''}</div>${fs.join('')}${as.join('')}${fs.length + as.length ? '' : '<div class="t-vacio">Nada</div>'}</div>`;
   }).join('');
   const pendientes = est.facturas.length + est.avisos.length;
   return `<div class="card">
@@ -572,9 +579,9 @@ function vistaMesa() {
   if (mes > 5) {
     cuerpo = `<div class="msg info"><b>Terminaron los cinco meses.</b> Utilidad acumulada ${money(est.utilidadAcum)} y caja ${money(est.caja)}${est.credito ? `, con ${money(est.credito)} de crédito por pagar` : ''}. Miren la pantalla: ¿el equipo con más utilidad es el que tiene más caja?</div>`;
   } else if (abierto === 0) {
-    cuerpo = `<div class="msg info">Esperen a que el facilitador abra el mes 1. El juego empieza cuando los cinco equipos tienen vocero.${!mesa.vocero_id ? ' <b>Su equipo todavía no tiene vocero:</b> elijan a una persona y que entre con ese rol.' : ''} Mientras, revisen su tablero: esto es lo que tienen hoy.</div>`;
+    cuerpo = guiaHecha() ? `<div class="msg info"><b>Listo.</b> Esperen a que el facilitador abra marzo. El juego empieza cuando los cinco equipos tienen vocero.${!mesa.vocero_id ? ' <b>Su equipo todavía no tiene vocero:</b> elijan a una persona y que entre con ese rol.' : ''} Mientras, revisen su tablero: esto es lo que tienen hoy. <a href="#" id="ver-guia">Ver otra vez cómo se juega</a></div>` : guiaHTML(GUIA_JUG, guiaJug, 'Listo');
   } else if (mes > abierto) {
-    cuerpo = `<div class="msg info">Ya enviaron el mes ${mes - 1}. Esperen a que el facilitador abra el mes ${mes}.</div>`;
+    cuerpo = `<div class="msg info">Ya enviaron ${nombreMes(mes - 1)}. Esperen a que el facilitador abra ${nombreMes(mes)}.</div>`;
   } else {
     const ped = Caja.PEDIDOS[mes];
     cuerpo = `<div class="card"><div class="kick">Mes ${mes} de 5</div>
@@ -590,13 +597,48 @@ function vistaMesa() {
     <div id="red" class="small" style="color:var(--danger)"></div>
     ${aviso && Date.now() < avisoHasta ? `<div class="msg info"><b>${aviso}</b></div>` : ''}
     ${avisoPendiente(est, mes) || avisoUltimo(est)}
+    ${abierto === 0 && mes <= 5 ? cuerpo : ''}
     ${mes <= 5 ? '<h2>Su tablero</h2>' + tablero(est, mes) : ''}
-    ${cuerpo}
+    ${abierto === 0 && mes <= 5 ? '' : cuerpo}
     ${historial(est)}
     <p class="small muted" style="margin-top:20px">Partida ${cfg.partida} · <a href="#" id="salir">cambiar de equipo o rol</a></p>`;
   $('#salir').onclick = $('#salir-arriba').onclick = e => { e.preventDefault(); clearInterval(timer); vistaUnirse(); };
   if (esVocero && mes <= 5 && mes <= abierto && abierto > 0) armarFormulario(est, mes);
+  if (abierto === 0 && mes <= 5) armarGuiaJug();
   avisoEmergente(est, mes);
+}
+
+/* ---------- Instrucciones antes de empezar ---------- */
+const GUIA_JUG = [
+  ['Ustedes dirigen la Planta Delta', `<p>Durante cinco meses, de <b>marzo a julio</b>, deciden cuántos lotes de latas producir.</p><p>Gana la mesa con <b>más utilidad acumulada</b>, sin quedarse nunca con la caja en negativo.</p>`],
+  ['Cuánto cuesta un lote', `<ul><li>Se vende en <b>$10</b>. El cliente paga <b>2 meses después</b>.</li><li>Aluminio <b>$4</b>: se paga al proveedor <b>el mes siguiente</b>.</li><li>Nómina y energía <b>$2</b>: se pagan <b>el mismo mes</b>.</li><li>Gastos fijos <b>$2 al mes</b>, aunque no produzcan nada.</li></ul><p class="muted">Cifras en millones de pesos.</p>`],
+  ['Con qué empiezan', `<ul><li><b>$5</b> en el banco.</li><li>Facturas de clientes por cobrar: <b>$30 en marzo</b> (lo que vendieron en enero) y <b>$30 en abril</b> (lo de febrero).</li><li>Factura del proveedor de aluminio: <b>$12 en marzo</b>.</li></ul><p>Lo ven en su tablero, aquí abajo y en el de papel.</p>`],
+  ['Qué hacen cada mes', `<ol><li>El facilitador abre el mes.</li><li>Deciden cuántos lotes producir, hasta lo que les piden.</li><li>Hacen las cuentas en la hoja de caja.</li><li>El vocero captura la decisión y cuatro números: cobros, pago al proveedor, caja al final y utilidad.</li><li>Ponen las tarjetas en su tablero de papel.</li></ol>`],
+  ['Si la caja no alcanza', `<ul><li><b>Crédito del banco</b> en múltiplos de $10. Cuesta $1 al mes por cada $10, desde el mes siguiente. Lo devuelven cuando quieran.</li><li><b>Pronto pago:</b> desde mayo llega un cliente nuevo con 6 lotes. Si le hacen $1 de descuento por lote, les paga en 1 mes en lugar de 2.</li><li><b>Producir menos</b> de lo que les piden.</li></ul><p>Si con su decisión la caja termina en negativo, el envío no se acepta.</p>`],
+  ['Cómo ganan puntos', `<ul><li><b>2 puntos</b> si sus cuatro números están bien a la primera.</li><li><b>1 punto</b> si quedan bien en el segundo intento.</li><li>Si no, avanzan sin puntos y les mostramos los números correctos para que los anoten.</li><li>Al final, <b>3 puntos extra</b> a la mesa con más utilidad acumulada.</li></ul>`]
+];
+const GUIA_FAC = [
+  ['Que entren todos', `<p>Proyecta esta pantalla. Cada persona escanea el QR, elige su equipo y su rol.</p><p>Revisa abajo que aparezcan las cinco mesas como «Conectada».</p>`],
+  ['Un vocero por mesa', `<p>Solo el vocero captura en el celular. Los demás hacen las cuentas en la hoja de caja y las revisan con él antes de enviar.</p>`],
+  ['Las reglas', `<p>Los jugadores están leyendo en su celular la misma explicación, paso a paso: el lote de $10, el aluminio que se paga al mes siguiente, el cobro a 2 meses, el crédito y el pronto pago.</p><p>Repásala con las láminas del juego mientras la leen.</p>`],
+  ['El calendario', `<p>El juego va de <b>marzo a julio</b>: marzo es el mes 1 de la hoja de caja y julio el mes 5.</p><p>En marzo se cobra lo que vendieron en enero, y en abril lo de febrero.</p>`],
+  ['Cómo avanzar', `<ul><li>Abre un mes cuando todas las mesas enviaron el anterior. Los recuadros de abajo te dicen quién falta.</li><li>«Mostrar cifras» proyecta caja, utilidad y puntos. Ocúltalas mientras deciden.</li><li>Al terminar julio, descarga los resultados.</li></ul>`]
+];
+let guiaJug = 0, guiaFac = 0;
+const claveGuia = () => `caja-guia-${cfg.partida}-${cfg.mesa}`;
+function guiaHecha() { try { return localStorage.getItem(claveGuia()) === '1'; } catch (e) { return false; } }
+function guiaHTML(pasos, i, fin) {
+  const [t, cuerpo] = pasos[i], ult = i === pasos.length - 1;
+  return `<div class="card guia"><div class="kick">Antes de empezar · paso ${i + 1} de ${pasos.length}</div>
+    <div class="g-pts">${pasos.map((_, k) => `<span class="${k <= i ? 'on' : ''}"></span>`).join('')}</div>
+    <h2 style="margin-top:6px">${t}</h2><div class="g-txt">${cuerpo}</div>
+    <div class="g-bot">${i > 0 ? '<button class="btn ghost" id="g-atras">Atrás</button>' : ''}<button class="btn" id="g-ok">${ult ? fin : 'Entendido'}</button></div></div>`;
+}
+function armarGuiaJug() {
+  const ver = $('#ver-guia'); if (ver) ver.onclick = e => { e.preventDefault(); try { localStorage.removeItem(claveGuia()); } catch (x) {} guiaJug = 0; vistaMesa(); };
+  const ok = $('#g-ok'); if (!ok) return;
+  ok.onclick = () => { if (guiaJug < GUIA_JUG.length - 1) guiaJug++; else { try { localStorage.setItem(claveGuia(), '1'); } catch (e) {} guiaJug = 0; } vistaMesa(); window.scrollTo(0, 0); };
+  const at = $('#g-atras'); if (at) at.onclick = () => { guiaJug--; vistaMesa(); };
 }
 
 // Ventana emergente con el resultado del envío. Cada celular la ve una vez y la cierra con «Aceptar»;
@@ -785,8 +827,9 @@ function vistaFac() {
   ${!partida ? '<div class="msg info">Esta partida no existe todavía. Créenla con el botón de arriba.</div>' : `
   <div class="cols"><div>
     <div class="bar">
-      <div style="font-size:22px;font-weight:700;margin-right:12px">${abierto === 0 ? 'Sin empezar' : 'Mes ' + abierto + ' de 5'}</div>
-      ${abierto < 5 ? `<button class="btn" id="abrir"${bloqueado ? ' disabled' : ''}>Abrir mes ${abierto + 1}</button>` : ''}
+      <div style="font-size:22px;font-weight:700;margin-right:12px">${abierto === 0 ? 'Sin empezar' : Nombre(abierto) + ' · mes ' + abierto + ' de 5'}</div>
+      ${abierto > 0 && abierto < 5 ? `<button class="btn" id="abrir"${bloqueado ? ' disabled' : ''}>Abrir ${nombreMes(abierto + 1)} (mes ${abierto + 1})</button>` : ''}
+      ${abierto === 0 && guiaFac >= GUIA_FAC.length ? `<button class="btn" id="abrir"${bloqueado ? ' disabled' : ''}>Abrir marzo (mes 1)</button> <a href="#" id="fg-otra" class="small">Ver instrucciones</a>` : ''}
       <button class="btn ghost" id="vis">${vis ? 'Ocultar cifras' : 'Mostrar cifras'}</button>
       <button class="btn ghost" id="desc-html">Descargar resultados</button>
       <button class="btn ghost" id="desc-csv">Datos en CSV</button>
@@ -794,6 +837,7 @@ function vistaFac() {
     ${bloqueado ? `<div class="msg warn"><b>Para empezar, cada equipo necesita un vocero.</b> Falta${faltan.length > 1 ? 'n' : ''}: ${faltan.map(n => MESAS[n][0]).join(', ')}. Pide que alguien de ${faltan.length > 1 ? 'cada uno' : 'ese equipo'} entre como vocero o asígnalo en «Administrar equipo».</div>` : ''}
     ${confirmar ? '<div class="msg err"><b>Reiniciar borra todos los datos de esta partida.</b> Si no los has guardado, descarga antes los resultados. Para cancelar, toca «Cargar».</div>' : ''}
     <div id="desc-msg" class="small muted" style="margin-top:8px"></div>
+    ${abierto === 0 && guiaFac < GUIA_FAC.length ? guiaHTML(GUIA_FAC, guiaFac, 'Listo') : ''}
     <div class="grid5">${[1,2,3,4,5].map(n => `<div class="st" style="border-top-color:${MESAS[n][1]}"><div class="n">${MESAS[n][0]}</div><div class="s">${estadoMesa(porMesa[n], abierto)}</div>${voceroMesa(porMesa[n])}
       ${porMesa[n] ? `<button class="mini" data-gestion="${n}">Administrar equipo</button>` : ''}</div>`).join('')}</div>
     ${panelVocero()}
@@ -814,6 +858,9 @@ function vistaFac() {
     await SB.from('caja_partidas').upsert({ codigo: c, mes_actual: 0, resultados_visibles: false, updated_at: new Date().toISOString() }, { onConflict: 'codigo' });
     refrescarFac();
   };
+  const gok = $('#g-ok'); if (gok) gok.onclick = () => { guiaFac++; vistaFac(); };
+  const gat = $('#g-atras'); if (gat) gat.onclick = () => { guiaFac--; vistaFac(); };
+  const fgo = $('#fg-otra'); if (fgo) fgo.onclick = e => { e.preventDefault(); guiaFac = 0; vistaFac(); };
   const ab = $('#abrir'); if (ab) ab.onclick = async () => { if (bloqueado) return; await SB.from('caja_partidas').update({ mes_actual: abierto + 1, updated_at: new Date().toISOString() }).eq('codigo', cfg.partida); refrescarFac(); };
   document.querySelectorAll('[data-gestion]').forEach(b => b.onclick = () => { gestion = { mesa: +b.dataset.gestion, sel: null, deshacer: false }; vistaFac(); });
   const cand = $('#cand'); if (cand) cand.onclick = e => { const b = e.target.closest('[data-d]'); if (b) { gestion.sel = b.dataset.d; vistaFac(); } };
