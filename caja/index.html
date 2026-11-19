@@ -94,6 +94,7 @@ button.btn.danger{background:var(--danger)}
 .g-pts{display:flex;gap:5px;margin-top:8px}.g-pts span{flex:1;height:5px;border-radius:3px;background:#E2DED7}.g-pts span.on{background:var(--env-red)}
 .g-txt{font-size:15px;line-height:1.55}.g-txt p{margin:8px 0 0}.g-txt ul,.g-txt ol{margin:8px 0 0 20px;padding:0}.g-txt li{margin-top:6px}
 .g-bot{display:flex;gap:8px;margin-top:16px}.g-bot .btn{margin-top:0}.g-bot .btn.ghost{flex:0 0 32%}
+.pd-logo{height:20px;width:auto;display:block;opacity:.9}.pd-logo.der{height:30px;align-self:center}.pd-logo.fac{height:30px;display:inline-block}.pd-logo.grande{height:44px;margin:10px 0 4px}
 .modal{position:fixed;inset:0;background:rgba(38,38,38,.55);display:flex;align-items:center;justify-content:center;padding:16px;z-index:50}
 .modal-caja{background:#fff;border-radius:18px;padding:8px 16px 16px;max-width:440px;width:100%;max-height:90vh;overflow:auto;box-shadow:0 12px 40px rgba(0,0,0,.25)}
 .modal-caja .msg{font-size:15.5px}
@@ -404,7 +405,7 @@ async function guardarJugador(rol) {
 /* ---------- Celular: unirse ---------- */
 function vistaUnirse(err) {
   app.innerHTML = `
-  <header class="top"><div><div class="kick">Finanzas para No Financieros · Sesión 2</div><h1>La caja de la planta</h1></div></header>
+  <header class="top"><div><div class="kick">Finanzas para No Financieros · Sesión 2</div><h1>La caja de la planta</h1></div><img class="pd-logo der" src="img/planta-delta.png" alt="Planta Delta"></header>
   <p class="sub">Escribe tu nombre y elige tu equipo y tu rol. El vocero captura la decisión y los números; todo el equipo hace las cuentas en papel.</p>
   <div class="card">
     <label for="nombre">Tu nombre</label><input type="text" id="nombre" maxlength="40" autocomplete="given-name" value="${esc(cfg.nombre || '')}">
@@ -592,7 +593,7 @@ function vistaMesa() {
         : `<div class="msg info">${nomVoc ? `<b>${esc(nomVoc)}</b> es el vocero y` : 'El vocero'} captura la decisión. Ustedes hagan las cuentas en la hoja de caja y revísenlas antes de enviar.</div>`}`;
   }
   app.innerHTML = `
-    <header class="top"><div><div class="kick">La caja de la planta</div><div style="margin-top:4px">${mesaTag(cfg.mesa)} <span class="muted small">· ${esc(cfg.nombre || '')} · ${esVocero ? 'Vocero' : esc(cfg.rol)}</span></div>
+    <header class="top"><div><img class="pd-logo" src="img/planta-delta.png" alt="Planta Delta"><div class="kick" style="margin-top:6px">La caja de la planta</div><div style="margin-top:4px">${mesaTag(cfg.mesa)} <span class="muted small">· ${esc(cfg.nombre || '')} · ${esVocero ? 'Vocero' : esc(cfg.rol)}</span></div>
       <a href="#" class="small" id="salir-arriba">¿Equipo o rol equivocado? Cámbialo aquí</a></div>
       <div style="text-align:right"><div class="pts" style="font-size:22px">${est.puntos}</div><div class="small muted">puntos</div></div></header>
     <div id="red" class="small" style="color:var(--danger)"></div>
@@ -611,7 +612,7 @@ function vistaMesa() {
 
 /* ---------- Instrucciones antes de empezar ---------- */
 const GUIA_JUG = [
-  ['Ustedes dirigen la Planta Delta', `<p>Durante cinco meses, de <b>marzo a julio</b>, deciden cuántos lotes de latas producir.</p><p>Gana la mesa con <b>más utilidad acumulada</b>, sin quedarse nunca con la caja en negativo.</p>`],
+  ['Ustedes dirigen la Planta Delta', `<img class="pd-logo grande" src="img/planta-delta.png" alt="Planta Delta"><p>Durante cinco meses, de <b>marzo a julio</b>, deciden cuántos lotes de latas producir.</p><p>Gana la mesa con <b>más utilidad acumulada</b>, sin quedarse nunca con la caja en negativo.</p>`],
   ['Cuánto cuesta un lote', `<ul><li>Se vende en <b>$10</b>. El cliente paga <b>2 meses después</b>.</li><li>Aluminio <b>$4</b>: se paga al proveedor <b>el mes siguiente</b>.</li><li>Nómina y energía <b>$2</b>: se pagan <b>el mismo mes</b>.</li><li>Gastos fijos <b>$2 al mes</b>, aunque no produzcan nada.</li></ul><p class="muted">Cifras en millones de pesos.</p>`],
   ['Con qué empiezan', `<ul><li><b>$5</b> en su cuenta de BBVA.</li><li>Facturas de clientes por cobrar: <b>$30 en marzo</b> (lo que vendieron en enero) y <b>$30 en abril</b> (lo de febrero).</li><li>Factura del proveedor de aluminio: <b>$12 en marzo</b>.</li></ul><p>Lo ven en su tablero, aquí abajo y en el de papel.</p>`],
   ['Qué hacen cada mes', `<ol><li>El facilitador abre el mes.</li><li>Deciden cuántos lotes producir, hasta lo que les piden.</li><li>Hacen las cuentas en la hoja de caja.</li><li>El vocero captura la decisión y cuatro números: cobros, pago al proveedor, caja al final y utilidad.</li><li>Ponen las tarjetas en su tablero de papel.</li></ol>`],
@@ -820,7 +821,7 @@ function vistaFac() {
   const tabla = facMesas.slice().sort((a, c) => (c.estado.puntos + (b[c.mesa] || 0)) - (a.estado.puntos + (b[a.mesa] || 0)));
   const url = location.origin + location.pathname + '?p=' + encodeURIComponent(cfg.partida);
   app.innerHTML = `
-  <header class="top"><div><div class="kick">Finanzas para No Financieros · Sesión 2 · Vista del facilitador</div><h1>La caja de la planta</h1></div>
+  <header class="top"><div><div class="kick">Finanzas para No Financieros · Sesión 2 · Vista del facilitador</div><h1 style="display:flex;align-items:center;gap:14px">La caja de la planta <img class="pd-logo fac" src="img/planta-delta.png" alt="Planta Delta"></h1></div>
     <div class="bar"><input type="text" id="cod" value="${cfg.partida}" style="width:150px;font-size:16px">
     <button class="btn ghost" id="cargar">Cargar</button>
     <button class="btn ${!partida ? '' : (confirmar ? 'danger' : 'sec')}" id="reset">${partida ? (confirmar ? 'Confirmar: se borra todo' : 'Reiniciar partida') : 'Crear partida'}</button></div></header>
