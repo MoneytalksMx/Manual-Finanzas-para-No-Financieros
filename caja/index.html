@@ -66,11 +66,12 @@ button.btn.danger{background:var(--danger)}
 .msg ul{margin:6px 0 0 18px}
 .msg li{margin-top:4px}
 .t-top{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.t-tile{display:flex;gap:8px;align-items:flex-start;background:var(--bg);border-radius:12px;padding:10px}
+.t-tile{display:flex;flex-direction:column;gap:6px;align-items:flex-start;background:var(--bg);border-radius:12px;padding:10px}
 .t-tile span{display:block;font-size:12px;color:var(--muted);line-height:1.25}
 .t-tile b{display:block;font-size:24px;line-height:1.15;margin-top:2px}
 .t-tile small{display:block;font-size:11.5px;color:var(--danger)}
-.t-tile.cred .v-ico{opacity:.55}
+.t-logo{height:16px;width:auto;display:block}
+.v-logo{height:14px;width:auto;flex:none;margin-top:4px}
 .t-ley{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;font-size:12px;color:var(--muted);margin-top:4px}
 .t-ley span{width:12px;height:12px;border-radius:3px;display:inline-block}
 .t-ley .cob{background:#1F6DA5}.t-ley .pag{background:#AA1124;margin-left:6px}
@@ -521,7 +522,7 @@ function visualMes(mes, ped) {
       <p class="v-nota">Se pagan cada mes, aunque no produzcan nada.</p>
     </div>
     ${mes >= 3 ? `<div class="v-caja"><span class="v-ico">${ICO.cliente}</span><div><b>Cliente nuevo:</b> ${Caja.CLIENTE_NUEVO} de los ${ped} lotes son suyos. Si le hacen $1 de descuento por lote, paga en 1 mes en lugar de 2: $9 por lote.</div></div>` : ''}
-    <div class="v-caja"><span class="v-ico">${ICO.banco}</span><div><b>Banco:</b> presta en múltiplos de $10 y cobra $1 al mes por cada $10, desde el mes siguiente.</div></div>
+    <div class="v-caja"><img class="v-logo" src="img/banamex.png" alt="Banamex"><div><b>Crédito de Banamex:</b> se pide en múltiplos de $10 ($0, $10, $20…) y cobra $1 al mes por cada $10, desde el mes siguiente. Su caja está en BBVA.</div></div>
   </div>`;
 }
 
@@ -539,8 +540,8 @@ function tablero(est, mes) {
   const pendientes = est.facturas.length + est.avisos.length;
   return `<div class="card">
     <div class="t-top">
-      <div class="t-tile"><span class="v-ico">${ICO.banco}</span><div><span>Caja en el banco${mes <= 5 ? ' al empezar' : ''}</span><b>${money(est.caja)}</b></div></div>
-      <div class="t-tile cred"><span class="v-ico">${ICO.banco}</span><div><span>Crédito por pagar</span><b>${money(est.credito)}</b>${ini && est.credito ? `<small>Intereses este mes: ${money(ini.intereses)}</small>` : ''}</div></div>
+      <div class="t-tile"><img class="t-logo" src="img/bbva.png" alt="BBVA"><div><span>Caja en BBVA${mes <= 5 ? ' al empezar' : ''}</span><b>${money(est.caja)}</b></div></div>
+      <div class="t-tile cred"><img class="t-logo" src="img/banamex.png" alt="Banamex"><div><span>Crédito de Banamex por pagar</span><b>${money(est.credito)}</b>${ini && est.credito ? `<small>Intereses este mes: ${money(ini.intereses)}</small>` : ''}</div></div>
     </div>
     ${pendientes ? `<div class="v-sub" style="margin-top:14px">Facturas por cobrar y por pagar</div>
     <div class="t-ley"><span class="cob"></span>Por cobrar: entra dinero <span class="pag"></span>Por pagar: sale dinero</div>
@@ -612,9 +613,9 @@ function vistaMesa() {
 const GUIA_JUG = [
   ['Ustedes dirigen la Planta Delta', `<p>Durante cinco meses, de <b>marzo a julio</b>, deciden cuántos lotes de latas producir.</p><p>Gana la mesa con <b>más utilidad acumulada</b>, sin quedarse nunca con la caja en negativo.</p>`],
   ['Cuánto cuesta un lote', `<ul><li>Se vende en <b>$10</b>. El cliente paga <b>2 meses después</b>.</li><li>Aluminio <b>$4</b>: se paga al proveedor <b>el mes siguiente</b>.</li><li>Nómina y energía <b>$2</b>: se pagan <b>el mismo mes</b>.</li><li>Gastos fijos <b>$2 al mes</b>, aunque no produzcan nada.</li></ul><p class="muted">Cifras en millones de pesos.</p>`],
-  ['Con qué empiezan', `<ul><li><b>$5</b> en el banco.</li><li>Facturas de clientes por cobrar: <b>$30 en marzo</b> (lo que vendieron en enero) y <b>$30 en abril</b> (lo de febrero).</li><li>Factura del proveedor de aluminio: <b>$12 en marzo</b>.</li></ul><p>Lo ven en su tablero, aquí abajo y en el de papel.</p>`],
+  ['Con qué empiezan', `<ul><li><b>$5</b> en su cuenta de BBVA.</li><li>Facturas de clientes por cobrar: <b>$30 en marzo</b> (lo que vendieron en enero) y <b>$30 en abril</b> (lo de febrero).</li><li>Factura del proveedor de aluminio: <b>$12 en marzo</b>.</li></ul><p>Lo ven en su tablero, aquí abajo y en el de papel.</p>`],
   ['Qué hacen cada mes', `<ol><li>El facilitador abre el mes.</li><li>Deciden cuántos lotes producir, hasta lo que les piden.</li><li>Hacen las cuentas en la hoja de caja.</li><li>El vocero captura la decisión y cuatro números: cobros, pago al proveedor, caja al final y utilidad.</li><li>Ponen las tarjetas en su tablero de papel.</li></ol>`],
-  ['Si la caja no alcanza', `<ul><li><b>Crédito del banco</b> en múltiplos de $10. Cuesta $1 al mes por cada $10, desde el mes siguiente. Lo devuelven cuando quieran.</li><li><b>Pronto pago:</b> desde mayo llega un cliente nuevo con 6 lotes. Si le hacen $1 de descuento por lote, les paga en 1 mes en lugar de 2.</li><li><b>Producir menos</b> de lo que les piden.</li></ul><p>Si con su decisión la caja termina en negativo, el envío no se acepta.</p>`],
+  ['Si la caja no alcanza', `<ul><li><b>Crédito de Banamex</b> en múltiplos de $10 ($0, $10, $20…). Cuesta $1 al mes por cada $10, desde el mes siguiente. Lo devuelven cuando quieran.</li><li><b>Pronto pago:</b> desde mayo llega un cliente nuevo con 6 lotes. Si le hacen $1 de descuento por lote, les paga en 1 mes en lugar de 2.</li><li><b>Producir menos</b> de lo que les piden.</li></ul><p>Si con su decisión la caja termina en negativo, el envío no se acepta.</p>`],
   ['Cómo ganan puntos', `<ul><li><b>2 puntos</b> si sus cuatro números están bien a la primera.</li><li><b>1 punto</b> si quedan bien en el segundo intento.</li><li>Si no, avanzan sin puntos y les mostramos los números correctos para que los anoten.</li><li>Al final, <b>3 puntos extra</b> a la mesa con más utilidad acumulada.</li></ul>`]
 ];
 const GUIA_FAC = [
@@ -665,7 +666,7 @@ function formulario(est, mes) {
   return `<div class="card"><h2 style="margin-top:0">1. La decisión</h2>
     ${campo('lotes', 'Lotes a producir', ` <small>(de 0 a ${Caja.PEDIDOS[mes]})</small>`)}
     ${mes >= 3 ? campo('pronto', 'Lotes con pronto pago', ` <small>(de 0 a ${Caja.CLIENTE_NUEVO})</small>`) : ''}
-    ${campo('pide', 'Crédito que piden al banco', ' <small>($0, $10, $20…)</small>')}
+    ${campo('pide', 'Crédito que piden a Banamex', ' <small>($0, $10, $20…)</small>')}
     ${est.credito ? campo('devuelve', 'Crédito que devuelven', ` <small>(deben ${money(est.credito)})</small>`) : ''}
     <h2>2. Sus números de papel</h2>
     ${campo('cobros', CAMPOS.cobros)}${campo('proveedor', CAMPOS.proveedor)}${campo('cajaFinal', CAMPOS.cajaFinal)}${campo('utilidad', CAMPOS.utilidad)}
